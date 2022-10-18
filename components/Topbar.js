@@ -28,24 +28,24 @@ export default class Topbar extends Component {
 		
 		return (
 	<nav className="tour-search navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-		
-		<button id="sidebarToggleTop" className="btn btn-link d-lg-none rounded-circle mr-3 text-secondary" onClick={event => this.props.toggleSidebar()}>
-			<FontAwesomeIcon icon={faBars} />
-		</button>
-
-		<div style={{width:"100%"}}>
-			<Search />
-		</div>
-		
+				
 		<div className="topbar-divider d-none d-sm-block"></div>
 
 		<ul className="navbar-nav ml-auto">
 			<li className="nav-item dropdown no-arrow">
-				<a className="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+				<a className="nav-link dropdown-toggle" href="/registration" as="/registration" id="userDropdown" role="button"
 					data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					<span className="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
-					<img className="img-profile rounded-circle"
-						src="/undraw_profile.svg" />
+					<span className="mr-2 d-none d-lg-inline text-gray-600 small">Register</span>
+					
+				</a>
+				
+			</li>
+
+			<li className="nav-item dropdown no-arrow">
+				<a className="nav-link dropdown-toggle" href="/login" as="/login" id="userDropdown" role="button"
+					data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<span className="mr-2 d-none d-lg-inline text-gray-600 small">Login</span>
+
 				</a>
 				
 			</li>
