@@ -6,7 +6,7 @@ import MyToolTip from './MyToolTip'
 import Link from 'next/link'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faViruses } from '@fortawesome/free-solid-svg-icons'
+import { faGear, faMicrochip, faNeuter, faNoteSticky, faPaintbrush, faPaintBrush, faPaperPlane, faQuidditch, faScissors, faSpaghettiMonsterFlying, faUserCog, faViruses } from '@fortawesome/free-solid-svg-icons'
 import { faTachometerAlt } from '@fortawesome/free-solid-svg-icons'
 import { faPrescriptionBottleAlt } from '@fortawesome/free-solid-svg-icons'
 import { faVials } from '@fortawesome/free-solid-svg-icons'
@@ -36,6 +36,7 @@ import { faCircleNodes } from '@fortawesome/free-solid-svg-icons'
 
 import entityTypes from '../lib/entityTypes.json'
 import relationTypes from '../lib/relationTypes.json'
+import { faStickyNote } from '@fortawesome/free-regular-svg-icons';
 
 export default class Sidebar extends Component {
 	constructor(props) {
@@ -151,105 +152,93 @@ export default class Sidebar extends Component {
 		
 		
 		return (
-	<ul className={"navbar-nav bg-gradient-primary sidebar sidebar-dark accordion " + showClass} id="accordionSidebar" style={{position:"relative"}} ref={this.container}>
+		<ul className={"navbar-nav bg-gradient-primary sidebar sidebar-dark accordion " + showClass} id="accordionSidebar" style={{position:"relative"}} ref={this.container}>
 
-		{/* Sidebar - Brand */}
-		<Link href="/" prefetch={false}>
-			<a className="sidebar-brand d-flex align-items-center justify-content-center">
-				<div>
-					<FontAwesomeIcon icon={faLandmark} />
-				</div>
-				<div className="sidebar-brand-text mx-2">{this.props.projectName}</div>
-			</a>
-		</Link>
+			{/* Sidebar - Brand */}
+			<Link href="/" prefetch={false}>
+				<a className="sidebar-brand d-flex align-items-center justify-content-center">
+					<div>
+						<FontAwesomeIcon icon={faDna} />
+					</div>
+					<div className="sidebar-brand-text mx-1">CIViCMine Annotation Review</div>
+				</a>
+			</Link>
 
-		{/* Divider */}
-		<hr className="sidebar-divider my-0" />
+			{/* Sidebar annotation review button */}
+			<div className="tour-categories my-0">	
+				<hr className="sidebar-divider my-0" />		
+					<hr className="sidebar-divider my-0" />
+				<MyToolTip text="Review the relations extracted from documents in CIViCMine" container={this.container}>
+					<li className={this.props.page=='/annotation_review' ? "nav-item active" : "nav-item"}>
+						<Link href="/" prefetch={false}>
+							<a className="nav-link">
+								<span style={{marginRight: "0.25rem"}}>
+									<FontAwesomeIcon className="sideicon" icon={faPaintbrush} fixedWidth width="0" />
+								</span>
+								<span> Annotation Review</span>
+							</a>
+						</Link>
+					</li>
+				</MyToolTip>
+			</div>
 
-		{/* Nav Item - Dashboard */}
-		<MyToolTip text="Overview of the coronavirus literature" container={this.container}>
-			<li className={this.props.page=='/' ? "nav-item active" : "nav-item"}>
-				<Link href="/index" as="/" prefetch={false}>
-					<a className="nav-link">
-						<span style={{marginRight: "0.25rem"}} >
-							<FontAwesomeIcon className="sideicon" icon={faTachometerAlt} fixedWidth width="0" />
-						</span>
-						<span> Dashboard</span>
-					</a>
-				</Link>
-			</li>
-		</MyToolTip>
+			{/* Sidebar annotation review button */}
+			<div className="tour-categories my-0">	
+				<hr className="sidebar-divider my-0" />		
+					<hr className="sidebar-divider my-0" />
+				<MyToolTip text="Get to know how this annotation review tool works" container={this.container}>
+				<li className={this.props.page=='/user_guide' ? "nav-item active" : "nav-item"}>
+					<Link href="/UserGuide" as="/user_guide" prefetch={false}>
+							<a className="nav-link">
+								<span style={{marginRight: "0.25rem"}}>
+									<FontAwesomeIcon className="sideicon" icon={faStickyNote} fixedWidth width="0" />
+								</span>
+								<span> User Guide</span>
+							</a>
+						</Link>
+					</li>
+				</MyToolTip>
+			</div>
 
-		{/* Divider */}
-		<hr className="sidebar-divider my-0" />
-		
-		<div className="tour-trending m-0 p-0">
-		<MyToolTip text="Articles from the last two weeks that are receiving attention in the media and on social media" container={this.container}>
-			<li className={this.props.page=='/trending' ? "nav-item active mb-0" : "nav-item mb-0"}>
-				<Link href="/trending" as="/trending" prefetch={false}>
-					<a className="nav-link">
-						<span style={{marginRight: "0.25rem"}}>
-							<FontAwesomeIcon className="sideicon" icon={faChartLine} fixedWidth width="0" />
-						</span>
-						<span> Trending</span>
-					</a>
-				</Link>
-			</li>
-		</MyToolTip>
-		</div>
-		
-		<hr className="sidebar-divider my-0" />
-		
-		<div className="tour-categories my-0">
-			
-			{relationlinks}
-			
-			<hr className="sidebar-divider my-0" />
-			
-			{entitylinks}
-			
-			<hr className="sidebar-divider my-0" />
-			
-			<MyToolTip text="A set of frequently asked questions to answer common inquiries about CoronaCentral and the methods used to build it." container={this.container}>
-				<li className={this.props.page=='/faqs' ? "nav-item active" : "nav-item"}>
-					<Link href="/faqs" as="/faqs" prefetch={false}>
-						<a className="nav-link">
-							<span style={{marginRight: "0.25rem"}}>
-								<FontAwesomeIcon className="sideicon" icon={faQuestionCircle} fixedWidth width="0" />
-							</span>
-							<span> FAQs</span>
-						</a>
-					</Link>
-				</li>
-			</MyToolTip>
-		</div>
 
-		<div className="tour-categories my-0">
-			
-			
-			
-			<hr className="sidebar-divider my-0" />
-			
-			
-			
-			<hr className="sidebar-divider my-0" />
-			
-			<MyToolTip text="A set of frequently asked questions to answer common inquiries about CoronaCentral and the methods used to build it." container={this.container}>
-				<li className={this.props.page=='/annotation_review' ? "nav-item active" : "nav-item"}>
-					<Link href="/annotation_review" as="/annotation_review" prefetch={false}>
-						<a className="nav-link">
-							<span style={{marginRight: "0.25rem"}}>
-								<FontAwesomeIcon className="sideicon" icon={faQuestionCircle} fixedWidth width="0" />
-							</span>
-							<span> Annotation Review</span>
-						</a>
-					</Link>
-				</li>
-			</MyToolTip>
-		</div>
-		
+			{/* Sidebar annotation review button */}
+			<div className="tour-categories my-0">	
+				<hr className="sidebar-divider my-0" />		
+					<hr className="sidebar-divider my-0" />
+				<MyToolTip text="Get to know the annotation criteria" container={this.container}>
+					<li className={this.props.page=='/annotation_guide' ? "nav-item active" : "nav-item"}>
+						<Link href="/AnnotationGuide" as="/annotation_guide" prefetch={false}>
+							<a className="nav-link">
+								<span style={{marginRight: "0.25rem"}}>
+									<FontAwesomeIcon className="sideicon" icon={faQuestionCircle} fixedWidth width="0" />
+								</span>
+								<span> Annotation Guide</span>
+							</a>
+						</Link>
+					</li>
+				</MyToolTip>
+			</div>
 
-	</ul>
+			{/* Sidebar annotation review button */}
+			<div className="tour-categories my-0">	
+				<hr className="sidebar-divider my-0" />		
+					<hr className="sidebar-divider my-0" />
+				<MyToolTip text="Customise your settings" container={this.container}>
+					<li className={this.props.page=='/settings' ? "nav-item active" : "nav-item"}>
+						<Link href="/settings" as="/settings" prefetch={false}>
+							<a className="nav-link">
+								<span style={{marginRight: "0.25rem"}}>
+									<FontAwesomeIcon className="sideicon" icon={faGear} fixedWidth width="0" />
+								</span>
+								<span> Settings</span>
+							</a>
+						</Link>
+					</li>
+				</MyToolTip>
+			</div>
+
+		</ul>
+
 		)
 	}
 }

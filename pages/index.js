@@ -6,7 +6,7 @@ import Table from 'react-bootstrap/Table'
 
 import Layout from '../components/Layout.js'
 
-export default class MainPage extends Component {
+export default class annotation_review extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
@@ -16,7 +16,7 @@ export default class MainPage extends Component {
 			
 		this.refreshFromDB = this.refreshFromDB.bind(this);
 	}
-	
+
 	refreshFromDB() {
 		var self = this
 		axios.get('/api/document_list')
@@ -40,16 +40,15 @@ export default class MainPage extends Component {
 	}
 	
 	render() {
-		
 		var contents = 'loading'
 		if (this.state.loaded) {
-			const rows = this.state.documents.map(d => <tr key={d.id}><td><Link href={"/doc/"+d.id}><a>{d.id}</a></Link></td><td>{d.title}</td></tr>)
+			const rows = this.state.documents.map(d => <tr key={d.id}><td>{d.title}</td><td><Link href={"/doc/"+d.id}><a>Review Annotations</a></Link></td></tr>)
 			
 			contents = <Table striped bordered hover>
 				<thead>
 					<tr>
-						<th>#</th>
 						<th>Title</th>
+						<th></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -59,20 +58,20 @@ export default class MainPage extends Component {
 		}
 		
 		return (
-			<Layout title="Documents" page="/" >
+			<Layout title="Documents" page="/annotation_review" >
 			
 				<div className="d-sm-flex align-items-center justify-content-between mb-4 titlepadding">
-					<h1 className="h3 mb-0 text-gray-800">Annotation Editor Demo</h1>
+					<h1 className="h3 mb-0 text-gray-800">Annotation Review</h1>
 					
 				</div>
-				
 
+				
 				<div className="card shadow mb-4">
 		
 					{contents}
 
 				</div>
-
+				
 			</Layout>
 		)
 	}
