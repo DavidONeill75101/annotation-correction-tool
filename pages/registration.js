@@ -3,6 +3,9 @@ import {Routes, Route, useNavigate} from 'react-router-dom';
 
 import axios from 'axios';
 
+import Link from 'next/link'
+
+
 
 import Layout from '../components/Layout.js'
 import Button from 'react-bootstrap/Button'
@@ -44,7 +47,7 @@ export default class Registration extends Component {
 			}
 		})
 		.then(function (response) {
-			this.useNavigate('/settings')
+			
 		})
 		.catch(function (error) {
 			console.log(error);
@@ -88,7 +91,7 @@ export default class Registration extends Component {
 				<br></br>
 				<br></br>
 				<Button size="sm" onClick={evt => this.addAccountToDB()}>
-							<div>Register</div>
+					<span> Register</span>
 				</Button>
 				
 			</Layout>

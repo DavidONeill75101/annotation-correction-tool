@@ -46,9 +46,10 @@ export default class RelationAnnotation extends Component {
 	
 	
 	componentDidMount () {
-		if (this.props.relation.isCandidate)
-			this.fetchRelationTypes()
-		
+		//if (this.props.relation.isCandidate)
+		console.log("fetchign")
+		this.fetchRelationTypes()
+		console.log(this.state.relationTypes)
 		this.handleResize(null)
 		
 		window.addEventListener("resize", this.handleResize);
