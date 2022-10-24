@@ -13,38 +13,27 @@ import { faBars } from '@fortawesome/free-solid-svg-icons'
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
 import { faVirus } from '@fortawesome/free-solid-svg-icons'
 
-/* Topbar */
-export default class Topbar extends Component {
-	constructor(props) {
-		super(props)
-		this.state = { 
-			menuShow: false
-		}
-	}
-	
-	// className="d-none d-sm-inline-block mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search"
-	
-	render() {
-		
-		return (
-	<nav className="tour-search navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+import { useUser } from "@auth0/nextjs-auth0"
+
+
+export default function TopBar() {
+  const { user } = useUser();
+  return (
+
+    <nav className="tour-search navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 				
 		<div className="topbar-divider d-none d-sm-block"></div>
 
 		<ul className="navbar-nav ml-auto">
+			
 			<li className="nav-item dropdown no-arrow">
-				<a className="nav-link dropdown-toggle" href="/registration" as="/registration" id="userDropdown" role="button"
+				<a className="nav-link dropdown-toggle" href="/api/auth/login" as="/login" id="userDropdown" role="button"
 					data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					<span className="mr-2 d-none d-lg-inline text-gray-600 small">Register</span>
-					
-				</a>
-				
-			</li>
-
-			<li className="nav-item dropdown no-arrow">
-				<a className="nav-link dropdown-toggle" href="/login" as="/login" id="userDropdown" role="button"
-					data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					<span className="mr-2 d-none d-lg-inline text-gray-600 small">Login</span>
+					<span className="mr-2 d-none d-lg-inline text-gray-600 small">{user ? (
+            <a href="/api/auth/logout">Logout</a>
+          ) : (
+            <a href="/api/auth/login">Login</a>
+          )}</span>
 
 				</a>
 				
@@ -52,6 +41,6 @@ export default class Topbar extends Component {
 		</ul>
 		
 	</nav>
-	)
-	}
+  
+  );
 }

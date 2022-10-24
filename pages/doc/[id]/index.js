@@ -9,6 +9,8 @@ import { useRouter } from 'next/router'
 const Document = () => {
 	const router = useRouter()
 	const documentId = router.query.id
+
+	
 	
 	const editor = documentId ?  <AnnotationEditor documentId={documentId} showMetadata={true} /> : <></>
 

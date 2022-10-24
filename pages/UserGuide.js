@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import Layout from '../components/Layout.js'
+import Instructions from '../components/Instructions.js'
 
 export default class UserGuide extends Component {
 	constructor(props) {
@@ -8,7 +9,10 @@ export default class UserGuide extends Component {
 		this.state = {}
 	}
 	
+
+
 	render() {
+		
 		
 		
 		return (
@@ -19,6 +23,11 @@ export default class UserGuide extends Component {
 					
 				</div>
 				
+				<div className="card shadow mb-4">
+					<div className="card-body">
+						<Instructions />
+					</div>
+				</div>
 			</Layout>
 		)
 	}

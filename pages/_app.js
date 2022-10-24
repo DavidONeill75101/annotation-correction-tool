@@ -1,6 +1,8 @@
 import '../css/sb-admin-2.css'
 import '../css/custom.css'
 
+import { UserProvider } from '@auth0/nextjs-auth0';
+
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 
 // https://medium.com/@fabianterh/fixing-flashing-huge-font-awesome-icons-on-a-gatsby-static-site-787e1cfb3a18
@@ -10,5 +12,9 @@ import '@fortawesome/fontawesome-svg-core/styles.css' // 👈
 config.autoAddCss = false // 👈
 
 export default function App({ Component, pageProps }) {
-  return <Component {...pageProps} />
+  return (
+    <UserProvider>
+      <Component {...pageProps} />
+    </UserProvider>
+  );
 }
