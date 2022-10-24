@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
-import ReviewEditor from '../../../components/ReviewEditor.js'
+import ReviewEditor from '../../../../../components/ReviewEditor.js'
 
-import Layout from '../../../components/Layout.js'
+import Layout from '../../../../../components/Layout.js'
 
 import { useRouter } from 'next/router'
 
@@ -11,8 +11,23 @@ const Review = () => {
 	
 	const router = useRouter()
 	const matchingId = router.query.id
+	const range = router.query.range
+
+	var start
+	var end
+
+	if (typeof range == "undefined"){
+		start = 0
+		end = 9
+	}else{
+		start = range.split('-')[0]
+		end = range.split('-')[1]
+	}
+
+	const citations = router.query.citations
+
 	
-	const editor = matchingId ?  <ReviewEditor matchingId={matchingId} showMetadata={true} /> : <></>
+	const editor = matchingId ?  <ReviewEditor matchingId={matchingId} showMetadata={true} start={start} end={end} citations={citations} /> : <></>
 
 
 	return <Layout title="Review" page="/review" >
@@ -23,7 +38,7 @@ const Review = () => {
 					
 				
 				</div>
-
+				
 				<div className="card shadow mb-4">
 					<div className="card-body">
 						{editor}

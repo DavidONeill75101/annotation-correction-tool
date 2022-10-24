@@ -170,7 +170,7 @@ export default class Sidebar extends Component {
 					<hr className="sidebar-divider my-0" />
 				<MyToolTip text="Review the relations extracted from documents in CIViCMine" container={this.container}>
 					<li className={this.props.page=='/annotation_review' ? "nav-item active" : "nav-item"}>
-						<Link href="/" prefetch={false}>
+						<Link href="/collated/0-9" prefetch={false}>
 							<a className="nav-link">
 								<span style={{marginRight: "0.25rem"}}>
 									<FontAwesomeIcon className="sideicon" icon={faPaintbrush} fixedWidth width="0" />

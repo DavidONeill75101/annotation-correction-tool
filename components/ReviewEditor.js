@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import { faCheck, faXmark, faPencil, faLink, faSkullCrossbones, faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons'
 
+import Link from 'next/link'
 
 import Table from 'react-bootstrap/Table'
 
@@ -24,15 +25,13 @@ export default class ReviewEditor extends Component {
 			relation_loaded: false,
 			}
 			
-		
-		
 	}
 	
 	refreshSentences(){
 
 		var self = this
 
-		axios.get('http://127.0.0.1:5000/get_sentences?start=0&end=10&matching_id='+this.props.matchingId)
+		axios.get('http://127.0.0.1:5000/get_sentences?start=' + this.props.start + '&end=' + this.props.end + '&matching_id='+this.props.matchingId)
 			.then(function (response) {
 				const sentences = response.data
 				self.setState( {
@@ -74,6 +73,27 @@ export default class ReviewEditor extends Component {
 
 	
 	render() {
+
+		var prev_link = ''
+		var next_link = ''
+
+		
+		var prev_start = parseInt(this.props.start)-10
+		var prev_end = parseInt(this.props.end) - 10
+
+		var next_start = parseInt(this.props.start)+10
+		var next_end = parseInt(this.props.end) + 10
+
+		if (prev_start>=0){
+			prev_link = <Link href={"/review/" + this.props.matchingId + '/'+ prev_start + '-' + prev_end + '/' + this.props.citations}><a>Previous</a></Link>
+		}
+
+		
+		if (next_start < this.props.citations){
+			next_link = <Link href={"/review/" + this.props.matchingId + '/' + next_start + '-' + next_end + '/' + this.props.citations}><a>Next</a></Link>			
+		}
+
+		
 
 		const upvote = (event, id) => {
 			axios.get('http://127.0.0.1:5000/upvote_sentence?id='+id)
@@ -160,12 +180,23 @@ export default class ReviewEditor extends Component {
 		}
 	
 		return (
-
 			
-				<div className="d-sm-flex align-items-center justify-content-between mb-4 titlepadding">
+				<div>
+
+					<div>
+						{contents}	
+					</div>
+
+					<div>
+						{prev_link}
+					</div>
+
+					<div>
+						{next_link}
+					</div>
 					
-					{contents}
-				</div>		
+				</div>	
+				
 		) 
 	}
 }
