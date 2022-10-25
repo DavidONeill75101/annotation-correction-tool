@@ -35,7 +35,7 @@ export default class annotation_review extends Component {
 
 				<div className="card shadow mb-4">
 
-				<Link href={"/collated/0-9"}><a>Get started</a></Link>
+				<Link href={"/collated/0-9/ / / / / /"}><a>Get started</a></Link>
 					
 				</div>
 

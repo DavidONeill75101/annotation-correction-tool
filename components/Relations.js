@@ -17,7 +17,12 @@ export default class Relations extends Component {
 			loaded: false,
 			collated: [],
 			start: this.props.start,
-			end: this.props.end
+			end: this.props.end,
+			evidence_type: this.props.evidence_type,
+			gene: this.props.gene,
+			cancer: this.props.cancer,
+			drug: this.props.drug,
+			variant: this.props.variant,
 
 		}
 		
@@ -29,9 +34,36 @@ export default class Relations extends Component {
 
 
 		var self = this
+
+		var fetchURL = 'http://127.0.0.1:5000/get_collated'
+		var params = {start:self.state.start, end:self.state.end}
+
 		
-		axios.get('http://127.0.0.1:5000/get_collated?start='+ self.state.start + '&end=' + self.state.end)
-			.then(function (response) {
+
+		if(this.state.gene!=" "){
+			params['gene'] = this.state.gene
+		}
+
+		if(this.state.cancer!=" "){
+			params['cancer'] = this.state.cancer
+		}
+
+		if(this.state.drug!=" "){
+			params['drug'] = this.state.drug
+		}
+		
+		if(this.state.evidence_type!=" "){
+			params['evidence_type'] = this.state.evidence_type
+		}
+
+		if(this.state.variant!=" "){
+			params['variant'] = this.state.variant
+		}
+		
+		axios.get(fetchURL, {
+			params: params
+		})
+		.then(function (response) {
 				const collated = response.data
 				self.setState({
 					collated: collated,
@@ -82,14 +114,12 @@ export default class Relations extends Component {
 		var next_end = parseInt(this.state.end) + 10
 
 		if (prev_start>=0){
-			prev_link = <Link href={"/collated/"+prev_start + '-' + prev_end}><a>Previous</a></Link>
+			prev_link = <Link href={"/collated/"+prev_start + '-' + prev_end + '/' + this.state.gene + '/' + this.state.cancer + '/' + this.state.drug + '/' + this.state.evidence_type + '/' + this.state.variant + '/'}><a>Previous</a></Link>
 		}
 
-		
-		next_link = <Link href={"/collated/"+next_start + '-' + next_end}><a>Next</a></Link>
-
-
-		
+		if (this.state.collated.length == 9){
+			next_link = <Link href={"/collated/"+next_start + '-' + next_end + '/' + this.state.gene + '/' + this.state.cancer + '/' + this.state.drug + '/' + this.state.evidence_type + '/' + this.state.variant + '/'}><a>Next</a></Link>
+		}
 
 		}
 
