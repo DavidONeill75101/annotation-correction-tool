@@ -1,0 +1,82 @@
+import prisma from '../../../lib/prisma'
+
+export default async function handle(req, res) {
+
+    const gene = req.query.gene
+	const cancer = req.query.cancer
+	const drug = req.query.drug
+	const evidence_type = req.query.evidence_type
+	const variant = req.query.variant_group
+	const start = parseInt(req.query.start)
+	const end = parseInt(req.query.end)
+
+    var params = {}
+
+	if (gene){
+		params['gene'] = gene
+	}
+
+	if (cancer){
+		params['cancer'] = cancer
+	}
+
+	if (drug){
+		params['drug'] = drug
+	}
+
+	if (evidence_type){
+		params['evidencetype'] = evidence_type
+	}
+
+	if (variant){
+		params['variant_group'] = variant
+	}
+	
+	var sentences = await prisma.sentence.findMany({
+		select: {
+			id:true,
+			matching_id: true,
+			evidencetype: true,
+			gene: true,
+			cancer: true,
+			variant_group: true,
+			drug: true,
+            downvotes: true,
+            formatted:true, 
+            journal: true,
+            month: true,
+            pmid: true,
+            section:true,
+            sentence:true, 
+            subsection:true,
+            title: true,
+            upvotes:true,
+            year:true,
+		},
+        where: params,
+	})
+
+    var downvoted_sentences = []
+
+	sentences.forEach(function(item, index){
+        if (parseInt(item['downvotes']) > 0){
+            downvoted_sentences.push(item)
+        }
+
+        if (item['subsection']=='None'){
+            item['subsection'] = 'No subsection'
+        }
+
+        if (item['drug']=='nan'){
+            item['drug'] = 'No Drug'
+        }
+
+		if (item['variant_group']=='nan'){
+			item['variant_group']='No variant'
+		}
+    })
+	
+	res.json(downvoted_sentences.slice(start,end))
+
+	
+}

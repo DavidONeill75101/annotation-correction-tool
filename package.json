@@ -11,11 +11,14 @@
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^1.9.2",
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
     "@fortawesome/fontawesome-free": "^5.15.4",
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
     "@fortawesome/free-regular-svg-icons": "^6.1.1",
     "@fortawesome/free-solid-svg-icons": "^6.1.1",
     "@fortawesome/react-fontawesome": "^0.1.18",
+    "@mui/material": "^5.10.12",
     "@prisma/client": "^3.15.2",
     "axios": "^0.26.1",
     "chroma-js": "^2.4.2",
@@ -29,6 +32,7 @@
     "react-select": "^5.5.6",
     "sqlite": "^4.0.23",
     "sqlite3": "^5.0.2",
+    "styled-components": "^5.3.6",
     "zlib": "^1.0.5"
   },
   "devDependencies": {

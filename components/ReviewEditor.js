@@ -17,21 +17,22 @@ export default class ReviewEditor extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-		
-			
 			loaded: false,
 			sentences: [],
 			relation: [],
 			relation_loaded: false,
-			}
 			
+			
+			}
+		
+		
 	}
 	
 	refreshSentences(){
 
 		var self = this
 
-		axios.get('http://127.0.0.1:5000/get_sentences?start=' + this.props.start + '&end=' + this.props.end + '&matching_id='+this.props.matchingId)
+		axios.get('/api/get_data/get_sentences?start=' + this.props.start + '&end=' + this.props.end + '&matching_id='+this.props.matchingId)
 			.then(function (response) {
 				const sentences = response.data
 				self.setState( {
@@ -47,7 +48,7 @@ export default class ReviewEditor extends Component {
 			});
 
 		
-		axios.get('http://127.0.0.1:5000/get_collated?matching_id='+this.props.matchingId)
+		axios.get('/api/get_data/get_relations?matching_id='+this.props.matchingId)
 		.then(function (response) {
 			const relation = response.data
 			self.setState( {
@@ -85,21 +86,20 @@ export default class ReviewEditor extends Component {
 		var next_end = parseInt(this.props.end) + 10
 
 		if (prev_start>=0){
-			prev_link = <Link href={"/review/" + this.props.matchingId + '/'+ prev_start + '-' + prev_end + '/' + this.props.citations}><a>Previous</a></Link>
+			prev_link = <Link href={"/review/" + this.props.matchingId + '/'+ prev_start + '-' + prev_end + '/' + this.props.citations}><a><Button size="md">Previous</Button></a></Link>
 		}
 
 		
 		if (next_start < this.props.citations){
-			next_link = <Link href={"/review/" + this.props.matchingId + '/' + next_start + '-' + next_end + '/' + this.props.citations}><a>Next</a></Link>			
+			next_link = <Link href={"/review/" + this.props.matchingId + '/' + next_start + '-' + next_end + '/' + this.props.citations}><a><Button size="md">Next</Button></a></Link>			
 		}
-
-		
 
 		const upvote = (event, id) => {
-			axios.get('http://127.0.0.1:5000/upvote_sentence?id='+id)
+			
+			axios.get('/api/update_data/upvote?id='+id)
 			.then(function (response) {
 				const res = response.data
-				console.log(res)
+				
 			})
 			.catch(function (error) {
 				console.log(error);
@@ -110,11 +110,52 @@ export default class ReviewEditor extends Component {
 			window.location.reload(false)
 		}
 
-		const downvote = (event, id) => {
-			axios.get('http://127.0.0.1:5000/downvote_sentence?id='+id)
+		const downvote = (event, id, users_downvoted) => {
+			console.log()
+			var users_voted_list = users_downvoted.split(',')	
+			
+			if (users_voted_list.includes(this.props.user)){
+				axios.get('/api/update_data/remove_downvote?id='+id)
+				.then(function (response) {
+					const res = response.data
+					
+				})
+				.catch(function (error) {
+					console.log(error);
+				})
+				.then(function () {
+					// always executed
+				});
+
+				var index = users_voted_list.indexOf(this.props.user);
+				if (index !== -1) {
+				users_voted_list.splice(index, 1);
+				}
+				
+				const new_users_voted = users_voted_list.join(',')
+
+				const fetchURL = '/api/update_data/update_users_downvoted?id='+id+'&usernames='+new_users_voted
+
+				axios.get(fetchURL)
+				.then(function (response) {
+					const res = response.data
+					
+				})
+				.catch(function (error) {
+					console.log(error);
+				})
+				.then(function () {
+					// always executed
+				});
+
+				window.location.reload(false)
+
+
+			}else{
+			axios.get('/api/update_data/downvote?id='+id)
 			.then(function (response) {
 				const res = response.data
-				console.log(res)
+				
 			})
 			.catch(function (error) {
 				console.log(error);
@@ -122,7 +163,26 @@ export default class ReviewEditor extends Component {
 			.then(function () {
 				// always executed
 			});
+			
+			const new_users_voted = this.props.user + ',' + users_downvoted
+
+			const fetchURL = '/api/update_data/update_users_downvoted?id='+id+'&usernames='+new_users_voted
+
+			axios.get(fetchURL)
+			.then(function (response) {
+				const res = response.data
+				
+			})
+			.catch(function (error) {
+				console.log(error);
+			})
+			.then(function () {
+				// always executed
+			});
+
 			window.location.reload(false)
+
+			}
 
 		}
 
@@ -146,17 +206,18 @@ export default class ReviewEditor extends Component {
 				</tbody>
 			</Table>
 		}
-
-		var contents = 'loading'
+		
+		var contents = 'loading...'
 		if (this.state.loaded) {
 		const rows = this.state.sentences.map(s => <tr key={s.id}><td>{s.pmid}</td>
 		<td>{s.journal}</td><td>{s.year}</td>
 		<td>{s.section}</td><td>{s.subsection}</td>
 		<td>{s.sentence}</td>
-		<td><Button size="sm" variant="success" onClick={event => upvote(event, s.id)}>
+		
+		{/*<td><Button size="sm" variant="success" onClick={event => upvote(event, s.id)}>
 			<FontAwesomeIcon icon={faThumbsUp} />
-		</Button><center>{s.upvotes}</center></td>
-		<td><Button size="sm" variant="danger" onClick={event => downvote(event, s.id)}>
+		</Button><center>{s.upvotes}</center></td>*/}
+		<td><Button size="sm" onClick={event => downvote(event, s.id, s.users_downvoted)}>
 			<FontAwesomeIcon icon={faThumbsDown} />
 		</Button><center>{s.downvotes}</center></td></tr>)
 
@@ -183,17 +244,20 @@ export default class ReviewEditor extends Component {
 			
 				<div>
 
-					<div>
-						{contents}	
-					</div>
+						<div>
+							{contents}
+						</div>
+						
+						<div>
+							<div className='float-left'>
+							{prev_link}
+							</div>
 
-					<div>
-						{prev_link}
-					</div>
 
-					<div>
-						{next_link}
-					</div>
+							<div className="float-right">
+							{next_link}
+							</div>
+						</div>
 					
 				</div>	
 				

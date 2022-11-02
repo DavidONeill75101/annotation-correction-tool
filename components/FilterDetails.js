@@ -2,10 +2,14 @@ import React, { Component } from 'react';
 import Link from 'next/link'
 import axios from 'axios';
 import Select from 'react-select'
+import Button from 'react-bootstrap/Button';
+
 
 import Table from 'react-bootstrap/Table'
 
 import Layout from '../components/Layout.js'
+import { Col, Container, Row } from 'react-bootstrap';
+
 
 
 export default class Relations extends Component {
@@ -43,7 +47,7 @@ export default class Relations extends Component {
 
 		var self = this
 		
-		axios.get('http://127.0.0.1:5000/get_genes')
+		axios.get('/api/get_data/get_genes')
 			.then(function (response) {
 				const res = response.data
 				var genes = []
@@ -70,7 +74,7 @@ export default class Relations extends Component {
 
 		var self = this
 		
-		axios.get('http://127.0.0.1:5000/get_cancers')
+		axios.get('/api/get_data/get_cancers')
 			.then(function (response) {
 				const res = response.data
 				var cancers = []
@@ -97,7 +101,7 @@ export default class Relations extends Component {
 
 		var self = this
 		
-		axios.get('http://127.0.0.1:5000/get_drugs')
+		axios.get('/api/get_data/get_drugs')
 			.then(function (response) {
 				const res = response.data
 				var drugs = []
@@ -124,7 +128,7 @@ export default class Relations extends Component {
 
 		var self = this
 		
-		axios.get('http://127.0.0.1:5000/get_evidence_types')
+		axios.get('/api/get_data/get_evidence_types')
 			.then(function (response) {
 				const res = response.data
 				var evidenceTypes = []
@@ -151,7 +155,7 @@ export default class Relations extends Component {
 
 		var self = this
 		
-		axios.get('http://127.0.0.1:5000/get_variants')
+		axios.get('/api/get_data/get_variants')
 			.then(function (response) {
 				const res = response.data
 				var variants = []
@@ -210,33 +214,35 @@ export default class Relations extends Component {
 
 		return (
 				<div>
-					<div>
-						Gene
-						<Select options={this.state.genes} onChange={this.handleGeneClick.bind(this)}/>
-					</div>
-					<div>
-						Cancer
-						<Select options={this.state.cancers} onChange={this.handleCancerClick.bind(this)}/>
 
-					</div>
-					<div>
-						Drug
-						<Select options={this.state.drugs} onChange={this.handleDrugClick.bind(this)}/>
 
-					</div>
-					<div>
-						Evidence Type
-						<Select options={this.state.evidenceTypes} onChange={this.handleEvidenceTypeClick.bind(this)}/>
+					<Container>
+						<Row>
+							<Col>Gene</Col>
+							<Col>Cancer</Col>
+							<Col>Drug</Col>
+							<Col>Evidence Type</Col>
+							<Col>Variant</Col>
+						</Row>
+						<Row>
+							<Col><Select className="sm" options={this.state.genes} onChange={this.handleGeneClick.bind(this)}/></Col>
+						
+							<Col><Select options={this.state.cancers} onChange={this.handleCancerClick.bind(this)}/></Col>
 
-					</div>
-					<div>
-						Variant
-						<Select options={this.state.variants} onChange={this.handleVariantClick.bind(this)}/>
+							<Col><Select options={this.state.drugs} onChange={this.handleDrugClick.bind(this)}/></Col>
 
-					</div>
-					<div>
-						<Link href={"/collated/0-9/" + this.state.gene + '/' + this.state.cancer + '/' + this.state.drug + '/' + this.state.evidenceType + '/' + this.state.variant + '/'}><a>Apply filters</a></Link>
-					</div>
+							<Col><Select options={this.state.evidenceTypes} onChange={this.handleEvidenceTypeClick.bind(this)}/></Col>
+
+							<Col><Select options={this.state.variants} onChange={this.handleVariantClick.bind(this)}/></Col>
+
+						</Row>
+						<br></br>
+						<Row>
+							<Col><Link href={"/collated/0-9/" + this.state.gene + '/' + this.state.cancer + '/' + this.state.drug + '/' + this.state.evidenceType + '/' + this.state.variant + '/'}><a><Button size="md">Apply filters</Button></a></Link></Col>
+						</Row>
+					</Container>
+
+				
 				</div>
 				
 					

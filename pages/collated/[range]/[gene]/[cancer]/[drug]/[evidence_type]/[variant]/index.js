@@ -5,6 +5,8 @@ import Relations from '../../../../../../../../components/Relations.js'
 import Filter from '../../../../../../../../components/FilterDetails.js'
 
 import { useRouter } from 'next/router'
+import Button from 'react-bootstrap/Button';
+
 
 import { useUser } from "@auth0/nextjs-auth0";
 
@@ -23,6 +25,8 @@ const Collated = () => {
 	const variant = router.query.variant
 
 	
+
+	
 	var start
 	var end
 	
@@ -36,9 +40,9 @@ const Collated = () => {
 	}
 
 	
-	const relations = user ? <Relations start={start} end={end} gene={gene} cancer={cancer} drug={drug} evidence_type={evidence_type} variant={variant}/> : <div><a href="/api/auth/login">Login</a> to use the tool</div>
+	const relations = user ? <Relations start={start} end={end} gene={gene} cancer={cancer} drug={drug} evidence_type={evidence_type} variant={variant}/> : <div><a href="/api/auth/login"><Button size="sm">Login</Button></a> to use the tool</div>
 
-	const filter = user ? <Filter /> : <></>
+	const filter = user ? <div className="card shadow mb-4"><div className="card-body"><Filter /></div></div> : <></>
 	
 	
 	return <Layout title="Relations" page="/relations" >
@@ -48,23 +52,14 @@ const Collated = () => {
 					<h1 className="h3 mb-0 text-gray-800">CIViCMine Annotation Review</h1>
 				</div>
 
-				<div className="card shadow mb-4">
-					<div className="card-body">
-						{filter}
-						
-					</div>
-				</div>
-				
-
+				{filter}
+								
 				<div className="card shadow mb-4">
 					<div className="card-body">
 						{relations}
 						
 					</div>
-				</div>
-				
-
-				
+				</div>			
 
 			</Layout>
 }

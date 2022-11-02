@@ -30,9 +30,8 @@ const Review = () => {
 	const citations = router.query.citations
 
 	
-	const editor = user ?  <ReviewEditor matchingId={matchingId} showMetadata={true} start={start} end={end} citations={citations} /> : <div><a href="/api/auth/login">Login</a> to use the tool</div>
+	const editor = user ?  <ReviewEditor matchingId={matchingId} showMetadata={true} start={start} end={end} citations={citations} user={user.email} /> : <div><a href="/api/auth/login">Login</a> to use the tool</div>
 
-	user.app_metadata = user.app_metadata || {};
 	
 	return <Layout title="Review" page="/review" >
 		

@@ -186,6 +186,24 @@ export default class Sidebar extends Component {
 			<div className="tour-categories my-0">	
 				<hr className="sidebar-divider my-0" />		
 					<hr className="sidebar-divider my-0" />
+				<MyToolTip text="Manually annotate sentences which have been flagged as incorrect" container={this.container}>
+					<li className={this.props.page=='/review_downvoted_sentences' ? "nav-item active" : "nav-item"}>
+						<Link href="/review_downvoted_sentences/ / / /" prefetch={false}>
+							<a className="nav-link">
+								<span style={{marginRight: "0.25rem"}}>
+									<FontAwesomeIcon className="sideicon" icon={faPaintbrush} fixedWidth width="0" />
+								</span>
+								<span> Manual Annotation</span>
+							</a>
+						</Link>
+					</li>
+				</MyToolTip>
+			</div>
+
+			{/*
+			<div className="tour-categories my-0">	
+				<hr className="sidebar-divider my-0" />		
+					<hr className="sidebar-divider my-0" />
 				<MyToolTip text="Get to know how this annotation review tool works" container={this.container}>
 				<li className={this.props.page=='/user_guide' ? "nav-item active" : "nav-item"}>
 					<Link href="/UserGuide" as="/user_guide" prefetch={false}>
@@ -199,7 +217,7 @@ export default class Sidebar extends Component {
 					</li>
 				</MyToolTip>
 			</div>
-
+			*/}
 
 			{/* Sidebar annotation review button */}
 			<div className="tour-categories my-0">	

@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import Link from 'next/link'
 import axios from 'axios';
+import Button from 'react-bootstrap/Button';
+import { Col, Container, Row } from 'react-bootstrap';
+
 
 
 import Table from 'react-bootstrap/Table'
@@ -35,7 +38,8 @@ export default class Relations extends Component {
 
 		var self = this
 
-		var fetchURL = 'http://127.0.0.1:5000/get_collated'
+		var fetchURL = '/api/get_data/get_relations'
+
 		var params = {start:self.state.start, end:self.state.end}
 
 		
@@ -57,7 +61,7 @@ export default class Relations extends Component {
 		}
 
 		if(this.state.variant!=" "){
-			params['variant'] = this.state.variant
+			params['variant_group'] = this.state.variant
 		}
 		
 		axios.get(fetchURL, {
@@ -84,12 +88,12 @@ export default class Relations extends Component {
 
 	render() {
 
-		var contents = 'loading'
+		var contents = 'loading...'
 		var prev_link = ''
 		var next_link = ''
 		
 		if (this.state.loaded) {
-			const rows = this.state.collated.map(c => <tr key={c.matching_id}><td>{c.evidencetype}</td><td>{c.gene_normalized}</td><td>{c.cancer_normalized}</td><td>{c.drug_normalized}</td><td>{c.variant_group}</td><td>{c.citation_count}</td><td><Link href={"/review/"+c.matching_id+'/0-9/'+c.citation_count}><a>Review Sentences</a></Link></td></tr>)
+			const rows = this.state.collated.map(c => <tr key={c.matching_id}><td>{c.evidencetype}</td><td>{c.gene}</td><td>{c.cancer}</td><td>{c.drug}</td><td>{c.variant_group}</td><td>{c.citation_count}</td><td><Link href={"/review/"+c.matching_id+'/0-9/'+c.citation_count}><a><Button size="sm">Review Sentences</Button></a></Link></td></tr>)
 
 			contents = <Table striped bordered hover>
 				<thead>
@@ -114,11 +118,11 @@ export default class Relations extends Component {
 		var next_end = parseInt(this.state.end) + 10
 
 		if (prev_start>=0){
-			prev_link = <Link href={"/collated/"+prev_start + '-' + prev_end + '/' + this.state.gene + '/' + this.state.cancer + '/' + this.state.drug + '/' + this.state.evidence_type + '/' + this.state.variant + '/'}><a>Previous</a></Link>
+			prev_link = <Link href={"/collated/"+prev_start + '-' + prev_end + '/' + this.state.gene + '/' + this.state.cancer + '/' + this.state.drug + '/' + this.state.evidence_type + '/' + this.state.variant + '/'}><a><Button size="md">Previous</Button></a></Link>
 		}
 
 		if (this.state.collated.length == 9){
-			next_link = <Link href={"/collated/"+next_start + '-' + next_end + '/' + this.state.gene + '/' + this.state.cancer + '/' + this.state.drug + '/' + this.state.evidence_type + '/' + this.state.variant + '/'}><a>Next</a></Link>
+			next_link = <Link href={"/collated/"+next_start + '-' + next_end + '/' + this.state.gene + '/' + this.state.cancer + '/' + this.state.drug + '/' + this.state.evidence_type + '/' + this.state.variant + '/'}><a><Button size="md">Next</Button></a></Link>
 		}
 
 		}
@@ -126,17 +130,23 @@ export default class Relations extends Component {
 		return (
 				<div>
 
-					<div>
-						{contents}
-					</div>
-
-					<div>
-						{prev_link}
-					</div>
 					
-					<div>
-						{next_link}
-					</div>
+					
+						<div>
+							{contents}
+						</div>
+						
+						<div>
+							<div className='float-left'>
+							{prev_link}
+							</div>
+
+
+							<div className="float-right">
+							{next_link}
+							</div>
+						</div>
+						
 					
 				</div>
 
