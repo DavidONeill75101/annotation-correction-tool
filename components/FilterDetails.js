@@ -3,22 +3,14 @@ import Link from 'next/link'
 import axios from 'axios';
 import Select from 'react-select'
 import Button from 'react-bootstrap/Button';
-
-
-import Table from 'react-bootstrap/Table'
-
-import Layout from '../components/Layout.js'
 import { Col, Container, Row } from 'react-bootstrap';
-
 
 
 export default class Relations extends Component {
 
-
 	constructor(props) {
 		super(props)
 		this.state = {
-			
 			genes: [],
 			cancers: [],
 			drugs: [],
@@ -29,7 +21,6 @@ export default class Relations extends Component {
 			drug: ' ',
 			evidenceType: ' ',
 			variant:' ',			
-
 		}
 		
 		this.getGenes = this.getGenes.bind(this);
@@ -37,9 +28,6 @@ export default class Relations extends Component {
 		this.getDrugs = this.getDrugs.bind(this);
 		this.getEvidenceTypes = this.getEvidenceTypes.bind(this);
 		this.getVariants = this.getVariants.bind(this);
-
-		
-
 	}
 
 
@@ -51,14 +39,11 @@ export default class Relations extends Component {
 			.then(function (response) {
 				const res = response.data
 				var genes = []
-				
 				res.forEach(element => {
 					genes.push({'value':element, 'label':element})
 				});
-				
 				self.setState({
 					genes: genes,
-					
 				})
 			})
 			.catch(function (error) {
@@ -66,9 +51,9 @@ export default class Relations extends Component {
 			})
 			.then(function () {
 				// always executed
-				
 			});
 	}
+
 
 	getCancers() {
 
@@ -78,14 +63,11 @@ export default class Relations extends Component {
 			.then(function (response) {
 				const res = response.data
 				var cancers = []
-				
 				res.forEach(element => {
 					cancers.push({'value':element, 'label':element})
 				});
-				
 				self.setState({
-					cancers: cancers,
-					
+					cancers: cancers,	
 				})
 			})
 			.catch(function (error) {
@@ -93,9 +75,9 @@ export default class Relations extends Component {
 			})
 			.then(function () {
 				// always executed
-				
 			});
 	}
+
 
 	getDrugs() {
 
@@ -105,14 +87,11 @@ export default class Relations extends Component {
 			.then(function (response) {
 				const res = response.data
 				var drugs = []
-				
 				res.forEach(element => {
 					drugs.push({'value':element, 'label':element})
 				});
-				
 				self.setState({
 					drugs: drugs,
-					
 				})
 			})
 			.catch(function (error) {
@@ -120,9 +99,9 @@ export default class Relations extends Component {
 			})
 			.then(function () {
 				// always executed
-				
 			});
 	}
+
 
 	getEvidenceTypes() {
 
@@ -132,14 +111,11 @@ export default class Relations extends Component {
 			.then(function (response) {
 				const res = response.data
 				var evidenceTypes = []
-				
 				res.forEach(element => {
 					evidenceTypes.push({'value':element, 'label':element})
 				});
-				
 				self.setState({
 					evidenceTypes: evidenceTypes,
-					
 				})
 			})
 			.catch(function (error) {
@@ -147,9 +123,9 @@ export default class Relations extends Component {
 			})
 			.then(function () {
 				// always executed
-				
 			});
 	}
+
 
 	getVariants() {
 
@@ -159,14 +135,11 @@ export default class Relations extends Component {
 			.then(function (response) {
 				const res = response.data
 				var variants = []
-				
 				res.forEach(element => {
 					variants.push({'value':element, 'label':element})
-				});
-				
+				});				
 				self.setState({
 					variants: variants,
-					
 				})
 			})
 			.catch(function (error) {
@@ -174,9 +147,9 @@ export default class Relations extends Component {
 			})
 			.then(function () {
 				// always executed
-				
 			});
 	}
+
 
 	componentDidMount() {
 		this.getGenes()
@@ -191,17 +164,21 @@ export default class Relations extends Component {
 		this.setState({gene:e.label})
 	}
 
+
 	handleCancerClick(e){
 		this.setState({cancer:e.label})
 	}
+
 
 	handleDrugClick(e){
 		this.setState({drug:e.label})
 	}
 
+
 	handleEvidenceTypeClick(e){
 		this.setState({evidenceType:e.label})
 	}
+
 
 	handleVariantClick(e){
 		this.setState({variant:e.label})
@@ -210,13 +187,10 @@ export default class Relations extends Component {
 
 	render() {
 
-		
-
 		return (
 				<div>
-
-
 					<Container>
+						
 						<Row>
 							<Col>Gene</Col>
 							<Col>Cancer</Col>
@@ -224,6 +198,7 @@ export default class Relations extends Component {
 							<Col>Evidence Type</Col>
 							<Col>Variant</Col>
 						</Row>
+						
 						<Row>
 							<Col><Select className="sm" options={this.state.genes} onChange={this.handleGeneClick.bind(this)}/></Col>
 						
@@ -234,25 +209,16 @@ export default class Relations extends Component {
 							<Col><Select options={this.state.evidenceTypes} onChange={this.handleEvidenceTypeClick.bind(this)}/></Col>
 
 							<Col><Select options={this.state.variants} onChange={this.handleVariantClick.bind(this)}/></Col>
-
 						</Row>
+
 						<br></br>
+
 						<Row>
 							<Col><Link href={"/collated/0-9/" + this.state.gene + '/' + this.state.cancer + '/' + this.state.drug + '/' + this.state.evidenceType + '/' + this.state.variant + '/'}><a><Button size="md">Apply filters</Button></a></Link></Col>
 						</Row>
+
 					</Container>
-
-				
 				</div>
-				
-					
-				
-
 		)
 	}
 }
-
-
-
-
-

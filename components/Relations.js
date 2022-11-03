@@ -4,6 +4,7 @@ import axios from 'axios';
 import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table'
 
+
 export default class Relations extends Component {
 	constructor(props) {
 		super(props)
@@ -21,7 +22,9 @@ export default class Relations extends Component {
 		this.refreshCollated = this.refreshCollated.bind(this);
 	}
 
+
 	refreshCollated() {
+
 		var self = this
 		var fetchURL = '/api/get_data/get_relations'
 		var params = {start:self.state.start, end:self.state.end}
@@ -64,9 +67,11 @@ export default class Relations extends Component {
 			});
 	}
 
+
 	componentDidMount() {
 		this.refreshCollated()
 	}
+
 
 	render() {
 
@@ -93,48 +98,38 @@ export default class Relations extends Component {
 				</tbody>
 			</Table>
 		
-		var prev_start = parseInt(this.state.start)-10
-		var prev_end = parseInt(this.state.end) - 10
+			var prev_start = parseInt(this.state.start)-10
+			var prev_end = parseInt(this.state.end) - 10
 
-		var next_start = parseInt(this.state.start)+10
-		var next_end = parseInt(this.state.end) + 10
+			var next_start = parseInt(this.state.start)+10
+			var next_end = parseInt(this.state.end) + 10
 
-		if (prev_start>=0){
-			prev_link = <Link href={"/collated/"+prev_start + '-' + prev_end + '/' + this.state.gene + '/' + this.state.cancer + '/' + this.state.drug + '/' + this.state.evidence_type + '/' + this.state.variant + '/'}><a><Button size="md">Previous</Button></a></Link>
+			if (prev_start>=0){
+				prev_link = <Link href={"/collated/"+prev_start + '-' + prev_end + '/' + this.state.gene + '/' + this.state.cancer + '/' + this.state.drug + '/' + this.state.evidence_type + '/' + this.state.variant + '/'}><a><Button size="md">Previous</Button></a></Link>
+			}
+
+			if (this.state.collated.length == 9){
+				next_link = <Link href={"/collated/"+next_start + '-' + next_end + '/' + this.state.gene + '/' + this.state.cancer + '/' + this.state.drug + '/' + this.state.evidence_type + '/' + this.state.variant + '/'}><a><Button size="md">Next</Button></a></Link>
+			}
 		}
 
-		if (this.state.collated.length == 9){
-			next_link = <Link href={"/collated/"+next_start + '-' + next_end + '/' + this.state.gene + '/' + this.state.cancer + '/' + this.state.drug + '/' + this.state.evidence_type + '/' + this.state.variant + '/'}><a><Button size="md">Next</Button></a></Link>
-		}
-
-		}
 
 		return (
 				<div>
-
-					
-					
 						<div>
 							{contents}
 						</div>
 						
 						<div>
 							<div className='float-left'>
-							{prev_link}
+								{prev_link}
 							</div>
-
 
 							<div className="float-right">
-							{next_link}
+								{next_link}
 							</div>
 						</div>
-						
-					
 				</div>
-
 		)
 	}
 }
-
-
-

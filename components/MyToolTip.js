@@ -1,10 +1,7 @@
 import React, { Component, useState, useRef } from 'react';
-
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Overlay from 'react-bootstrap/Overlay'
-import Popover from 'react-bootstrap/Popover'
 import Tooltip from 'react-bootstrap/Tooltip'
-import Button from 'react-bootstrap/Button'
+
 
 export default function MyToolTip(props) {
 	const [show, setShow] = useState(false);
@@ -25,4 +22,3 @@ export default function MyToolTip(props) {
 		</>
 	);
 }
-

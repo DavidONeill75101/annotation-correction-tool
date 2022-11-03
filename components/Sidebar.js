@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import Collapse from 'react-bootstrap/Collapse';
-
 import MyToolTip from './MyToolTip'
-
 import Link from 'next/link'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -38,16 +36,15 @@ import entityTypes from '../lib/entityTypes.json'
 import relationTypes from '../lib/relationTypes.json'
 import { faStickyNote } from '@fortawesome/free-regular-svg-icons';
 
+
 export default class Sidebar extends Component {
 	constructor(props) {
 		super(props)
-				
 		var collapseOpen = {'entities':false,'relations':false}
-		
 		this.state = { 
 			collapseOpen: collapseOpen
 		}
-		
+	
 		this.toggleGroup = this.toggleGroup.bind(this);
 		this.renderEntityTypes = this.renderEntityTypes.bind(this);
 		this.renderRelationTypes = this.renderRelationTypes.bind(this);
@@ -55,6 +52,7 @@ export default class Sidebar extends Component {
 		this.container = React.createRef()
 	}
 	
+
 	toggleGroup(g) {
 		var collapseOpen = {'entities':false,'relations':false}
 		
@@ -63,6 +61,7 @@ export default class Sidebar extends Component {
 		
 		this.setState({collapseOpen: collapseOpen})
 	}
+
 	
 	renderRelationTypes() {
 		const groupIcon = faCircleNodes
@@ -75,7 +74,7 @@ export default class Sidebar extends Component {
 			<MyToolTip text="Lists of relations extracted from research articles" container={this.container}>
 			<li className={groupActive ? "nav-item active" : "nav-item"}>
 				<a className="nav-link" href="#" onClick={event => { this.toggleGroup('relations'); event.preventDefault() } } aria-controls="example-collapse-text"
-	aria-expanded={false}>
+					aria-expanded={false}>
 					<span className="icon" style={{marginRight: "0.25rem"}}>
 						<FontAwesomeIcon className="sideicon" icon={groupIcon} fixedWidth width="0" />
 					</span>
@@ -109,7 +108,7 @@ export default class Sidebar extends Component {
 			<MyToolTip text="Lists of different biomedical entities (e.g. Drugs) mentioned in published articles" container={this.container}>
 			<li className={groupActive ? "nav-item active" : "nav-item"}>
 				<a className="nav-link" href="#" onClick={event => { this.toggleGroup('entities'); event.preventDefault() } } aria-controls="example-collapse-text"
-	aria-expanded={false}>
+					aria-expanded={false}>
 					<span className="icon" style={{marginRight: "0.25rem"}}>
 						<FontAwesomeIcon className="sideicon" icon={groupIcon} fixedWidth width="0" />
 					</span>
@@ -134,7 +133,6 @@ export default class Sidebar extends Component {
 	render() {
 		
 		const hover = {
-			
 			'& a': {
 				textDecoration: 'none',
 				color: '#0000ee',
@@ -154,7 +152,6 @@ export default class Sidebar extends Component {
 		return (
 		<ul className={"navbar-nav bg-gradient-primary sidebar sidebar-dark accordion " + showClass} id="accordionSidebar" style={{position:"relative"}} ref={this.container}>
 
-			{/* Sidebar - Brand */}
 			<Link href="/" prefetch={false}>
 				<a className="sidebar-brand d-flex align-items-center justify-content-center">
 					<div>
@@ -164,7 +161,6 @@ export default class Sidebar extends Component {
 				</a>
 			</Link>
 
-			{/* Sidebar annotation review button */}
 			<div className="tour-categories my-0">	
 				<hr className="sidebar-divider my-0" />		
 					<hr className="sidebar-divider my-0" />
@@ -182,7 +178,6 @@ export default class Sidebar extends Component {
 				</MyToolTip>
 			</div>
 
-			{/* Sidebar annotation review button */}
 			<div className="tour-categories my-0">	
 				<hr className="sidebar-divider my-0" />		
 					<hr className="sidebar-divider my-0" />
@@ -200,26 +195,6 @@ export default class Sidebar extends Component {
 				</MyToolTip>
 			</div>
 
-			{/*
-			<div className="tour-categories my-0">	
-				<hr className="sidebar-divider my-0" />		
-					<hr className="sidebar-divider my-0" />
-				<MyToolTip text="Get to know how this annotation review tool works" container={this.container}>
-				<li className={this.props.page=='/user_guide' ? "nav-item active" : "nav-item"}>
-					<Link href="/UserGuide" as="/user_guide" prefetch={false}>
-							<a className="nav-link">
-								<span style={{marginRight: "0.25rem"}}>
-									<FontAwesomeIcon className="sideicon" icon={faStickyNote} fixedWidth width="0" />
-								</span>
-								<span> User Guide</span>
-							</a>
-						</Link>
-					</li>
-				</MyToolTip>
-			</div>
-			*/}
-
-			{/* Sidebar annotation review button */}
 			<div className="tour-categories my-0">	
 				<hr className="sidebar-divider my-0" />		
 					<hr className="sidebar-divider my-0" />
@@ -237,7 +212,6 @@ export default class Sidebar extends Component {
 				</MyToolTip>
 			</div>
 
-			{/* Sidebar annotation review button */}
 			<div className="tour-categories my-0">	
 				<hr className="sidebar-divider my-0" />		
 					<hr className="sidebar-divider my-0" />
@@ -254,9 +228,7 @@ export default class Sidebar extends Component {
 					</li>
 				</MyToolTip>
 			</div>
-
 		</ul>
-
 		)
 	}
 }
