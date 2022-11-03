@@ -9,10 +9,24 @@ const ReviewDownvotedSentences = () => {
 
 	const { user, error, isLoading } = useUser();
 	const router = useRouter()
-	
-	const start = router.query.start
-	const end = router.query.end
-	const editor = user ?  <DownvotedSentences start={start} end={end} /> : <div><a href="/api/auth/login">Login</a> to use the tool</div>
+	const matchingId = router.query.id
+	const range = router.query.range
+
+	var start
+	var end
+
+	if (typeof range == "undefined"){
+		start = 0
+		end = 9
+	}else{
+		start = range.split('-')[0]
+		end = range.split('-')[1]
+	}
+
+	const citations = router.query.citations
+
+
+	const editor = user ?  <DownvotedSentences matching_id={matchingId} start={start} end={end} citations={citations} /> : <div><a href="/api/auth/login">Login</a> to use the tool</div>
 
 	return <Layout title="Manual Annotation" page="/review" >
 		

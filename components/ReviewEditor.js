@@ -16,7 +16,7 @@ export default class ReviewEditor extends Component {
 			loaded: false,
 			sentences: [],
 			relation: [],
-			relation_loaded: false,
+			relation_loaded: false,	
 		}
 	}
 	
@@ -40,7 +40,7 @@ export default class ReviewEditor extends Component {
 				// always executed
 			});
 		
-		axios.get('/api/get_data/get_relations?matching_id='+this.props.matchingId)
+		axios.get('/api/get_data/get_relations?matching_id='+this.props.matchingId + '&start=0&end=1')
 		.then(function (response) {
 			const relation = response.data
 			self.setState( {
@@ -55,6 +55,8 @@ export default class ReviewEditor extends Component {
 			// always executed
 		});
 	}
+
+	
 	
 	
 	componentDidMount() {
@@ -224,10 +226,10 @@ export default class ReviewEditor extends Component {
 			}
 		}
 
-		var relation_contents = 'loading'
+		var relation_contents = ''
 
 		if (this.state.relation_loaded) {
-			const relation_rows = this.state.relation.map(c => <tr key={c.matching_id}><td>{c.evidencetype}</td><td>{c.gene_normalized}</td><td>{c.cancer_normalized}</td><td>{c.drug_normalized}</td><td>{c.variant_group}</td><td>{c.citation_count}</td></tr>)
+			const relation_rows = this.state.relation.map(c => <tr key={c.matching_id}><td>{c.evidencetype}</td><td>{c.gene}</td><td>{c.cancer}</td><td>{c.drug}</td><td>{c.variant_group}</td><td>{c.citation_count}</td></tr>)
 			relation_contents = <Table striped bordered hover>
 				<thead>
 					<tr>
@@ -282,6 +284,9 @@ export default class ReviewEditor extends Component {
 		return (
 			
 				<div>
+						<div>
+							{ relation_contents }
+						</div>
 						<div>
 							{contents}
 						</div>
