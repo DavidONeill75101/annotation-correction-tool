@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-
 import AnnotationEditor from '../components/AnnotationEditor.js'
 import Layout from '../components/Layout.js'
+
 
 export default class SearchPage extends Component {
 	constructor(props) {
@@ -11,11 +11,11 @@ export default class SearchPage extends Component {
 			entities: false,
 			searchResults: [],
 		}
-			
 		this.refreshFromDB = this.refreshFromDB.bind(this);
 	}
 	
 	refreshFromDB() {
+
 		var self = this
 		
 		var fetchURL = '/api/entityannotation_search'
@@ -59,16 +59,8 @@ export default class SearchPage extends Component {
 					{/* Page Heading */}
 					<div className="d-sm-flex align-items-center justify-content-between mb-4 titlepadding">
 						<h1 className="h3 mb-0 text-gray-800">Annotation Editor Demo</h1>
-						
 					</div>
-					
-
-					
-							{editors}
-						
-					
-
+					{editors}
 				</Layout>
 	}
 }
-

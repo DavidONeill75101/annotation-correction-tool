@@ -1,12 +1,8 @@
 import React, { Component } from 'react';
-import axios from 'axios';
-
-import ReviewEditor from '../../../../../components/ReviewEditor.js'
-
-import Layout from '../../../../../components/Layout.js'
-
 import { useRouter } from 'next/router'
 import { useUser } from "@auth0/nextjs-auth0";
+import ReviewEditor from '../../../../../components/ReviewEditor.js'
+import Layout from '../../../../../components/Layout.js'
 
 
 const Review = () => {
@@ -29,17 +25,12 @@ const Review = () => {
 
 	const citations = router.query.citations
 
-	
 	const editor = user ?  <ReviewEditor matchingId={matchingId} showMetadata={true} start={start} end={end} citations={citations} user={user.email} /> : <div><a href="/api/auth/login">Login</a> to use the tool</div>
-
 	
 	return <Layout title="Review" page="/review" >
-		
-				{/* Page Heading */}
+						
 				<div className="d-sm-flex align-items-center justify-content-between mb-4 titlepadding">
 					<h1 className="h3 mb-0 text-gray-800">Review Sentences</h1>
-					
-				
 				</div>
 				
 				<div className="card shadow mb-4">
@@ -48,11 +39,7 @@ const Review = () => {
 					</div>
 				</div>
 				
-
-
 			</Layout>
 }
 
 export default Review
-
-

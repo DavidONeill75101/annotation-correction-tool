@@ -1,21 +1,20 @@
-
-
 import React, { Component } from 'react';
 import Link from 'next/link'
 import Layout from '../components/Layout.js'
 import Button from 'react-bootstrap/Button'
 
+
 export default class annotation_review extends Component {
 
 	constructor(props) {
 		super(props)
-
 	}
 
 	render() {
 
 		return (
 			<Layout title="Home" page="/" >
+
 				<div className="d-sm-flex align-items-center justify-content-between mb-4 titlepadding">
 					<h1 className="h3 mb-0 text-gray-800">CIViCMine Annotation Review</h1>
 				</div>
@@ -31,8 +30,7 @@ export default class annotation_review extends Component {
 						</Link>
 					</div>					
 				</div>		
-
-				
+								
 			</Layout>
 		)
 	}

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-
 import Layout from '../components/Layout.js'
 import Table from 'react-bootstrap/Table'
 
@@ -11,7 +10,6 @@ export default class AnnotationGuide extends Component {
 	}
 	
 	render() {
-		
 		
 		return (
 			<Layout title="Annotation Guide" page="/annotation_guide" >
