@@ -8,7 +8,7 @@ export default async function handle(req, res) {
 	
 	var sentences = await prisma.sentence.update({
 		where: params,
-        data: {downvotes: {increment:1}}
+        data: {upvotes: {decrement:1}}
 	})
 
 	res.json(sentences)

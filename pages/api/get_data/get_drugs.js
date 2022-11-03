@@ -18,5 +18,4 @@ export default async function handle(req, res) {
     })
 
 	res.json(drug_list.sort(Intl.Collator().compare))
-	
 }

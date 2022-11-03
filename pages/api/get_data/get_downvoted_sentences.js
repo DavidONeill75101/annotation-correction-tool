@@ -10,7 +10,7 @@ export default async function handle(req, res) {
 	const start = parseInt(req.query.start)
 	const end = parseInt(req.query.end)
 
-    var params = {}
+    var params = {'downvotes':{'gt':0}}
 
 	if (gene){
 		params['gene'] = gene
@@ -54,15 +54,11 @@ export default async function handle(req, res) {
             year:true,
 		},
         where: params,
+		skip: start,
+		take: 9,
 	})
 
-    var downvoted_sentences = []
-
 	sentences.forEach(function(item, index){
-        if (parseInt(item['downvotes']) > 0){
-            downvoted_sentences.push(item)
-        }
-
         if (item['subsection']=='None'){
             item['subsection'] = 'No subsection'
         }
@@ -76,7 +72,5 @@ export default async function handle(req, res) {
 		}
     })
 	
-	res.json(downvoted_sentences.slice(start,end))
-
-	
+	res.json(sentences)
 }

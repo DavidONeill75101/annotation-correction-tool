@@ -17,8 +17,5 @@ export default async function handle(req, res) {
         }
     })
 
-
 	res.json(gene_list.sort(Intl.Collator().compare))
-
-	
 }

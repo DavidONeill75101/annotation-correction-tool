@@ -94,8 +94,47 @@ export default class ReviewEditor extends Component {
 			next_link = <Link href={"/review/" + this.props.matchingId + '/' + next_start + '-' + next_end + '/' + this.props.citations}><a><Button size="md">Next</Button></a></Link>			
 		}
 
-		const upvote = (event, id) => {
+		const upvote = (event, id, users_upvoted) => {
+			var users_voted_list = users_upvoted.split(',')	
 			
+			if (users_voted_list.includes(this.props.user)){
+				axios.get('/api/update_data/remove_upvote?id='+id)
+				.then(function (response) {
+					const res = response.data
+					
+				})
+				.catch(function (error) {
+					console.log(error);
+				})
+				.then(function () {
+					// always executed
+				});
+
+				var index = users_voted_list.indexOf(this.props.user);
+				if (index !== -1) {
+				users_voted_list.splice(index, 1);
+				}
+				
+				const new_users_voted = users_voted_list.join(',')
+
+				const fetchURL = '/api/update_data/update_users_upvoted?id='+id+'&usernames='+new_users_voted
+
+				axios.get(fetchURL)
+				.then(function (response) {
+					const res = response.data
+					
+				})
+				.catch(function (error) {
+					console.log(error);
+				})
+				.then(function () {
+					// always executed
+				});
+
+				window.location.reload(false)
+
+
+			}else{
 			axios.get('/api/update_data/upvote?id='+id)
 			.then(function (response) {
 				const res = response.data
@@ -107,11 +146,31 @@ export default class ReviewEditor extends Component {
 			.then(function () {
 				// always executed
 			});
+			
+			const new_users_voted = this.props.user + ',' + users_upvoted
+
+			const fetchURL = '/api/update_data/update_users_upvoted?id='+id+'&usernames='+new_users_voted
+
+			axios.get(fetchURL)
+			.then(function (response) {
+				const res = response.data
+				
+			})
+			.catch(function (error) {
+				console.log(error);
+			})
+			.then(function () {
+				// always executed
+			});
+
 			window.location.reload(false)
+
+			}
+			
 		}
 
 		const downvote = (event, id, users_downvoted) => {
-			console.log()
+			
 			var users_voted_list = users_downvoted.split(',')	
 			
 			if (users_voted_list.includes(this.props.user)){
@@ -214,9 +273,10 @@ export default class ReviewEditor extends Component {
 		<td>{s.section}</td><td>{s.subsection}</td>
 		<td>{s.sentence}</td>
 		
-		{/*<td><Button size="sm" variant="success" onClick={event => upvote(event, s.id)}>
+		<td><Button size="sm" variant="success" onClick={event => upvote(event, s.id, s.users_upvoted)}>
 			<FontAwesomeIcon icon={faThumbsUp} />
-		</Button><center>{s.upvotes}</center></td>*/}
+		</Button><center>{s.upvotes}</center></td>
+
 		<td><Button size="sm" onClick={event => downvote(event, s.id, s.users_downvoted)}>
 			<FontAwesomeIcon icon={faThumbsDown} />
 		</Button><center>{s.downvotes}</center></td></tr>)

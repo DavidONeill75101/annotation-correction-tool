@@ -2,18 +2,9 @@ import React, { Component } from 'react';
 import Link from 'next/link'
 import axios from 'axios';
 import Button from 'react-bootstrap/Button';
-import { Col, Container, Row } from 'react-bootstrap';
-
-
-
 import Table from 'react-bootstrap/Table'
 
-import Layout from '../components/Layout.js'
-
-
 export default class Relations extends Component {
-
-
 	constructor(props) {
 		super(props)
 		this.state = {
@@ -26,23 +17,14 @@ export default class Relations extends Component {
 			cancer: this.props.cancer,
 			drug: this.props.drug,
 			variant: this.props.variant,
-
-		}
-		
+		}		
 		this.refreshCollated = this.refreshCollated.bind(this);
-
 	}
 
 	refreshCollated() {
-
-
 		var self = this
-
 		var fetchURL = '/api/get_data/get_relations'
-
 		var params = {start:self.state.start, end:self.state.end}
-
-		
 
 		if(this.state.gene!=" "){
 			params['gene'] = this.state.gene
