@@ -85,8 +85,9 @@ export default class ReviewEditor extends Component {
 			next_link = <Link href={"/review/" + this.props.matchingId + '/' + next_start + '-' + next_end + '/' + this.props.citations}><a><Button size="md">Next</Button></a></Link>			
 		}
 
-		const upvote = (event, id, users_upvoted) => {
+		const upvote = (event, id, users_upvoted, users_downvoted) => {
 			var users_voted_list = users_upvoted.split(',')	
+			var users_downvoted_list = users_downvoted.split(',')
 			
 			if (users_voted_list.includes(this.props.user)){
 				axios.get('/api/update_data/remove_upvote?id='+id)
@@ -124,42 +125,45 @@ export default class ReviewEditor extends Component {
 				window.location.reload(false)
 
 			}else{
-
-				axios.get('/api/update_data/upvote?id='+id)
-				.then(function (response) {
-					const res = response.data
-				})
-				.catch(function (error) {
-					console.log(error);
-				})
-				.then(function () {
-					// always executed
-				});
-				
-				const new_users_voted = this.props.user + ',' + users_upvoted
-
-				const fetchURL = '/api/update_data/update_users_upvoted?id='+id+'&usernames='+new_users_voted
-
-				axios.get(fetchURL)
-				.then(function (response) {
-					const res = response.data
+				if (!users_downvoted_list.includes(this.props.user)){
+						axios.get('/api/update_data/upvote?id='+id)
+					.then(function (response) {
+						const res = response.data
+					})
+					.catch(function (error) {
+						console.log(error);
+					})
+					.then(function () {
+						// always executed
+					});
 					
-				})
-				.catch(function (error) {
-					console.log(error);
-				})
-				.then(function () {
-					// always executed
-				});
+					const new_users_voted = this.props.user + ',' + users_upvoted
 
-				window.location.reload(false)
+					const fetchURL = '/api/update_data/update_users_upvoted?id='+id+'&usernames='+new_users_voted
+
+					axios.get(fetchURL)
+					.then(function (response) {
+						const res = response.data
+						
+					})
+					.catch(function (error) {
+						console.log(error);
+					})
+					.then(function () {
+						// always executed
+					});
+
+					window.location.reload(false)
+				}
+				
 			}
 		}
 
 
-		const downvote = (event, id, users_downvoted) => {
+		const downvote = (event, id, users_downvoted, users_upvoted) => {
 			
 			var users_voted_list = users_downvoted.split(',')	
+			var users_upvoted_list = users_upvoted.split(',')
 			
 			if (users_voted_list.includes(this.props.user)){
 				axios.get('/api/update_data/remove_downvote?id='+id)
@@ -196,33 +200,37 @@ export default class ReviewEditor extends Component {
 				window.location.reload(false)
 
 			}else{
-				axios.get('/api/update_data/downvote?id='+id)
-				.then(function (response) {
-					const res = response.data
-				})
-				.catch(function (error) {
-					console.log(error);
-				})
-				.then(function () {
-					// always executed
-				});
+				if (!users_upvoted_list.includes(this.props.user)){
+					axios.get('/api/update_data/downvote?id='+id)
+					.then(function (response) {
+						const res = response.data
+					})
+					.catch(function (error) {
+						console.log(error);
+					})
+					.then(function () {
+						// always executed
+					});
+					
+					const new_users_voted = this.props.user + ',' + users_downvoted
+	
+					const fetchURL = '/api/update_data/update_users_downvoted?id='+id+'&usernames='+new_users_voted
+	
+					axios.get(fetchURL)
+					.then(function (response) {
+						const res = response.data
+					})
+					.catch(function (error) {
+						console.log(error);
+					})
+					.then(function () {
+						// always executed
+					});
+	
+					
+					window.location.reload(false)
+				}
 				
-				const new_users_voted = this.props.user + ',' + users_downvoted
-
-				const fetchURL = '/api/update_data/update_users_downvoted?id='+id+'&usernames='+new_users_voted
-
-				axios.get(fetchURL)
-				.then(function (response) {
-					const res = response.data
-				})
-				.catch(function (error) {
-					console.log(error);
-				})
-				.then(function () {
-					// always executed
-				});
-
-				window.location.reload(false)
 
 			}
 		}
@@ -256,11 +264,11 @@ export default class ReviewEditor extends Component {
 			<td>{s.section}</td><td>{s.subsection}</td>
 			<td>{parse(s.formatted)}</td>
 			
-			<td><Button size="sm" variant="success" onClick={event => upvote(event, s.id, s.users_upvoted)}>
+			<td><Button size="sm" variant="success" onClick={event => upvote(event, s.id, s.users_upvoted, s.users_downvoted)}>
 				<FontAwesomeIcon icon={faThumbsUp} />
 			</Button><center>{s.upvotes}</center></td>
 
-			<td><Button size="sm" onClick={event => downvote(event, s.id, s.users_downvoted)}>
+			<td><Button size="sm" onClick={event => downvote(event, s.id, s.users_downvoted, s.users_upvoted)}>
 				<FontAwesomeIcon icon={faThumbsDown} />
 			</Button><center>{s.downvotes}</center></td></tr>)
 
@@ -288,16 +296,17 @@ export default class ReviewEditor extends Component {
 						<div>
 							{ relation_contents }
 						</div>
-						<div>
+						
+						<div className="scrollableComponent mt-5">
 							{contents}
 						</div>
 						
 						<div>
-							<div className='float-left'>
+							<div className='float-left mt-3'>
 								{prev_link}
 							</div>
 
-							<div className="float-right">
+							<div className="float-right mt-3">
 								{next_link}
 							</div>
 						</div>

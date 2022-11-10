@@ -102,13 +102,10 @@ export default class SentenceEditor extends Component {
 		
 		return (
 				<div> 
-						<SelectionHighlighter
-							text={this.state.formatted_txt}
-
-							selectionHandler={this.selectionHandler}
-        
-      					/>		
 					
+							{this.state.txt}
+
+							
 				</div>
 		)
 	}

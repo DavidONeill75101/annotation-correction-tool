@@ -10,9 +10,12 @@
   border: 0 !important;
 }
 
-.highlighted-text {
-	background-color: #fdbaba
-  }
+.scrollableComponent {
+	max-height: 40vh;
+  	overflow-y: auto;
+	
+}
+
 
 .flagtime {
 	color: #AAAAAA

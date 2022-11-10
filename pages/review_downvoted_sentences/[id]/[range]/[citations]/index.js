@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import { useUser } from "@auth0/nextjs-auth0";
 import DownvotedSentences from '../../../../../components/DownvotedSentences.js'
 import Layout from '../../../../../components/Layout.js'
+import Button from 'react-bootstrap/Button';
 
 
 const ReviewDownvotedSentences = () => {
@@ -32,6 +33,7 @@ const ReviewDownvotedSentences = () => {
 		
 				<div className="d-sm-flex align-items-center justify-content-between mb-4 titlepadding">
 					<h1 className="h3 mb-0 text-gray-800">Review Sentences</h1>
+					<Button onClick={() => router.back()}>Back to Relations</Button>
 				</div>
 
 				<div className="card shadow mb-4">

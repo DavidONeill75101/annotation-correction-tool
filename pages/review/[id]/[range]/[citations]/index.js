@@ -3,12 +3,15 @@ import { useRouter } from 'next/router'
 import { useUser } from "@auth0/nextjs-auth0";
 import ReviewEditor from '../../../../../components/ReviewEditor.js'
 import Layout from '../../../../../components/Layout.js'
+import Button from 'react-bootstrap/Button';
+
 
 
 const Review = () => {
 
 	const { user, error, isLoading } = useUser();
 	const router = useRouter()
+	
 	const matchingId = router.query.id
 	const range = router.query.range
 
@@ -30,9 +33,10 @@ const Review = () => {
 	return <Layout title="Review" page="/review" >
 						
 				<div className="d-sm-flex align-items-center justify-content-between mb-4 titlepadding">
-					<h1 className="h3 mb-0 text-gray-800">Review Sentences</h1>
+					<h1 className="h3 mb-0 text-gray-800">Review Sentence Annotations</h1>
+					<Button onClick={() => router.back()}>Back to Relations</Button>
 				</div>
-				
+		
 				<div className="card shadow mb-4">
 					<div className="card-body">
 						{editor}
