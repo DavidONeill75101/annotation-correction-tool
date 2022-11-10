@@ -5,6 +5,7 @@ import Button from 'react-bootstrap/Button';
 import { Col, Container, Row } from 'react-bootstrap';
 import Table from 'react-bootstrap/Table'
 import Layout from '../components/Layout.js'
+import SenEditor from './SenEditor.js';
 
 
 export default class DownvotedSentences extends Component {
@@ -21,10 +22,9 @@ export default class DownvotedSentences extends Component {
 	
 
 	refreshSentences(){
-
 		var self = this
 
-		axios.get('/api/get_data/get_sentences?start=' + this.props.start + '&end=' + this.props.end + '&matching_id='+this.props.matchingId)
+		axios.get('/api/get_data/get_downvoted_sentences?start=' + this.props.start + '&end=' + this.props.end + '&matching_id='+this.props.matching_id)
 			.then(function (response) {
 				const sentences = response.data
 				self.setState( {
@@ -39,7 +39,7 @@ export default class DownvotedSentences extends Component {
 				// always executed
 			});
 		
-		axios.get('/api/get_data/get_relations?matching_id='+this.props.matchingId + '&start=0&end=1')
+		axios.get('/api/get_data/get_relations?matching_id='+this.props.matching_id + '&start=0&end=1')
 		.then(function (response) {
 			const relation = response.data
 			self.setState( {
@@ -57,6 +57,7 @@ export default class DownvotedSentences extends Component {
 
 	
 	componentDidMount() {
+		
 		this.refreshSentences()
 	}
 	
@@ -73,157 +74,14 @@ export default class DownvotedSentences extends Component {
 		var next_end = parseInt(this.props.end) + 10
 
 		if (prev_start>=0){
-			prev_link = <Link href={"/review/" + this.props.matchingId + '/'+ prev_start + '-' + prev_end + '/' + this.props.citations}><a><Button size="md">Previous</Button></a></Link>
+			prev_link = <Link href={"/review_downvoted_sentences/" + this.props.matching_id + '/'+ prev_start + '-' + prev_end + '/' + this.props.citations}><a><Button size="md">Previous</Button></a></Link>
 		}
 		
-		if (next_start < this.props.citations){
-			next_link = <Link href={"/review/" + this.props.matchingId + '/' + next_start + '-' + next_end + '/' + this.props.citations}><a><Button size="md">Next</Button></a></Link>			
-		}
-
-		const upvote = (event, id, users_upvoted) => {
-			var users_voted_list = users_upvoted.split(',')	
-			
-			if (users_voted_list.includes(this.props.user)){
-				axios.get('/api/update_data/remove_upvote?id='+id)
-				.then(function (response) {
-					const res = response.data
-				})
-				.catch(function (error) {
-					console.log(error);
-				})
-				.then(function () {
-					// always executed
-				});
-
-				var index = users_voted_list.indexOf(this.props.user);
-				if (index !== -1) {
-				users_voted_list.splice(index, 1);
-				}
-				
-				const new_users_voted = users_voted_list.join(',')
-
-				const fetchURL = '/api/update_data/update_users_upvoted?id='+id+'&usernames='+new_users_voted
-
-				axios.get(fetchURL)
-				.then(function (response) {
-					const res = response.data
-					
-				})
-				.catch(function (error) {
-					console.log(error);
-				})
-				.then(function () {
-					// always executed
-				});
-
-				window.location.reload(false)
-
-			}else{
-
-				axios.get('/api/update_data/upvote?id='+id)
-				.then(function (response) {
-					const res = response.data
-				})
-				.catch(function (error) {
-					console.log(error);
-				})
-				.then(function () {
-					// always executed
-				});
-				
-				const new_users_voted = this.props.user + ',' + users_upvoted
-
-				const fetchURL = '/api/update_data/update_users_upvoted?id='+id+'&usernames='+new_users_voted
-
-				axios.get(fetchURL)
-				.then(function (response) {
-					const res = response.data
-					
-				})
-				.catch(function (error) {
-					console.log(error);
-				})
-				.then(function () {
-					// always executed
-				});
-
-				window.location.reload(false)
-			}
-		}
-
-
-		const downvote = (event, id, users_downvoted) => {
-			
-			var users_voted_list = users_downvoted.split(',')	
-			
-			if (users_voted_list.includes(this.props.user)){
-				axios.get('/api/update_data/remove_downvote?id='+id)
-				.then(function (response) {
-					const res = response.data	
-				})
-				.catch(function (error) {
-					console.log(error);
-				})
-				.then(function () {
-					// always executed
-				});
-
-				var index = users_voted_list.indexOf(this.props.user);
-				if (index !== -1) {
-				users_voted_list.splice(index, 1);
-				}
-				
-				const new_users_voted = users_voted_list.join(',')
-
-				const fetchURL = '/api/update_data/update_users_downvoted?id='+id+'&usernames='+new_users_voted
-
-				axios.get(fetchURL)
-				.then(function (response) {
-					const res = response.data
-				})
-				.catch(function (error) {
-					console.log(error);
-				})
-				.then(function () {
-					// always executed
-				});
-
-				window.location.reload(false)
-
-			}else{
-				axios.get('/api/update_data/downvote?id='+id)
-				.then(function (response) {
-					const res = response.data
-				})
-				.catch(function (error) {
-					console.log(error);
-				})
-				.then(function () {
-					// always executed
-				});
-				
-				const new_users_voted = this.props.user + ',' + users_downvoted
-
-				const fetchURL = '/api/update_data/update_users_downvoted?id='+id+'&usernames='+new_users_voted
-
-				axios.get(fetchURL)
-				.then(function (response) {
-					const res = response.data
-				})
-				.catch(function (error) {
-					console.log(error);
-				})
-				.then(function () {
-					// always executed
-				});
-
-				window.location.reload(false)
-
-			}
+		if (this.state.sentences.length==9){
+			next_link = <Link href={"/review_downvoted_sentences/" + this.props.matching_id + '/' + next_start + '-' + next_end + '/' + this.props.citations}><a><Button size="md">Next</Button></a></Link>			
 		}
 
 		var relation_contents = ''
-
 		if (this.state.relation_loaded) {
 			const relation_rows = this.state.relation.map(c => <tr key={c.matching_id}><td>{c.evidencetype}</td><td>{c.gene}</td><td>{c.cancer}</td><td>{c.drug}</td><td>{c.variant_group}</td><td>{c.citation_count}</td></tr>)
 			relation_contents = <Table striped bordered hover>
@@ -250,14 +108,10 @@ export default class DownvotedSentences extends Component {
 			<td>{s.journal}</td><td>{s.year}</td>
 			<td>{s.section}</td><td>{s.subsection}</td>
 			<td>{s.sentence}</td>
+			<td><Link href={"/manual_annotation/" + s.id + '/'}><a><Button size="md">Annotate</Button></a></Link></td>
 			
-			<td><Button size="sm" variant="success" onClick={event => upvote(event, s.id, s.users_upvoted)}>
-				<FontAwesomeIcon icon={faThumbsUp} />
-			</Button><center>{s.upvotes}</center></td>
-
-			<td><Button size="sm" onClick={event => downvote(event, s.id, s.users_downvoted)}>
-				<FontAwesomeIcon icon={faThumbsDown} />
-			</Button><center>{s.downvotes}</center></td></tr>)
+			
+			</tr>)
 
 			contents = <Table striped bordered hover>
 				<thead>

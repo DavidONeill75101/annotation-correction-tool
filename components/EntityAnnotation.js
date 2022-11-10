@@ -54,7 +54,7 @@ export default class EntityAnnotation extends Component {
 	
 	getEntityTypes() {
 		var self = this
-		axios.get('/api/entitytype_list')
+		axios.get('/api/get_data/get_entity_types')
 		.then(function (response) {
 			self.setState( {
 				entityTypes: response.data
@@ -93,7 +93,7 @@ export default class EntityAnnotation extends Component {
 			
 			
 			
-			/*const acceptClick = evt => {
+			const acceptClick = evt => {
 				const selectedEntityIdForDb = this.state.selectedEntityId == -1 ? this.state.selectedUnlinkedId : this.state.selectedEntityId
 				
 				if (this.state.editing) {
@@ -102,9 +102,8 @@ export default class EntityAnnotation extends Component {
 				} else {
 					this.props.accept(selectedEntityIdForDb)
 				}
-			}*/
+			}
 			
-			/*
 			const acceptButton = <div style={{textAlign:"right", paddingLeft:"3px"}}>
 						<Button size="sm" variant="success" onClick={acceptClick} >
 							<FontAwesomeIcon icon={faCheck} />
@@ -117,8 +116,8 @@ export default class EntityAnnotation extends Component {
 				} else {
 					this.props.reject(evt)
 				}
-			}*/
-			/*	
+			}
+					
 			const rejectButton = <div style={{textAlign:"right", paddingLeft:"3px"}}>
 							<Button size="sm" variant="secondary" onClick={rejectClick}>
 								<FontAwesomeIcon icon={faXmark} />
@@ -131,13 +130,12 @@ export default class EntityAnnotation extends Component {
 				const searchQuery = evt.target.value
 				this.search(searchQuery)
 				this.setState({searchQuery:searchQuery})
-			}*/
-			/*
+			}
+			
 			const searchBar = <Form.Control type="text" placeholder="Enter search query" size="sm" value={this.state.searchQuery} onChange={updateSearchQuery} />
 			
 			title = searchBar
-			*/
-			/*
+			
 			var entityTypeListGroup = ''
 			if (this.state.entityTypes) {
 				const entityTypeOptions = this.state.entityTypes.map( et => <option key={et.id} value={et.unlinkedEntityId}>{et.name}</option> )
@@ -159,9 +157,9 @@ export default class EntityAnnotation extends Component {
 								{entityTypeSelect}
 							</div>
 						</ListGroup.Item>
-			}*/
+			}
 			
-			/*
+			
 			var entityOptions = ''
 			if (this.state.searchResults) {
 				entityOptions = this.state.searchResults.map( s => 
@@ -179,16 +177,15 @@ export default class EntityAnnotation extends Component {
 								</div>
 							</div>
 						</ListGroup.Item> )
-			}*/
-			/*
+			}
+			
 			mainText = <>{entityOptions}{entityTypeListGroup}</>
-			*/
+			
 		} else {
 			
 			
 			const isAutomated = this.props.attribs.userIsBot
 			var approveButton = ''
-			/*
 			if (isAutomated) {
 				const acceptClick = evt => {
 					this.props.edit(this.props.attribs.entityAnnotationId, this.props.attribs.entityId)
@@ -227,8 +224,7 @@ export default class EntityAnnotation extends Component {
 		
 			
 			buttons = <>{approveButton}{addRelationButton}{editButton}{deleteButton}</>
-			*/
-			/*
+			
 			title = <Link href={"/entity/"+this.props.attribs['entityId']}><a style={{color:"#666666"}}>{this.props.attribs['name']}</a></Link>
 			
 			const automatedText = isAutomated ? <div style={{fontWeight:"bold", textDecoration: "underline", fontSize: "x-small"}}>
@@ -245,12 +241,25 @@ export default class EntityAnnotation extends Component {
 					Type: {this.props.attribs.type} {externalIdText}
 				</div>
 				{automatedText}
-			</>*/
+			</>
 		}
 		
-		
 		const popoverContents = <>
-			
+			<Popover.Header as="h3">
+				<div style={{display:"flex", flexDirection: 'row', alignItems: "center" }}>
+					<div style={{flexGrow:1}}>
+						{title}
+					</div>
+					<div style={{width:"10px"}}></div>
+					{buttons}
+					
+				</div>
+			</Popover.Header>
+			<Popover.Body>
+				<div style={{maxHeight:"200px", overflowY:"auto" }}>
+					{mainText}
+				</div>
+			</Popover.Body>
 		</>
 		
 		const formattedChildren = <b>{this.props.children}</b>

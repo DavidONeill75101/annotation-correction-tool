@@ -2,6 +2,7 @@ import prisma from '../../../lib/prisma'
 
 export default async function handle(req, res) {
 
+	const matching_id = req.query.matching_id
     const gene = req.query.gene
 	const cancer = req.query.cancer
 	const drug = req.query.drug
@@ -11,6 +12,11 @@ export default async function handle(req, res) {
 	const end = parseInt(req.query.end)
 
     var params = {'downvotes':{'gt':0}}
+
+	if (matching_id){
+		params['matching_id'] = matching_id
+	}
+
 
 	if (gene){
 		params['gene'] = gene

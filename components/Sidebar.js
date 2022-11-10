@@ -178,7 +178,7 @@ export default class Sidebar extends Component {
 				</MyToolTip>
 			</div>
 
-			<div className="tour-categories my-0">	
+			{/*<div className="tour-categories my-0">	
 				<hr className="sidebar-divider my-0" />		
 					<hr className="sidebar-divider my-0" />
 				<MyToolTip text="Manually annotate sentences which have been flagged as incorrect" container={this.container}>
@@ -193,7 +193,7 @@ export default class Sidebar extends Component {
 						</Link>
 					</li>
 				</MyToolTip>
-			</div>
+		</div>*/}
 
 			<div className="tour-categories my-0">	
 				<hr className="sidebar-divider my-0" />		

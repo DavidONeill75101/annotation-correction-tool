@@ -47,3 +47,34 @@ model Sentence {
   users_downvoted   String
 }
 
+model EntityAnnotation {
+  id                Int                 @id @default(autoincrement())
+  sentence_id       Int
+  relation_id       Int
+  entity_type       String
+  start             Int
+  end               Int
+}
+
+model RelationAnnotation {
+  id                Int                 @id @default(autoincrement())
+  sentence_id       Int
+  relation_type_id  Int
+  variant_group     String
+  entity_one_id     Int
+  entity_two_id     Int
+  entity_three_id   Int
+}
+
+
+model EntityType {
+  id               Int      @id @default(autoincrement())
+  name             String
+}
+
+
+model RelationType {
+  id                  Int                  @id @default(autoincrement())
+  name                String
+  description         String
+}

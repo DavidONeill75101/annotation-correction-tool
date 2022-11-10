@@ -80,7 +80,17 @@ export default class Relations extends Component {
 		var next_link = ''
 		
 		if (this.state.loaded) {
-			const rows = this.state.collated.map(c => <tr key={c.matching_id}><td>{c.evidencetype}</td><td>{c.gene}</td><td>{c.cancer}</td><td>{c.drug}</td><td>{c.variant_group}</td><td>{c.citation_count}</td><td><Link href={"/review/"+c.matching_id+'/0-9/'+c.citation_count}><a><Button size="sm">Review Sentences</Button></a></Link></td></tr>)
+			const rows = this.state.collated.map(c => <tr key={c.matching_id}>
+													<td>{c.evidencetype}</td>
+													<td>{c.gene}</td><td>{c.cancer}</td>
+													<td>{c.drug}</td><td>{c.variant_group}</td>
+													<td>{c.citation_count}</td>
+													<td><Link href={"/review/"+c.matching_id+'/0-9/'+c.citation_count}>
+															<a><Button size="sm">Review Sentences</Button></a>
+														</Link></td>
+													<td><Link href={'/review_downvoted_sentences/' + c.matching_id + '/0-9/' + c.citation_count}>
+														<a><Button size="sm">Annotate Sentences</Button></a>
+														</Link></td></tr>)
 
 			contents = <Table striped bordered hover>
 				<thead>
