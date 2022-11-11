@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import SelectionHighlighter from 'react-highlight-selection';
-import ReactDOM from "react-dom";
 import axios from 'axios';
-import parse from 'html-react-parser'
+import {TokenAnnotator, TextAnnotator} from 'react-text-annotate'
+
 
 
 
@@ -16,15 +15,11 @@ export default class SentenceEditor extends Component {
 			
 			}
 				
-		this.selectionHandler = this.selectionHandler.bind(this);
 		this.refreshEntityAnnotations = this.refreshEntityAnnotations.bind(this);
 		this.refreshSentenceFromDB = this.refreshSentenceFromDB.bind(this);
 	}
 
-	selectionHandler(selection){
-		//pass
-	}
-
+	
 
 
 	refreshEntityAnnotations(){
@@ -103,9 +98,8 @@ export default class SentenceEditor extends Component {
 		return (
 				<div> 
 					
-							{this.state.txt}
+					{this.state.txt}		 
 
-							
 				</div>
 		)
 	}

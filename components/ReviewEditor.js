@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck, faXmark, faPencil, faLink, faSkullCrossbones, faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
 import parse from 'html-react-parser'
+import VotingButtons from './VotingButtons';
 
 const validHTMLTags = ["a", "abbr", "acronym", "address", "applet", "area", "article", "aside", "audio", "b", "base", "basefont", "bdi", "bdo", "big", "blockquote", "body", "br", "button", "canvas", "caption", "center", "cite", "code", "col", "colgroup", "data", "datalist", "dd", "del", "details", "dfn", "dialog", "dir", "div", "dl", "dt", "em", "embed", "fieldset", "figcaption", "figure", "font", "footer", "form", "frame", "frameset", "h1", "h2", "h3", "h4", "h5", "h6", "head", "header", "hr", "html", "i", "iframe", "img", "input", "ins", "kbd", "label", "legend", "li", "link", "main", "map", "mark", "meta", "meter", "nav", "noframes", "noscript", "object", "ol", "optgroup", "option", "output", "p", "param", "picture", "pre", "progress", "q", "rp", "rt", "ruby", "s", "samp", "script", "section", "select", "small", "source", "span", "strike", "strong", "style", "sub", "summary", "sup", "svg", "table", "tbody", "td", "template", "textarea", "tfoot", "th", "thead", "time", "title", "tr", "track", "tt", "u", "ul", "var", "video", "wbr"];
 
@@ -85,156 +86,6 @@ export default class ReviewEditor extends Component {
 			next_link = <Link href={"/review/" + this.props.matchingId + '/' + next_start + '-' + next_end + '/' + this.props.citations}><a><Button size="md">Next</Button></a></Link>			
 		}
 
-		const upvote = (event, id, users_upvoted, users_downvoted) => {
-			var users_voted_list = users_upvoted.split(',')	
-			var users_downvoted_list = users_downvoted.split(',')
-			
-			if (users_voted_list.includes(this.props.user)){
-				axios.get('/api/update_data/remove_upvote?id='+id)
-				.then(function (response) {
-					const res = response.data
-				})
-				.catch(function (error) {
-					console.log(error);
-				})
-				.then(function () {
-					// always executed
-				});
-
-				var index = users_voted_list.indexOf(this.props.user);
-				if (index !== -1) {
-				users_voted_list.splice(index, 1);
-				}
-				
-				const new_users_voted = users_voted_list.join(',')
-
-				const fetchURL = '/api/update_data/update_users_upvoted?id='+id+'&usernames='+new_users_voted
-
-				axios.get(fetchURL)
-				.then(function (response) {
-					const res = response.data
-					
-				})
-				.catch(function (error) {
-					console.log(error);
-				})
-				.then(function () {
-					// always executed
-				});
-
-				window.location.reload(false)
-
-			}else{
-				if (!users_downvoted_list.includes(this.props.user)){
-						axios.get('/api/update_data/upvote?id='+id)
-					.then(function (response) {
-						const res = response.data
-					})
-					.catch(function (error) {
-						console.log(error);
-					})
-					.then(function () {
-						// always executed
-					});
-					
-					const new_users_voted = this.props.user + ',' + users_upvoted
-
-					const fetchURL = '/api/update_data/update_users_upvoted?id='+id+'&usernames='+new_users_voted
-
-					axios.get(fetchURL)
-					.then(function (response) {
-						const res = response.data
-						
-					})
-					.catch(function (error) {
-						console.log(error);
-					})
-					.then(function () {
-						// always executed
-					});
-
-					window.location.reload(false)
-				}
-				
-			}
-		}
-
-
-		const downvote = (event, id, users_downvoted, users_upvoted) => {
-			
-			var users_voted_list = users_downvoted.split(',')	
-			var users_upvoted_list = users_upvoted.split(',')
-			
-			if (users_voted_list.includes(this.props.user)){
-				axios.get('/api/update_data/remove_downvote?id='+id)
-				.then(function (response) {
-					const res = response.data	
-				})
-				.catch(function (error) {
-					console.log(error);
-				})
-				.then(function () {
-					// always executed
-				});
-
-				var index = users_voted_list.indexOf(this.props.user);
-				if (index !== -1) {
-				users_voted_list.splice(index, 1);
-				}
-				
-				const new_users_voted = users_voted_list.join(',')
-
-				const fetchURL = '/api/update_data/update_users_downvoted?id='+id+'&usernames='+new_users_voted
-
-				axios.get(fetchURL)
-				.then(function (response) {
-					const res = response.data
-				})
-				.catch(function (error) {
-					console.log(error);
-				})
-				.then(function () {
-					// always executed
-				});
-
-				window.location.reload(false)
-
-			}else{
-				if (!users_upvoted_list.includes(this.props.user)){
-					axios.get('/api/update_data/downvote?id='+id)
-					.then(function (response) {
-						const res = response.data
-					})
-					.catch(function (error) {
-						console.log(error);
-					})
-					.then(function () {
-						// always executed
-					});
-					
-					const new_users_voted = this.props.user + ',' + users_downvoted
-	
-					const fetchURL = '/api/update_data/update_users_downvoted?id='+id+'&usernames='+new_users_voted
-	
-					axios.get(fetchURL)
-					.then(function (response) {
-						const res = response.data
-					})
-					.catch(function (error) {
-						console.log(error);
-					})
-					.then(function () {
-						// always executed
-					});
-	
-					
-					window.location.reload(false)
-				}
-				
-
-			}
-		}
-
 		var relation_contents = ''
 
 		if (this.state.relation_loaded) {
@@ -262,15 +113,10 @@ export default class ReviewEditor extends Component {
 			const rows = this.state.sentences.map(s => <tr key={s.id}><td>{s.pmid}</td>
 			<td>{s.journal}</td><td>{s.year}</td>
 			<td>{s.section}</td><td>{s.subsection}</td>
-			<td>{parse(s.formatted)}</td>
-			
-			<td><Button size="sm" variant="success" onClick={event => upvote(event, s.id, s.users_upvoted, s.users_downvoted)}>
-				<FontAwesomeIcon icon={faThumbsUp} />
-			</Button><center>{s.upvotes}</center></td>
+			<td>{parse(s.formatted)}</td>			
+			<td><VotingButtons id={s.id} users_upvoted={s.users_upvoted} users_downvoted={s.users_downvoted} user={this.props.user}></VotingButtons></td></tr>)
 
-			<td><Button size="sm" onClick={event => downvote(event, s.id, s.users_downvoted, s.users_upvoted)}>
-				<FontAwesomeIcon icon={faThumbsDown} />
-			</Button><center>{s.downvotes}</center></td></tr>)
+			
 
 			contents = <Table striped bordered hover>
 				<thead>
