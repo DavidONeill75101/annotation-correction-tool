@@ -1,104 +1,80 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import {TokenAnnotator, TextAnnotator} from 'react-text-annotate'
+import NLPAnnotator from "react-nlp-annotate";
 
 
+const entity_labels = [
+	{
+	  id: 'Gene',
+	  displayName: "Gene",
+	  description: "Definition of a gene"
+	},
+	{
+	  id: "Cancer",
+	  displayName: "Cancer",
+	  description: "Definition of a cancer"
+	},
+	{
+	   id: "Drug",
+	   displayName: "Drug",
+	   description: "Definition of a drug"
+	}
+  ];
 
 
+  const relation_labels = [
+	{
+	  id: 'Diagnostic',
+	  displayName: "Diagnostic",
+	  description: "Definition of diagnostic"
+	},
+	{
+	  id: "Predisposing",
+	  displayName: "Predisposing",
+	  description: "Definition of predisposing"
+	},
+	{
+		id: "Predictive",
+		displayName: "Predictive",
+		description: "Definition of predictive"
+	},
+	{
+		id: "Prognostic",
+		displayName: "Prognostic",
+		description: "Definition of prognostic"
+	 },
+  ];
 
 
 export default class SentenceEditor extends Component {
 
 	constructor(props) {
 		super(props)
-		this.state = {
-			
-			}
-				
-		this.refreshEntityAnnotations = this.refreshEntityAnnotations.bind(this);
-		this.refreshSentenceFromDB = this.refreshSentenceFromDB.bind(this);
-	}
-
-	
-
-
-	refreshEntityAnnotations(){
-		var self = this
-		const fetchURL = '/api/get_data/get_entity_annotations'
-		var params = {sentence_id:this.props.sentence_id}
-
-		axios.get(fetchURL, {
-			params: params
-		})
-		.then(function (response) {
-				const entity_annotations = response.data
-				self.setState({
-					entity_annotations: entity_annotations,
-					
-				})
-
-				
-			})
-			.catch(function (error) {
-				console.log(error);
-			})
-			.then(function () {
-				// always executed
-				
-				
-			});
-
-	}
-
-	refreshSentenceFromDB() {
-		var self = this
 		
-		var fetchURL = '/api/get_data/get_sentence'
-		var params = {sentence_id: this.props.sentence_id}
-		
-		
-		axios.get(fetchURL, {
-			params: params
-		})
-		.then(function (response) {
-			const sentence = response.data
-			
-			self.setState( {
-				txt: sentence.sentence,
-				formatted_txt: sentence.formatted,
-			} )
-
-		})
-		.catch(function (error) {
-			console.log(error);
-		})
-		.then(function () {
-			// always executed
-		});  
-		
-
 	}
-
-
-	
-
-	
-	componentDidMount(){
-		this.refreshSentenceFromDB()
-		//this.refreshEntityAnnotations()
-	}
-
-	
-	
 
 	render() {
 
-		
-		
+		console.log(this.props.sentence)		
 		return (
 				<div> 
 					
-					{this.state.txt}		 
+					<div>
+						<NLPAnnotator
+							hotkeysEnabled
+							type="label-relationships"
+							multipleLabels={false}
+							document={this.props.sentence}
+							onChange={(output) => {
+							
+							}}
+							onFinish={(output) => {
+							console.log(output)
+							}}
+								entityLabels={entity_labels}
+							relationshipLabels={relation_labels}
+						/>
+					</div> 
 
 				</div>
 		)
