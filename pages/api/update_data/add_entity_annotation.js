@@ -2,32 +2,25 @@ import prisma from '../../../lib/prisma'
 
 export default async function handle(req, res) {
 
-	const sentence_id = parseInt(req.query.sentence_id)
-    
-    const entity_type = req.query.entity_type
     const start = parseInt(req.query.start)
-    const end = parseInt(req.query.end)
+	const annotated_sentence_id = parseInt(req.query.sentence_id)
+    const entity_type_id = parseInt(req.query.entity_type_id)
+    const offset = parseInt(req.query.offset)
+    const relation_annotation_id = parseInt(req.query.relation_annotation_id)
 
-    const entityAnnotationExists = await prisma.EntityAnnotation.findFirst({
-        where: {sentence_id: sentence_id,
-        relation_id: 2,
-        entity_type: entity_type,
+    const record = {
         start: start,
-        end: end},
-      });
-    	
-    if(!entityAnnotationExists){
-        const record = {sentence_id: sentence_id,
-            
-            entity_type: entity_type,
-            start: start,
-            end: end}
+        annotatedSentenceId: annotated_sentence_id,
+        entityTypeId: entity_type_id,
+        offset: offset,
+        relationAnnotationId: relation_annotation_id    
+    }
 	
 	var entity_annotation = await prisma.EntityAnnotation.create({
 		data: record,
 	})
 
 	res.json(entity_annotation)
-    }   
+    
 	
 }

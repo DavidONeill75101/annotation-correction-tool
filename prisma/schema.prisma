@@ -22,27 +22,28 @@ model relation {
 }
 
 model Sentence {
-  id              Int    @id @default(autoincrement())
-  matching_id     String
-  pmid            Int
-  title           String
-  journal         String
-  year            Int
-  month           String
-  day             Int
-  section         String
-  subsection      String
-  evidencetype    String
-  cancer          String
-  gene            String
-  drug            String
-  variant_group   String
-  sentence        String
-  formatted       String
-  upvotes         Int
-  downvotes       Int
-  users_upvoted   String
-  users_downvoted String
+  id                      Int    @id @default(autoincrement())
+  matching_id             String
+  pmid                    Int
+  title                   String
+  journal                 String
+  year                    Int
+  month                   String
+  day                     Int
+  section                 String
+  subsection              String
+  evidencetype            String
+  cancer                  String
+  gene                    String
+  drug                    String
+  variant_group           String
+  sentence                String
+  formatted               String
+  upvotes                 Int
+  downvotes               Int
+  users_upvoted           String
+  users_downvoted         String
+  
 }
 
 model AnnotatedSentence {

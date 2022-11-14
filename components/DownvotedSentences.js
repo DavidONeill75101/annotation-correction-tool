@@ -2,10 +2,8 @@ import React, { Component } from 'react';
 import Link from 'next/link'
 import axios from 'axios';
 import Button from 'react-bootstrap/Button';
-import { Col, Container, Row } from 'react-bootstrap';
 import Table from 'react-bootstrap/Table'
-import Layout from '../components/Layout.js'
-import SenEditor from './SenEditor.js';
+
 
 
 export default class DownvotedSentences extends Component {
