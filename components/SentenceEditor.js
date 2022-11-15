@@ -53,7 +53,9 @@ export default class SentenceEditor extends Component {
 		super(props)
 		this.state = {
 			annotated_sentence_id: 0,
-			relation_map: {}
+			relation_map: {},
+			relation_id: 0
+			
 		}
 		
 		this.addAnnotationsToDB = this.addAnnotationsToDB.bind(this)
@@ -139,11 +141,9 @@ export default class SentenceEditor extends Component {
 							for (var i=0; i<index; i++){
 								start = start + fragments[i].text.length + 1
 							}
-							var chosen_relation_id = 0
-
 							
 							// get relation_id						
-	
+							
 							var fetchEntityURL = '/api/update_data/add_entity_annotation'
 							var entityParams = {start: start, sentence_id: self.state.annotated_sentence_id, entity_type_id: entity['label'], offset: entity['text'].length, relation_annotation_id: 68}
 	
