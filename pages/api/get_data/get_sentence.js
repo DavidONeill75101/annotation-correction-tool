@@ -8,19 +8,9 @@ export default async function handle(req, res) {
 	var params = {'id':sentence_id}
 	
 	var sentence = await prisma.sentence.findUnique({
-		select: {
-			id:true,
-            downvotes: true,
-            formatted:true, 
-            journal: true,
-            pmid: true,
-            section:true,
-            sentence:true, 
-            subsection:true,
-            upvotes:true,
-            year:true,
-			users_upvoted: true,
-			users_downvoted: true,
+		select:{
+			user_upvotes: true,
+			user_downvotes: true,
 		},
 		where: params,
 		

@@ -11,17 +11,14 @@ export default async function handle(req, res) {
 	var sentences = await prisma.sentence.findMany({
 		select: {
 			id:true,
-            downvotes: true,
             formatted:true, 
             journal: true,
             pmid: true,
             section:true,
             sentence:true, 
             subsection:true,
-            upvotes:true,
-            year:true,
-			users_upvoted: true,
-			users_downvoted: true,
+          	year:true,
+			
 		},
 		where: params,
 		skip: start,

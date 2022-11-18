@@ -14,177 +14,192 @@ export default class VotingButtons extends Component {
             downvote_size: 'sm',
 			}
 				
-        this.upvote = this.upvote.bind(this)
-        this.downvote = this.downvote.bind(this)
+        
 		this.get_sentence = this.get_sentence.bind(this)
+        this.create_user = this.create_user.bind(this)
+
+        this.upvote_sentence = this.upvote_sentence.bind(this)
+        this.add_upvote = this.add_upvote.bind(this)
+        this.delete_upvote = this.delete_upvote.bind(this)
+
+        this.downvote_sentence = this.downvote_sentence.bind(this)
+        this.add_downvote = this.add_downvote.bind(this)
+        this.delete_downvote = this.delete_downvote.bind(this)        
+
 	}
 
 
-    upvote(event){
+    delete_upvote(){
         var self = this
-        var users_upvoted_list = self.state.users_upvoted.split(',')
-        var users_downvoted_list = self.state.users_downvoted.split(',')	
-        if (!users_upvoted_list.includes(this.props.user) && !users_downvoted_list.includes(this.props.user)){
-                
-            const new_users_voted = this.props.user + ',' + this.state.sentence.users_upvoted
-
-            const fetchURL = '/api/update_data/update_users_upvoted?id='+this.props.id+'&usernames='+new_users_voted
-
-            axios.get(fetchURL)
-            .then(function (response) {
-                const res = response.data
-            })
-            .catch(function (error) {
-                console.log(error);
-            })
-            .then(function () {
-                // always executed
-            });
-            
-            axios.get('/api/update_data/upvote?id='+this.props.id)
-                .then(function (response) {
-                    const res = response.data
-                    self.setState({
-                        upvotes: res.upvotes,
-                        users_upvoted: res.users_upvoted,
-                        upvote_size: 'md',
-                    })
-                })
-                .catch(function (error) {
-                    console.log(error);
-                })
-                .then(function () {
-                    // always executed
-            });
-
-        }else if (users_upvoted_list.includes(this.props.user)) {
-
-            var index = users_upvoted_list.indexOf(this.props.user)
-
-            if (index !== -1) {
-                users_upvoted_list.splice(index, 1);
-            }
-            
-            const new_users_voted = users_upvoted_list.join(',')
-
-            const fetchURL = '/api/update_data/update_users_upvoted?id='+this.props.id+'&usernames='+new_users_voted
-
-            axios.get(fetchURL)
-            .then(function (response) {
-                const res = response.data
-                
-            })
-            .catch(function (error) {
-                console.log(error);
-            })
-            .then(function () {
-                // always executed
-            });
-
-
-            axios.get('/api/update_data/remove_upvote?id='+this.props.id)
-            .then(function (response) {
-                const res = response.data	
-                self.setState({
-                    upvotes: res.upvotes,
-                    users_upvoted: res.users_upvoted,
-                    upvote_size: 'sm',
-                })
-                    
-            })
-            .catch(function (error) {
-                console.log(error);
-            })
-            .then(function () {
-                // always executed
-            });
-
-        }
-        this.get_sentence()
+        const fetchURL = 'http://localhost:3000/api/update_data/delete_upvote?user_id=' + this.state.user_id + '&sentence_id=' + this.props.id
         
+        axios.get(fetchURL)
+        .then(function (response) {
+            const res = response.data   
+                   
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
+        .then(function () {
+            // always executed
+           self.get_sentence()
+        });
+    }
+
+    add_upvote(){
+        var self = this
+        const fetchURL = 'http://localhost:3000/api/update_data/add_upvote?user_id=' + this.state.user_id + '&sentence_id=' + this.props.id
+
+       
+        axios.get(fetchURL)
+        .then(function (response) {
+            const res = response.data   
+            
+            if (res[0]=='error'){
+                self.delete_upvote()
+            } 
+               
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
+        .then(function () {
+            // always executed
+            self.get_sentence()  
+        });       
+
+    }
+
+    create_user(){
+        var self = this
+        const username = this.props.user.split('@')[0]
+
+        const fetchURL = '/api/update_data/add_user?email=' + username
+        
+        axios.get(fetchURL)
+        .then(function (response) {
+            const res = response.data   
+            self.setState({
+                user_id: res.id
+            })    
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
+        .then(function () {
+            // always executed
+        });
+    }
+
+    upvote_sentence(){
+        var self = this
+        
+        const username = this.props.user.split('@')[0]
+
+        const fetchURL = '/api/get_data/get_user?email=' + username
+        
+        axios.get(fetchURL)
+        .then(function (response) {
+            const res = response.data
+            self.setState({
+                user_id: res.id
+            })
+
+            if (res==''){
+                
+                self.create_user()
+            }            
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
+        .then(function () {
+            // always executed
+
+            
+            self.add_upvote()
+                
+           
+        });
     }
 
 
-    downvote(event){
+    delete_downvote(){
         var self = this
-        var users_upvoted_list = self.state.users_upvoted.split(',')	
-        var users_downvoted_list = self.state.users_downvoted.split(',')
-        if (!users_downvoted_list.includes(this.props.user) && !users_upvoted_list.includes(this.props.user)){
-                
-            const new_users_voted = this.props.user + ',' + this.state.sentence.users_downvoted
+        const fetchURL = 'http://localhost:3000/api/update_data/delete_downvote?user_id=' + this.state.user_id + '&sentence_id=' + this.props.id
+        
+        axios.get(fetchURL)
+        .then(function (response) {
+            const res = response.data   
+                   
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
+        .then(function () {
+            // always executed
+           self.get_sentence()
+        });
+    }
 
-            const fetchURL = '/api/update_data/update_users_downvoted?id='+this.props.id+'&usernames='+new_users_voted
 
-            axios.get(fetchURL)
-            .then(function (response) {
-                const res = response.data
-            })
-            .catch(function (error) {
-                console.log(error);
-            })
-            .then(function () {
-                // always executed
-            });
+    add_downvote(){
+        var self = this
+
+        const fetchURL = 'http://localhost:3000/api/update_data/add_downvote?user_id=' + this.state.user_id + '&sentence_id=' + this.props.id
+
+        
+       
+        axios.get(fetchURL)
+        .then(function (response) {
+            const res = response.data   
             
-            axios.get('/api/update_data/downvote?id='+this.props.id)
-                .then(function (response) {
-                    const res = response.data
-                    self.setState({
-                        downvotes: res.downvotes,
-                        users_downvoted: res.users_downvoted,
-                        downvote_size: 'md',
-                    })
-                })
-                .catch(function (error) {
-                    console.log(error);
-                })
-                .then(function () {
-                    // always executed
-            });
+            if (res[0]=='error'){
+                self.delete_downvote()
+            } 
+               
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
+        .then(function () {
+            // always executed
+            self.get_sentence()  
+        });  
+    }
 
-        }else if (users_downvoted_list.includes(this.props.user)) {
 
-            var index = users_downvoted_list.indexOf(this.props.user)
+    downvote_sentence(){
+        var self = this
+        
+        const username = this.props.user.split('@')[0]
 
-            if (index !== -1) {
-                users_downvoted_list.splice(index, 1);
-            }
-            
-            const new_users_voted = users_downvoted_list.join(',')
+        const fetchURL = '/api/get_data/get_user?email=' + username
+        
+        axios.get(fetchURL)
+        .then(function (response) {
+            const res = response.data
+            self.setState({
+                user_id: res.id
+            })
 
-            const fetchURL = '/api/update_data/update_users_downvoted?id='+this.props.id+'&usernames='+new_users_voted
-
-            axios.get(fetchURL)
-            .then(function (response) {
-                const res = response.data
+            if (res==''){
                 
-            })
-            .catch(function (error) {
-                console.log(error);
-            })
-            .then(function () {
-                // always executed
-            });
+                self.create_user()
+            }       
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
+        .then(function () {
+            // always executed
 
-
-            axios.get('/api/update_data/remove_downvote?id='+this.props.id)
-            .then(function (response) {
-                const res = response.data	
-                self.setState({
-                    downvotes: res.downvotes,
-                    users_downvoted: res.users_downvoted,
-                    downvote_size: 'sm',
-                })
-                    
-            })
-            .catch(function (error) {
-                console.log(error);
-            })
-            .then(function () {
-                // always executed
-            });
-        }
-        this.get_sentence()
+            
+            self.add_downvote()
+                
+           
+        });
     }
 
 
@@ -194,47 +209,42 @@ export default class VotingButtons extends Component {
 		axios.get('/api/get_data/get_sentence?sentence_id=' + this.props.id)
 			.then(function (response) {
 				const sentence = response.data
-				self.setState( {
-					upvotes: sentence.upvotes,
-                    downvotes: sentence.downvotes,
-                    sentence: sentence,
-                    users_downvoted: sentence.users_downvoted,
-                    users_upvoted: sentence.users_upvoted,
-					
-				} )        
+
+                console.log(sentence)
                 
+                if (typeof sentence.user_upvotes == 'undefined'){
+                    self.setState( {
+                        upvotes: 0,
+                    } ) 
+                }else{
+                    self.setState( {
+                        upvotes: sentence.user_upvotes.length,
+                    } ) 
+                    
+                }
+
+                if (typeof sentence.user_downvotes == 'undefined'){
+                    self.setState( {
+                        downvotes: 0,
+                    } ) 
+                }else{
+                    self.setState( {
+                        downvotes: sentence.user_downvotes.length,
+                    } ) 
+                }
+
 			})
 			.catch(function (error) {
 				console.log(error);
 			})
 			.then(function () {
 				// always executed
-                var users_upvoted_list = self.state.users_upvoted.split(',')	
-                var users_downvoted_list = self.state.users_downvoted.split(',')
                 
-                if (users_upvoted_list.includes(self.props.user)){
-                    self.setState({
-                        upvote_size: 'md'
-                    })
-                }else{
-                    self.setState({
-                        upvote_size: 'sm'
-                    })
-                }
-
-                if (users_downvoted_list.includes(self.props.user)){
-                    self.setState({
-                        downvote_size: 'md'
-                    })
-                }else{
-                    self.setState({
-                        downvote_size: 'sm'
-                    })
-                }
 
 			});        
     }
 
+    
     
     componentDidMount(){
         this.get_sentence()    
@@ -242,16 +252,15 @@ export default class VotingButtons extends Component {
 		
 
 	render() {
-       
 		
 		return (
 				<div> 
                     <div>
-                    <Button size={this.state.upvote_size} variant="success" onClick={this.upvote}>
+                    <Button size={this.state.upvote_size} variant="success" onClick={this.upvote_sentence}>
                         <FontAwesomeIcon icon={faThumbsUp} />
                     </Button><center>{this.state.upvotes}</center>
 
-                    <Button size={this.state.downvote_size} onClick={this.downvote}>
+                    <Button size={this.state.downvote_size} onClick={this.downvote_sentence}>
                         <FontAwesomeIcon icon={faThumbsDown} />
                     </Button><center>{this.state.downvotes}</center>
                     </div>

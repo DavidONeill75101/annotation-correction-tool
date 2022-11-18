@@ -114,7 +114,7 @@ export default class ReviewEditor extends Component {
 			<td>{s.journal}</td><td>{s.year}</td>
 			<td>{s.section}</td><td>{s.subsection}</td>
 			<td>{parse(s.formatted)}</td>			
-			<td><VotingButtons id={s.id} users_upvoted={s.users_upvoted} users_downvoted={s.users_downvoted} user={this.props.user}></VotingButtons></td></tr>)
+			<td><VotingButtons id={s.id} user={this.props.user}></VotingButtons></td></tr>)
 
 			
 

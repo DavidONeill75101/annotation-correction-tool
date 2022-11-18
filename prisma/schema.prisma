@@ -5,10 +5,68 @@ generator client {
   provider = "prisma-client-js"
 }
 
+
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
+
+model User {
+  id                    Int               @id @default(autoincrement())
+  email                 String            @unique
+  upvoted_sentences     UserUpvote[]  
+  downvoted_sentences   UserDownvote[]
+  @@map("users")
+}
+
+
+model UserUpvote {
+  sentence         Sentence    @relation(fields: [sentenceId], references: [id])
+  sentenceId       Int         @map("sentence_id")
+  user             User        @relation(fields: [userId], references: [id])
+  userId           Int         @map("user_id")
+  
+  @@id([sentenceId, userId])
+  @@map("user_upvote")
+}
+
+
+model UserDownvote {
+  sentence         Sentence    @relation(fields: [sentenceId], references: [id])
+  sentenceId       Int         @map("sentence_id")
+  user             User        @relation(fields: [userId], references: [id])
+  userId           Int         @map("user_id")
+  
+  @@id([sentenceId, userId])
+  @@map("user_downvote")
+}
+
+
+model Sentence {
+  id              Int               @id @default(autoincrement())
+  matching_id     String
+  pmid            Int
+  title           String
+  journal         String
+  year            Int
+  month           String
+  day             Int
+  section         String
+  subsection      String
+  evidencetype    String
+  cancer          String
+  gene            String
+  drug            String
+  variant_group   String
+  sentence        String
+  formatted       String
+  user_upvotes    UserUpvote[]
+  user_downvotes  UserDownvote[]
+
+  @@map("sentences")
+}
+
 
 model relation {
   id             Int    @id @default(autoincrement())
@@ -21,30 +79,6 @@ model relation {
   citation_count Int
 }
 
-model Sentence {
-  id                      Int    @id @default(autoincrement())
-  matching_id             String
-  pmid                    Int
-  title                   String
-  journal                 String
-  year                    Int
-  month                   String
-  day                     Int
-  section                 String
-  subsection              String
-  evidencetype            String
-  cancer                  String
-  gene                    String
-  drug                    String
-  variant_group           String
-  sentence                String
-  formatted               String
-  upvotes                 Int
-  downvotes               Int
-  users_upvoted           String
-  users_downvoted         String
-  
-}
 
 model AnnotatedSentence {
   id                 Int                  @id @default(autoincrement())
@@ -52,6 +86,7 @@ model AnnotatedSentence {
   entityAnnotations  EntityAnnotation[]
   relationAnnotation RelationAnnotation[]
 }
+
 
 model EntityAnnotation {
   id                   Int                 @id @default(autoincrement())
@@ -65,11 +100,13 @@ model EntityAnnotation {
   entityTypeId         Int
 }
 
+
 model EntityType {
   id               Int                @id @default(autoincrement())
   name             String
   EntityAnnotation EntityAnnotation[]
 }
+
 
 model RelationAnnotation {
   id                  Int                @id @default(autoincrement())
@@ -79,6 +116,7 @@ model RelationAnnotation {
   annotatedSentenceId Int?
   relationTypeId      Int
 }
+
 
 model RelationType {
   id                 Int                  @id @default(autoincrement())
