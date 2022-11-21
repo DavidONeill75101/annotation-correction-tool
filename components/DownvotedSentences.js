@@ -29,6 +29,7 @@ export default class DownvotedSentences extends Component {
 					sentences: sentences,
 					loaded: true
 				} )
+				
 			})
 			.catch(function (error) {
 				console.log(error);
@@ -61,6 +62,7 @@ export default class DownvotedSentences extends Component {
 	
 	
 	render() {
+		console.log(this.state.sentences)
 
 		var prev_link = ''
 		var next_link = ''
@@ -102,11 +104,12 @@ export default class DownvotedSentences extends Component {
 		var contents = 'loading...'
 
 		if (this.state.loaded) {
-			const rows = this.state.sentences.map(s => <tr key={s.id}><td>{s.pmid}</td>
-			<td>{s.journal}</td><td>{s.year}</td>
-			<td>{s.section}</td><td>{s.subsection}</td>
-			<td>{s.sentence}</td>
-			<td><Link href={"/manual_annotation/" + s.id + '/'}><a><Button size="md">Annotate</Button></a></Link></td>
+
+			const rows = this.state.sentences.map(s => <tr key={s.sentence.id}><td>{s.sentence.pmid}</td>
+			<td>{s.sentence.journal}</td><td>{s.sentence.year}</td>
+			<td>{s.sentence.section}</td><td>{s.sentence.subsection}</td>
+			<td>{s.sentence.sentence}</td>
+			<td><Link href={"/manual_annotation/" + s.sentence.id + '/'}><a><Button size="md">Annotate</Button></a></Link></td>
 			
 			
 			</tr>)
@@ -135,7 +138,7 @@ export default class DownvotedSentences extends Component {
 						<div>
 							{ relation_contents }
 						</div>
-						<div>
+						<div className="scrollableComponent mt-5">
 							{contents}
 						</div>
 						
