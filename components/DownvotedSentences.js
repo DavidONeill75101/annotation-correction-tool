@@ -62,7 +62,6 @@ export default class DownvotedSentences extends Component {
 	
 	
 	render() {
-		console.log(this.state.sentences)
 
 		var prev_link = ''
 		var next_link = ''

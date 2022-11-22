@@ -11,6 +11,7 @@ export default async function handle(req, res) {
 		select:{
 			user_upvotes: true,
 			user_downvotes: true,
+			sentence: true,
 		},
 		where: params,
 		

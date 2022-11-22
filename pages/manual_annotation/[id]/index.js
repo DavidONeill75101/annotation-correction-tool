@@ -10,8 +10,6 @@ function Sentence() {
 	const router = useRouter()
 	const sentence_id = router.query.id
 
-	//const [sentence, setSentence] = useState("sentence time")
-
 	var fetchURL = '/api/get_data/get_sentence?sentence_id=' + String(sentence_id)
 	
 	const [{ data, loading, error }, refetch] = useAxios(
@@ -26,9 +24,8 @@ function Sentence() {
 	return <Layout title="Manual Annotation" page="/manual_annotation" >
 		
 	 				<div>
-	 				<Button className='float-right mb-3' onClick={() => router.back()}>Back to Sentences</Button>
-	
-	 				</div>
+	 					<Button className='float-right mb-3' onClick={() => router.back()}>Back to Sentences</Button>
+					</div>
 					
 	 				<div className="card shadow mb-4 float-right">
 	 					<div className="card-body">

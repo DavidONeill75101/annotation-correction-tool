@@ -5,68 +5,65 @@ generator client {
   provider = "prisma-client-js"
 }
 
-
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
-
 model User {
-  id                    Int               @id @default(autoincrement())
-  email                 String            @unique
-  upvoted_sentences     UserUpvote[]  
-  downvoted_sentences   UserDownvote[]
+  id                  Int            @id @default(autoincrement())
+  email               String         @unique
+  upvoted_sentences   UserUpvote[]
+  downvoted_sentences UserDownvote[]
+
   @@map("users")
+  UserAnnotation UserAnnotation[]
 }
 
-
 model UserUpvote {
-  sentence         Sentence    @relation(fields: [sentenceId], references: [id])
-  sentenceId       Int         @map("sentence_id")
-  user             User        @relation(fields: [userId], references: [id])
-  userId           Int         @map("user_id")
-  
+  sentence   Sentence @relation(fields: [sentenceId], references: [id])
+  sentenceId Int      @map("sentence_id")
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int      @map("user_id")
+
   @@id([sentenceId, userId])
   @@map("user_upvote")
 }
 
-
 model UserDownvote {
-  sentence         Sentence    @relation(fields: [sentenceId], references: [id])
-  sentenceId       Int         @map("sentence_id")
-  user             User        @relation(fields: [userId], references: [id])
-  userId           Int         @map("user_id")
-  
+  sentence   Sentence @relation(fields: [sentenceId], references: [id])
+  sentenceId Int      @map("sentence_id")
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int      @map("user_id")
+
   @@id([sentenceId, userId])
   @@map("user_downvote")
 }
 
-
 model Sentence {
-  id              Int               @id @default(autoincrement())
-  matching_id     String
-  pmid            Int
-  title           String
-  journal         String
-  year            Int
-  month           String
-  day             Int
-  section         String
-  subsection      String
-  evidencetype    String
-  cancer          String
-  gene            String
-  drug            String
-  variant_group   String
-  sentence        String
-  formatted       String
-  user_upvotes    UserUpvote[]
-  user_downvotes  UserDownvote[]
+  id               Int              @id @default(autoincrement())
+  matching_id      String
+  pmid             Int
+  title            String
+  journal          String
+  year             Int
+  month            String
+  day              Int
+  section          String
+  subsection       String
+  evidencetype     String
+  cancer           String
+  gene             String
+  drug             String
+  variant_group    String
+  sentence         String
+  formatted        String
+  user_upvotes     UserUpvote[]
+  user_downvotes   UserDownvote[]
+  user_annotations UserAnnotation[]
 
   @@map("sentences")
 }
-
 
 model relation {
   id             Int    @id @default(autoincrement())
@@ -79,27 +76,23 @@ model relation {
   citation_count Int
 }
 
-
-model AnnotatedSentence {
-  id                 Int                  @id @default(autoincrement())
-  text               String
-  entityAnnotations  EntityAnnotation[]
-  relationAnnotation RelationAnnotation[]
+model UserAnnotation {
+  id         Int                  @id @default(autoincrement())
+  sentence   Sentence             @relation(fields: [sentenceId], references: [id])
+  sentenceId Int                  @map("sentence_id")
+  user       User                 @relation(fields: [userId], references: [id])
+  userId     Int                  @map("user_id")
+  relations  RelationAnnotation[]
 }
-
 
 model EntityAnnotation {
   id                   Int                 @id @default(autoincrement())
   entityType           EntityType          @relation(fields: [entityTypeId], references: [id])
-  start                Int
-  offset               Int
-  AnnotatedSentence    AnnotatedSentence?  @relation(fields: [annotatedSentenceId], references: [id])
-  annotatedSentenceId  Int?
+  text                 String
   RelationAnnotation   RelationAnnotation? @relation(fields: [relationAnnotationId], references: [id])
   relationAnnotationId Int?
   entityTypeId         Int
 }
-
 
 model EntityType {
   id               Int                @id @default(autoincrement())
@@ -107,16 +100,14 @@ model EntityType {
   EntityAnnotation EntityAnnotation[]
 }
 
-
 model RelationAnnotation {
-  id                  Int                @id @default(autoincrement())
-  relationType        RelationType       @relation(fields: [relationTypeId], references: [id])
-  entityAnnotations   EntityAnnotation[]
-  AnnotatedSentence   AnnotatedSentence? @relation(fields: [annotatedSentenceId], references: [id])
-  annotatedSentenceId Int?
-  relationTypeId      Int
+  id                Int                @id @default(autoincrement())
+  relationType      RelationType       @relation(fields: [relationTypeId], references: [id])
+  relationTypeId    Int
+  entityAnnotations EntityAnnotation[]
+  UserAnnotation   UserAnnotation?     @relation(fields: [userAnnotationId], references: [id])
+  userAnnotationId Int?
 }
-
 
 model RelationType {
   id                 Int                  @id @default(autoincrement())
