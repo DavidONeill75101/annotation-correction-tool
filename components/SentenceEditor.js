@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import axios from 'axios';
+
 import {TokenAnnotator, TextAnnotator} from 'react-text-annotate'
 
 import Button from 'react-bootstrap/Button'
@@ -31,6 +33,8 @@ export default class SentenceEditor extends Component {
 		this.update_candidate_evidence_type = this.update_candidate_evidence_type.bind(this)
 		this.add_relation_annotation = this.add_relation_annotation.bind(this)
 		this.remove_relation_annotation = this.remove_relation_annotation.bind(this)
+		this.add_annotations_to_db = this.add_annotations_to_db.bind(this)
+		this.add_user_annotation_to_db = this.add_user_annotation_to_db.bind(this)
 
 	}
 
@@ -132,6 +136,56 @@ export default class SentenceEditor extends Component {
 		this.setState({
 			relations: relations
 		})
+	}
+
+	add_user_annotation_to_db(){
+
+		var self = this
+
+		var fetchURL = '/api/update_data/add_user_annotation'
+		
+		var params = {sentence_id:self.props.sentence_id, user_id:self.state.user_id}
+
+		
+		axios.get(fetchURL, {
+			params: params
+		})
+		.then(function (response) {
+				const user_annotation = response.data
+				
+			})
+			.catch(function (error) {
+				console.log(error);
+			})
+			.then(function () {
+				// always executed
+				
+			});
+	}
+
+	add_annotations_to_db(){
+		var self = this
+
+		var fetchURL = '/api/get_data/get_user'
+		var params = {email: this.props.user.email.split('@')[0]}
+
+		
+		axios.get(fetchURL, {
+			params: params
+		})
+		.then(function (response) {
+				const user = response.data
+				self.setState({
+					user_id: user.id,
+				})
+			})
+			.catch(function (error) {
+				console.log(error);
+			})
+			.then(function () {
+				// always executed
+				self.add_user_annotation_to_db()
+			});
 	}
 
 	
@@ -240,7 +294,7 @@ export default class SentenceEditor extends Component {
 						<h3 className="mt-5">Relations</h3>
 						{relation_contents}
 
-						<Button className="mt-1 float-right" size="sm">
+						<Button className="mt-1 float-right" size="sm" onClick={this.add_annotations_to_db}>
 							Annotations Complete
 						</Button>
 					</div>

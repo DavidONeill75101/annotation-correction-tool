@@ -88,7 +88,8 @@ model UserAnnotation {
 model EntityAnnotation {
   id                   Int                 @id @default(autoincrement())
   entityType           EntityType          @relation(fields: [entityTypeId], references: [id])
-  text                 String
+  start                Int
+  offset               Int
   RelationAnnotation   RelationAnnotation? @relation(fields: [relationAnnotationId], references: [id])
   relationAnnotationId Int?
   entityTypeId         Int
