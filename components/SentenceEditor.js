@@ -5,6 +5,7 @@ import {TokenAnnotator, TextAnnotator} from 'react-text-annotate'
 
 import Button from 'react-bootstrap/Button'
 import Table from 'react-bootstrap/Table'
+import { sessionFactory } from '@auth0/nextjs-auth0/dist/session';
  
 
 export default class SentenceEditor extends Component {
@@ -14,12 +15,12 @@ export default class SentenceEditor extends Component {
 		this.state = {
 			tag: 'gene',
 			value: [],
-			gene_annotations: [{text:'N/A', value:'N/A'}],
-			cancer_annotations: [{text:'N/A', value:'N/A'}],
-			drug_annotations: [{text:'N/A', value:'N/A'}],
-			candidate_gene: 'N/A',
-			candidate_cancer: 'N/A',
-			candidate_drug: 'N/A',		
+			gene_annotations: [{text:'N/A', value:-1}],
+			cancer_annotations: [{text:'N/A', value:-1}],
+			drug_annotations: [{text:'N/A', value:-1}],
+			candidate_gene: -1,
+			candidate_cancer: -1,
+			candidate_drug: -1,		
 			candidate_evidence_type: 'diagnostic',
 			relations: [],
 		}
@@ -35,6 +36,8 @@ export default class SentenceEditor extends Component {
 		this.remove_relation_annotation = this.remove_relation_annotation.bind(this)
 		this.add_annotations_to_db = this.add_annotations_to_db.bind(this)
 		this.add_user_annotation_to_db = this.add_user_annotation_to_db.bind(this)
+		this.add_relation_annotations_to_db = this.add_relation_annotations_to_db.bind(this)
+		this.add_entity_annotation_to_db = this.add_entity_annotation_to_db.bind(this)
 
 	}
 
@@ -42,22 +45,19 @@ export default class SentenceEditor extends Component {
 	update_value(value){
 		var self = this
 		
-		
-		var gene_annotations = [{text:'N/A', value:'N/A'}]
-		var cancer_annotations = [{text:'N/A', value:'N/A'}]
-		var drug_annotations = [{text:'N/A', value:'N/A'}]
+		var gene_annotations = [{text:'N/A', value:-1}]
+		var cancer_annotations = [{text:'N/A', value:-1}]
+		var drug_annotations = [{text:'N/A', value:-1}]
 
 		value.forEach(function(item, index){
 			if (item['tag']=='gene'){
-				gene_annotations.push({text: item['tokens'].join(' '), value:item['tokens'].join(' ')})
+				gene_annotations.push({text: item['tokens'].join(' '), value:index})
 			}else if (item['tag']=='cancer'){
-				cancer_annotations.push({text: item['tokens'].join(' '), value:item['tokens'].join(' ')})
+				cancer_annotations.push({text: item['tokens'].join(' '), value:index})
 			}else if (item['tag']=='drug'){
-				drug_annotations.push({text: item['tokens'].join(' '), value:item['tokens'].join(' ')})
+				drug_annotations.push({text: item['tokens'].join(' '), value:index})
 			}
 		})
-
-		
 
 		self.setState({
 			value: value,
@@ -67,6 +67,7 @@ export default class SentenceEditor extends Component {
 		})
 
 	}
+
 
 	update_tag(e){
 		var self = this
@@ -78,18 +79,21 @@ export default class SentenceEditor extends Component {
 
 	update_candidate_gene(e){
 		var self = this
+
+
 		self.setState({
 		 	candidate_gene: e.target.value
 		})
 	}
+
 
 	update_candidate_cancer(e){
 		var self = this
 		self.setState({
 		 	candidate_cancer: e.target.value
 		})
-		
 	}
+
 
 	update_candidate_drug(e){
 		var self = this
@@ -106,7 +110,9 @@ export default class SentenceEditor extends Component {
 		})
 	}
 
+
 	add_relation_annotation(){
+
 		var relations = this.state.relations
 
 		relations.push({'id': relations.length,
@@ -119,6 +125,7 @@ export default class SentenceEditor extends Component {
 			relations: relations,
 		})
 	}
+
 
 	remove_relation_annotation(id){
 		var relations = this.state.relations
@@ -138,20 +145,24 @@ export default class SentenceEditor extends Component {
 		})
 	}
 
-	add_user_annotation_to_db(){
 
-		var self = this
+	add_entity_annotation_to_db(relation_annotation_id, entity_annotation_id){
+		var entity_type_ids = {'gene':1, 'cancer':2, 'drug':3}
+		var annotation = this.state.value[entity_annotation_id]
 
-		var fetchURL = '/api/update_data/add_user_annotation'
-		
-		var params = {sentence_id:self.props.sentence_id, user_id:self.state.user_id}
+		var entity_type_id = entity_type_ids[annotation.tag]
+		var offset = annotation.tokens.join(' ').length
+
+		var start = this.props.sentence.split(' ').slice(0, annotation.start).join(' ').length + 1
+	
+		var fetchURL = '/api/update_data/add_entity_annotation'
+		var params = {relation_annotation_id:relation_annotation_id, entity_type_id:entity_type_id, start: start, offset: offset}
 
 		
 		axios.get(fetchURL, {
 			params: params
 		})
 		.then(function (response) {
-				const user_annotation = response.data
 				
 			})
 			.catch(function (error) {
@@ -161,14 +172,103 @@ export default class SentenceEditor extends Component {
 				// always executed
 				
 			});
+
 	}
+
+
+	add_relation_annotations_to_db(){
+		
+		
+		var self = this
+
+
+		let promise = new Promise(function(resolve, reject) {
+			self.state.relations.forEach(function(item, index){
+				var fetchURL = '/api/update_data/add_relation_annotation'
+
+				
+				var evidence_type_ids = {'diagnostic': 1, 'predisposing': 2, 'predictive': 3, 'prognostic': 4}
+				
+		
+				var params = {user_annotation_id:self.state.user_annotation_id, relation_type_id:evidence_type_ids[item.evidence_type]}
+
+				
+				axios.get(fetchURL, {
+					params: params
+				})
+				.then(function (response) {
+						const relation_annotation = response.data
+						const relation_annotation_id = relation_annotation.id
+						if (typeof item.gene == 'string'){
+							self.add_entity_annotation_to_db(relation_annotation_id, item.gene)
+						}
+
+						if (typeof item.cancer == 'string'){
+							self.add_entity_annotation_to_db(relation_annotation_id, item.cancer)
+						}
+
+						if (typeof item.drug == 'string'){
+							self.add_entity_annotation_to_db(relation_annotation_id, item.drug)
+						}
+
+						
+					})
+					.catch(function (error) {
+						console.log(error);
+					})
+					.then(function () {
+						// always executed
+						
+					});
+
+			})
+			resolve() 
+			reject()  
+		});
+			
+		promise.then(
+		 	function(value) {
+				
+			},
+			function(error) {
+
+			}
+			);
+	}
+
+
+	add_user_annotation_to_db(){
+
+		var self = this
+
+		var fetchURL = '/api/update_data/add_user_annotation'
+		var params = {sentence_id:self.props.sentence_id, user_id:self.state.user_id}
+
+		axios.get(fetchURL, {
+			params: params
+		})
+		.then(function (response) {
+				const user_annotation = response.data
+				self.setState({
+					user_annotation_id: user_annotation.id
+				})
+				
+			})
+			.catch(function (error) {
+				console.log(error);
+			})
+			.then(function () {
+				// always executed
+				self.add_relation_annotations_to_db()
+			});
+	}
+
 
 	add_annotations_to_db(){
 		var self = this
 
 		var fetchURL = '/api/get_data/get_user'
 		var params = {email: this.props.user.email.split('@')[0]}
-
 		
 		axios.get(fetchURL, {
 			params: params
@@ -194,7 +294,7 @@ export default class SentenceEditor extends Component {
 		const tag_colours = {'gene':'#BA324F', 'cancer':'#175676', 'drug':'#4BA3C3'}
 
 		var relation_contents = ''
-		const relation_rows = this.state.relations.map(r => <tr><td>{r.gene}</td><td>{r.cancer}</td><td>{r.drug}</td><td>{r.evidence_type}</td><Button className="w-100 mt-1" onClick={() => this.remove_relation_annotation(r.id)}>Remove</Button></tr>)
+		const relation_rows = this.state.relations.map(r => <tr><td>{(r.gene>-1) ? this.state.value[r.gene].tokens.join(' ') : 'N/A'}</td><td>{(r.cancer>-1) ? this.state.value[r.cancer].tokens.join(' ') : 'N/A'}</td><td>{(r.drug>-1) ? this.state.value[r.drug].tokens.join(' ') : 'N/A'}</td><td>{r.evidence_type}</td><Button className="w-100 mt-1" onClick={() => this.remove_relation_annotation(r.id)}>Remove</Button></tr>)
 		relation_contents = <Table striped bordered hover>
 			<thead>
 				<tr>
@@ -209,6 +309,7 @@ export default class SentenceEditor extends Component {
 				{relation_rows}
 			</tbody>
 		</Table>
+
 
 		const gene_options = this.state.gene_annotations.map(g => <option value={g.value}>{g.text}</option>)
 		const cancer_options = this.state.cancer_annotations.map(c => <option value={c.value}>{c.text}</option>)
@@ -245,8 +346,7 @@ export default class SentenceEditor extends Component {
 				<td>{ evidence_selector }</td>
 			</tr>
 		</tbody>
-	</Table>
-
+		</Table>
 
 
 		return (
@@ -275,20 +375,15 @@ export default class SentenceEditor extends Component {
 						/>
 					</div>
 
-					
-
 					<div className="mt-5">
 
 						{ selector_table }
-
-						
 
 						<Button className="mt-1 float-right" size="sm" onClick={this.add_relation_annotation}>
 							Add relation
 						</Button>
 
 					</div>
-
 					
 					<div>
 						<h3 className="mt-5">Relations</h3>
@@ -303,241 +398,3 @@ export default class SentenceEditor extends Component {
 		)
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import React, { Component } from 'react';
-// import axios from 'axios';
-
-
-// import { TextAnnotateBlend } from "react-text-annotate-blend"
-
-
-// const entity_labels = [
-// 	{
-// 	  id: 1,
-// 	  displayName: "Gene",
-// 	  description: "Definition of a gene"
-// 	},
-// 	{
-// 		id: 2,
-// 		displayName: "Drug",
-// 		description: "Definition of a drug"
-// 	},
-// 	{
-// 	  id: 3,
-// 	  displayName: "Cancer",
-// 	  description: "Definition of a cancer"
-// 	},
-	
-//   ];
-
-//   const relation_labels = [
-// 	{
-// 	  id: 1,
-// 	  displayName: "Diagnostic",
-// 	  description: "Definition of diagnostic"
-// 	},
-// 	{
-// 	  id: 2,
-// 	  displayName: "Predisposing",
-// 	  description: "Definition of predisposing"
-// 	},
-// 	{
-// 		id: 3,
-// 		displayName: "Predictive",
-// 		description: "Definition of predictive"
-// 	},
-// 	{
-// 		id: 4,
-// 		displayName: "Prognostic",
-// 		description: "Definition of prognostic"
-// 	 },
-//   ];
-
-
-// export default class SentenceEditor extends Component {
-
-// 	constructor(props) {
-// 		super(props)
-// 		this.state = {
-// 			annotated_sentence_id: 0,
-// 			relation_map: {},
-// 			relation_id: 0
-			
-// 		}
-		
-// 		//this.addAnnotationsToDB = this.addAnnotationsToDB.bind(this)
-		
-// 	}
-
-// 	//addRelationAnnotationsToDB(output, id){
-
-// 	//}
-
-
-// 	// addAnnotationsToDB(output){
-// 	// 	console.log(output)
-
-// 	// 	var self = this
-
-// 	// 	var fetchSentenceURL = '/api/update_data/add_annotated_sentence'
-// 	// 	var sentenceParams = {text: this.props.sentence}
-
-
-// 	// 	axios.get(fetchSentenceURL, {
-// 	// 		params: sentenceParams
-// 	// 	})
-// 	// 	.then(function (response) {
-// 	// 			const annotation_sentence = response.data
-
-// 	// 			self.setState({
-// 	// 				annotated_sentence_id: annotation_sentence.id
-// 	// 			})
-				
-// 	// 			if (output.relationships){
-// 	// 				var relation_map = {}
-// 	// 				output.relationships.forEach((relationship) => {
-						
-// 	// 					var fetchRelationsURL = '/api/update_data/add_relation_annotation'
-// 	// 					var relationParams = {
-// 	// 						sentence_id: annotation_sentence.id,
-// 	// 						relation_type_id: relationship.label,
-// 	// 					}
-		
-// 	// 					axios.get(fetchRelationsURL, {
-// 	// 						params: relationParams
-// 	// 					})
-// 	// 					.then(function (response) {
-// 	// 						const relation = response.data
-
-// 	// 						relation_map[relation.id] = [relationship.from, relationship.to]
-							
-
-// 	// 						})
-// 	// 						.catch(function (error) {
-// 	// 							console.log(error);
-// 	// 						})
-// 	// 						.then(function () {
-// 	// 							// always executed
-// 	// 						});
-// 	// 				});
-// 	// 				self.setState({
-// 	// 					relation_map: relation_map,
-// 	// 				})
-// 	// 			}
-// 	// 		})
-// 	// 		.catch(function (error) {
-// 	// 			console.log(error);
-// 	// 		})
-// 	// 		.then(function () {
-				
-
-// 	// 			if (output.sequence){
-// 	// 				var fragments = []
-	
-// 	// 				output.sequence.forEach((entity) => {
-// 	// 					if (entity['text'] != ' '){
-// 	// 						fragments.push(entity)
-// 	// 					}
-// 	// 				})
-	
-// 	// 				fragments.forEach((entity, index) => {
-// 	// 					if ('label' in entity && entity['label']){
-	
-	
-// 	// 						var start = 0
-// 	// 						for (var i=0; i<index; i++){
-// 	// 							start = start + fragments[i].text.length + 1
-// 	// 						}
-							
-// 	// 						// get relation_id						
-							
-// 	// 						var fetchEntityURL = '/api/update_data/add_entity_annotation'
-// 	// 						var entityParams = {start: start, sentence_id: self.state.annotated_sentence_id, entity_type_id: entity['label'], offset: entity['text'].length, relation_annotation_id: 68}
-	
-// 	// 						axios.get(fetchEntityURL, {
-// 	// 							params: entityParams
-// 	// 						})
-// 	// 						.then(function (response) {
-								
-// 	// 						})
-// 	// 						.catch(function (error) {
-// 	// 						console.log(error);
-// 	// 						})
-// 	// 						.then(function () {
-// 	// 						// always executed
-// 	// 						});  
-// 	// 					}
-// 	// 				})
-// 	// 			}
-// 	// 		});		
-
-			
-
-			
-		
-// 	// }
-
-	
-
-// 	render() {
-
-// 		return (
-// 				<div> 
-					
-// 					<div id="test">
-// 						{/* <NLPAnnotator
-// 							hotkeysEnabled
-// 							type="label-relationships"
-// 							multipleLabels={false}
-// 							document={this.props.sentence}
-// 							onFinish={this.addAnnotationsToDB}
-// 							entityLabels={entity_labels}
-// 							relationshipLabels={relation_labels}
-// 						/> */}
-// 					</div> 
-
-// 				</div>
-// 		)
-// 	}
-// }
-
-
-
