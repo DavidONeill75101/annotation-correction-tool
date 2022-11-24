@@ -115,3 +115,7 @@ model RelationType {
   name               String
   RelationAnnotation RelationAnnotation[]
 }
+
+generator erd {
+  provider = "prisma-erd-generator"
+}
