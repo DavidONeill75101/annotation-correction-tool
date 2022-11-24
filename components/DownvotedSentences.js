@@ -54,10 +54,35 @@ export default class DownvotedSentences extends Component {
 		});
 	}
 
+	get_user(){
+		var self = this
+		var fetchURL = '/api/get_data/get_user'
+		var params = {email: this.props.user.email.split('@')[0]}
+		
+		axios.get(fetchURL, {
+			params: params
+		})
+		.then(function (response) {
+				const user = response.data
+				self.setState({
+					user_id: user.id,
+				})
+			})
+			.catch(function (error) {
+				console.log(error);
+			})
+			.then(function () {
+				// always executed
+				
+			});
+	}
+
 	
 	componentDidMount() {
 		
 		this.refreshSentences()
+		this.get_user()
+
 	}
 	
 	
@@ -102,15 +127,31 @@ export default class DownvotedSentences extends Component {
 		
 		var contents = 'loading...'
 
-		if (this.state.loaded) {
+		if (this.state.loaded && this.state.user_id) {
+			
+			var annotated_sentences = []
 
-			const rows = this.state.sentences.map(s => <tr key={s.sentence.id}><td>{s.sentence.pmid}</td>
+			for (var sentence of this.state.sentences){
+				for (var user_annotation of sentence.sentence.user_annotations){
+					if (user_annotation.userId == this.state.user_id) {
+						annotated_sentences.push(sentence.sentenceId)
+					}
+				}
+			}
+
+			var non_annotated_sentences = []
+
+			for (var sentence of this.state.sentences){
+				if (!annotated_sentences.includes(sentence.sentenceId)){
+					non_annotated_sentences.push(sentence)
+				}
+			}
+			
+			const rows = non_annotated_sentences.map(s => <tr key={s.sentence.id}><td>{s.sentence.pmid}</td>
 			<td>{s.sentence.journal}</td><td>{s.sentence.year}</td>
 			<td>{s.sentence.section}</td><td>{s.sentence.subsection}</td>
 			<td>{s.sentence.sentence}</td>
-			<td><Link href={"/manual_annotation/" + s.sentence.id + '/'}><a><Button size="md">Annotate</Button></a></Link></td>
-			
-			
+			<td><Link href={"/manual_annotation/" + s.sentence.id + '/' + this.props.matching_id + '/' + this.props.citations + '/'}><a><Button size="md">Annotate</Button></a></Link></td>
 			</tr>)
 
 			contents = <Table striped bordered hover>

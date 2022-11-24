@@ -27,7 +27,7 @@ const ReviewDownvotedSentences = () => {
 	const citations = router.query.citations
 
 
-	const editor = user ?  <DownvotedSentences matching_id={matchingId} start={start} end={end} citations={citations} /> : <div><a href="/api/auth/login">Login</a> to use the tool</div>
+	const editor = user ?  <DownvotedSentences matching_id={matchingId} start={start} end={end} citations={citations} user={user}/> : <div><a href="/api/auth/login">Login</a> to use the tool</div>
 
 	return <Layout title="Manual Annotation" page="/review" >
 		

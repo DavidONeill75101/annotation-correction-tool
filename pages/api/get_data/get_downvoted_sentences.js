@@ -43,7 +43,19 @@ export default async function handle(req, res) {
         select: {
             sentenceId: true,
             userId: true,
-            sentence: true,
+            sentence: {
+				select: {
+					id: true,
+					pmid: true,
+					journal: true,
+					year: true,
+					section: true,
+					subsection: true,
+					sentence: true,
+					matching_id: true,
+					user_annotations: true,
+				}
+			}
         },
 
         where: { 

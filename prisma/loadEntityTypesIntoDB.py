@@ -31,7 +31,7 @@ def main():
 
     
     
-    d = {'id': [1, 2, 3], 'name': ['gene', 'drug', 'cancer']}
+    d = {'id': [1, 2, 3], 'name': ['gene', 'cancer', 'drug']}
     df = pd.DataFrame(data=d)
 
     for i in range(len(df)):

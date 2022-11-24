@@ -5,6 +5,7 @@ import {TokenAnnotator, TextAnnotator} from 'react-text-annotate'
 
 import Button from 'react-bootstrap/Button'
 import Table from 'react-bootstrap/Table'
+import Router from 'next/router';
 import { sessionFactory } from '@auth0/nextjs-auth0/dist/session';
  
 
@@ -228,7 +229,7 @@ export default class SentenceEditor extends Component {
 			
 		promise.then(
 		 	function(value) {
-				
+				Router.back()
 			},
 			function(error) {
 
@@ -291,7 +292,7 @@ export default class SentenceEditor extends Component {
 	
 	render() {
 
-		const tag_colours = {'gene':'#BA324F', 'cancer':'#175676', 'drug':'#4BA3C3'}
+		const tag_colours = {'gene':'#FF9900', 'cancer':'#38E54D', 'drug':'#FDFF00'}
 
 		var relation_contents = ''
 		const relation_rows = this.state.relations.map(r => <tr><td>{(r.gene>-1) ? this.state.value[r.gene].tokens.join(' ') : 'N/A'}</td><td>{(r.cancer>-1) ? this.state.value[r.cancer].tokens.join(' ') : 'N/A'}</td><td>{(r.drug>-1) ? this.state.value[r.drug].tokens.join(' ') : 'N/A'}</td><td>{r.evidence_type}</td><Button className="w-100 mt-1" onClick={() => this.remove_relation_annotation(r.id)}>Remove</Button></tr>)
@@ -389,9 +390,14 @@ export default class SentenceEditor extends Component {
 						<h3 className="mt-5">Relations</h3>
 						{relation_contents}
 
+
+						
 						<Button className="mt-1 float-right" size="sm" onClick={this.add_annotations_to_db}>
 							Annotations Complete
 						</Button>
+						
+
+						
 					</div>
 									
 				</div>
