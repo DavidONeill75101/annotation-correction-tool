@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import Button from 'react-bootstrap/Button';
+
 import { useUser } from "@auth0/nextjs-auth0"
+
+import Button from 'react-bootstrap/Button';
 
 
 export default function TopBar() {
   const { user } = useUser();
-
+  
 
   return (
 

@@ -6,7 +6,6 @@ import {TokenAnnotator, TextAnnotator} from 'react-text-annotate'
 import Button from 'react-bootstrap/Button'
 import Table from 'react-bootstrap/Table'
 import Router from 'next/router';
-import { sessionFactory } from '@auth0/nextjs-auth0/dist/session';
  
 
 export default class SentenceEditor extends Component {
@@ -26,15 +25,17 @@ export default class SentenceEditor extends Component {
 			relations: [],
 		}
 		
-
 		this.update_value = this.update_value.bind(this)
 		this.update_tag = this.update_tag.bind(this)
+
 		this.update_candidate_gene = this.update_candidate_gene.bind(this)
 		this.update_candidate_cancer = this.update_candidate_cancer.bind(this)
 		this.update_candidate_drug = this.update_candidate_drug.bind(this)
 		this.update_candidate_evidence_type = this.update_candidate_evidence_type.bind(this)
+
 		this.add_relation_annotation = this.add_relation_annotation.bind(this)
 		this.remove_relation_annotation = this.remove_relation_annotation.bind(this)
+
 		this.add_annotations_to_db = this.add_annotations_to_db.bind(this)
 		this.add_user_annotation_to_db = this.add_user_annotation_to_db.bind(this)
 		this.add_relation_annotations_to_db = this.add_relation_annotations_to_db.bind(this)
@@ -44,6 +45,7 @@ export default class SentenceEditor extends Component {
 
 
 	update_value(value){
+
 		var self = this
 		
 		var gene_annotations = [{text:'N/A', value:-1}]
@@ -179,21 +181,16 @@ export default class SentenceEditor extends Component {
 
 	add_relation_annotations_to_db(){
 		
-		
 		var self = this
-
 
 		let promise = new Promise(function(resolve, reject) {
 			self.state.relations.forEach(function(item, index){
 				var fetchURL = '/api/update_data/add_relation_annotation'
 
-				
 				var evidence_type_ids = {'diagnostic': 1, 'predisposing': 2, 'predictive': 3, 'prognostic': 4}
-				
 		
 				var params = {user_annotation_id:self.state.user_annotation_id, relation_type_id:evidence_type_ids[item.evidence_type]}
 
-				
 				axios.get(fetchURL, {
 					params: params
 				})
@@ -311,7 +308,6 @@ export default class SentenceEditor extends Component {
 			</tbody>
 		</Table>
 
-
 		const gene_options = this.state.gene_annotations.map(g => <option value={g.value}>{g.text}</option>)
 		const cancer_options = this.state.cancer_annotations.map(c => <option value={c.value}>{c.text}</option>)
 		const drug_options = this.state.drug_annotations.map(d => <option value={d.value}>{d.text}</option>)
@@ -328,7 +324,6 @@ export default class SentenceEditor extends Component {
 		const cancer_selector = <select onChange={this.update_candidate_cancer} value={this.state.candidate_cancer} className="w-100">{ cancer_options }</select>
 		const drug_selector = <select onChange={this.update_candidate_drug} value={this.state.candidate_drug} className="w-100">{ drug_options }</select>
 		const evidence_selector = <select onChange={this.update_candidate_evidence_type} value={this.state.candidate_evidence_type} className="w-100">{ evidence_type_options }</select>
-
 
 		const selector_table = <Table striped bordered hover>
 		<thead>
@@ -390,13 +385,9 @@ export default class SentenceEditor extends Component {
 						<h3 className="mt-5">Relations</h3>
 						{relation_contents}
 
-
-						
 						<Button className="mt-1 float-right" size="sm" onClick={this.add_annotations_to_db}>
 							Annotations Complete
 						</Button>
-						
-
 						
 					</div>
 									

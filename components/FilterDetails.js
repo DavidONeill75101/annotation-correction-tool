@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
+
 import Link from 'next/link'
+
 import axios from 'axios';
+
 import Select from 'react-select'
+
 import Button from 'react-bootstrap/Button';
 import { Col, Container, Row } from 'react-bootstrap';
 
@@ -30,7 +34,7 @@ export default class Relations extends Component {
 		this.getVariants = this.getVariants.bind(this);
 	}
 
-
+	
 	getGenes() {
 
 		var self = this
@@ -186,6 +190,7 @@ export default class Relations extends Component {
 
 
 	render() {
+		
 
 		return (
 				<div>

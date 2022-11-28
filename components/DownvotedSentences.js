@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
+
 import Link from 'next/link'
+
 import axios from 'axios';
+
 import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table'
-
 
 
 export default class DownvotedSentences extends Component {
@@ -54,6 +56,7 @@ export default class DownvotedSentences extends Component {
 		});
 	}
 
+
 	get_user(){
 		var self = this
 		var fetchURL = '/api/get_data/get_user'
@@ -79,10 +82,8 @@ export default class DownvotedSentences extends Component {
 
 	
 	componentDidMount() {
-		
 		this.refreshSentences()
 		this.get_user()
-
 	}
 	
 	
@@ -172,6 +173,7 @@ export default class DownvotedSentences extends Component {
 			</Table>
 		}
 	
+		
 		return (
 			
 				<div>

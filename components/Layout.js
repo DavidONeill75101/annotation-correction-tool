@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
-import Router from 'next/router'
 
-import Spinner from 'react-bootstrap/Spinner'
+import Router from 'next/router'
+import { withRouter } from 'next/router'
 
 import Head from 'next/head'
-import Sidebar from '../components/Sidebar.js'
-import Topbar from '../components/Topbar.js'
+
+import Spinner from 'react-bootstrap/Spinner'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBomb, faFrown } from '@fortawesome/free-solid-svg-icons'
 
-import { withRouter } from 'next/router'
+import Sidebar from '../components/Sidebar.js'
+import Topbar from '../components/Topbar.js'
 
 
 class Layout extends Component {
@@ -42,6 +43,7 @@ class Layout extends Component {
 		this.handleResize = this.handleResize.bind(this);
 		this.toggleSidebar = this.toggleSidebar.bind(this);
 	}
+
 	
 	componentDidMount () {
 		this.setState({windowSize: window.innerWidth})
@@ -51,10 +53,12 @@ class Layout extends Component {
 			this.props.handleResize(window.innerWidth)
 		}
 	}
+
 	
 	componentWillUnmount() {
 		window.addEventListener("resize", null);
     }
+
 	
 	handleResize(WindowSize, event) {
 		this.setState({windowSize: window.innerWidth})
@@ -63,18 +67,17 @@ class Layout extends Component {
 			this.props.handleResize(window.innerWidth)
 		}
     }
+
 	
 	toggleSidebar() {
 		this.setState({showSidebar:!this.state.showSidebar})
 	}
+
 	
 	render() {
-		const projectName = "Text Annotater"
-		
-		const metaTitle = 'title' in this.props && this.props.page != '/' ? this.props.title + " at " + projectName : projectName
-		
-		const metadata = <></> // TODO
-									
+
+		const projectName = "Annotation Review"
+													
 		var content = '', headBlock = '';
 		if (this.props.error404) {
 			content = <div style={{display: 'flex',  justifyContent:'center', alignItems:'center', height: '100vh'}}>
@@ -86,7 +89,7 @@ class Layout extends Component {
 			headBlock = <Head>
 							<title>Page not found | {projectName}</title>
 							<meta name="robots" content="noindex" />
-							{metadata}
+							
 						</Head>
 		} else if (this.state.error || this.props.error) {
 			const errorMessage = this.props.errorMessage ? this.props.errorMessage : "An error has occurred!"
@@ -100,7 +103,7 @@ class Layout extends Component {
 			headBlock = <Head>
 							<title>Error | {projectName}</title>
 							<meta name="robots" content="noindex" />
-							{metadata}
+							
 						</Head>
 		} else if (this.state.loading || ('loading' in this.props && this.props.loading == true)) {
 			content = <div style={{display: 'flex',  justifyContent:'center', alignItems:'center', height: '100vh'}}>
@@ -110,7 +113,7 @@ class Layout extends Component {
 				</div>
 			headBlock = <Head>
 							<meta name="robots" content="noindex" />
-							{metadata}
+							
 						</Head>
 		} else {
 										
@@ -120,7 +123,7 @@ class Layout extends Component {
 			headBlock = <Head>
 					<title>{pageTitle}</title>
 					<link rel="icon" href="/favicon.png" type="image/png" />
-					{metadata}
+					
 				</Head>
 		}
 		
@@ -133,6 +136,7 @@ class Layout extends Component {
 		const overflowHack = tourMode ? {overflowY: 'hidden',overflowX: 'hidden'} : {overflowX: 'hidden'}
 		
 		const toastInBottomRight = 'toastInBottomRight' in this.props ? <div style={{position:"fixed", right:"10px", bottom:"10px", zIndex: "2000 !important"}}>{this.props.toastInBottomRight}</div> : <></>
+		
 		
 		return (
 			<div id="wrapper">

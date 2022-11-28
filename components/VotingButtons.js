@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
+
 import axios from 'axios';
+
 import Button from 'react-bootstrap/Button'
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCheck, faXmark, faPencil, faLink, faSkullCrossbones, faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons'
+import { faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons'
 
 
 export default class VotingButtons extends Component {
@@ -31,6 +34,7 @@ export default class VotingButtons extends Component {
 
 
     delete_upvote() {
+
         var self = this
         const fetchURL = 'http://localhost:3000/api/update_data/delete_upvote?user_id=' + this.state.user_id + '&sentence_id=' + this.props.id
 
@@ -51,10 +55,11 @@ export default class VotingButtons extends Component {
             });
     }
 
+
     add_upvote() {
+
         var self = this
         const fetchURL = 'http://localhost:3000/api/update_data/add_upvote?user_id=' + this.state.user_id + '&sentence_id=' + this.props.id
-
 
         axios.get(fetchURL)
             .then(function (response) {
@@ -75,7 +80,9 @@ export default class VotingButtons extends Component {
 
     }
 
+
     create_user() {
+
         var self = this
         const username = this.props.user.split('@')[0]
 
@@ -114,6 +121,7 @@ export default class VotingButtons extends Component {
 
 
     get_user() {
+
         var self = this
         const username = this.props.user.split('@')[0]
 
@@ -137,6 +145,7 @@ export default class VotingButtons extends Component {
     
 
     upvote_sentence() {
+
         var self = this
 
         const username = this.props.user.split('@')[0]
@@ -164,17 +173,15 @@ export default class VotingButtons extends Component {
             })
             .then(function () {
                 // always executed
-
-
                 self.add_upvote()
-
-
             });
     }
 
 
     delete_downvote() {
+
         var self = this
+
         const fetchURL = 'http://localhost:3000/api/update_data/delete_downvote?user_id=' + this.state.user_id + '&sentence_id=' + this.props.id
 
         axios.get(fetchURL)
@@ -196,6 +203,7 @@ export default class VotingButtons extends Component {
 
 
     add_downvote() {
+
         var self = this
 
         const fetchURL = 'http://localhost:3000/api/update_data/add_downvote?user_id=' + this.state.user_id + '&sentence_id=' + this.props.id
@@ -224,6 +232,7 @@ export default class VotingButtons extends Component {
 
 
     downvote_sentence() {
+
         var self = this
 
         const username = this.props.user.split('@')[0]
@@ -256,6 +265,7 @@ export default class VotingButtons extends Component {
 
 
     get_sentence() {
+
         var self = this
 
         axios.get('/api/get_data/get_sentence?sentence_id=' + this.props.id)
@@ -311,13 +321,10 @@ export default class VotingButtons extends Component {
 
     componentDidMount() {
         this.get_sentence()
-        
     }
 
 
     render() {
-        
-
         
 
         return (
