@@ -110,7 +110,10 @@ export default class ReviewEditor extends Component {
 		var contents = 'loading...'
 
 		if (this.state.loaded) {
-			const rows = this.state.sentences.map(s => <tr key={s.id}><td>{s.pmid}</td>
+
+			
+
+			const rows = this.state.sentences.map(s => <tr key={s.id}><td><a href={'https://pubmed.ncbi.nlm.nih.gov/' + s.pmid + '/'}>{s.pmid}</a></td>
 			<td>{s.journal}</td><td>{s.year}</td>
 			<td>{s.section}</td><td>{s.subsection}</td>
 			<td>{parse(s.formatted)}</td>			
