@@ -1,5 +1,6 @@
 import prisma from '../../../lib/prisma'
 
+
 export default async function handle(req, res) {
 
     const matching_id = req.query.matching_id
@@ -9,7 +10,6 @@ export default async function handle(req, res) {
 	const evidence_type = req.query.evidence_type
 	const variant = req.query.variant_group
 	var start = parseInt(req.query.start)
-
 
 	var params = {}
 
@@ -37,7 +37,6 @@ export default async function handle(req, res) {
 		params['variant_group'] = variant
 	}
 
-    
 	var downvotes = await prisma.UserDownvote.findMany({
 		
         select: {
@@ -67,7 +66,5 @@ export default async function handle(req, res) {
 		
 	})
 
-	
 	res.json(downvotes)
-
 }

@@ -1,5 +1,6 @@
 import prisma from '../../../lib/prisma'
 
+
 export default async function handle(req, res) {
 
 	var cancers = await prisma.relation.findMany({
@@ -17,6 +18,5 @@ export default async function handle(req, res) {
         }
     })
 
-	res.json(cancer_list.sort(Intl.Collator().compare))
-	
+	res.json(cancer_list.sort(Intl.Collator().compare))	
 }

@@ -1,15 +1,10 @@
-
-import sqlite3
-
-
 import pandas as pd
-import wget
-import gzip
 
 import mysql.connector
 
 import os
 import re
+
 
 def main():
 
@@ -28,11 +23,11 @@ def main():
     cur = con.cursor()
 
     print("DB connection established")
-
-    
     
     d = {'id': [1, 2, 3], 'name': ['gene', 'cancer', 'drug']}
     df = pd.DataFrame(data=d)
+
+    print("Dataframe Created")
 
     for i in range(len(df)):
         row = df.iloc[i]
@@ -43,6 +38,7 @@ def main():
     print("Dataframe written to DB")
     
     con.commit()
+    
 
 main()
     

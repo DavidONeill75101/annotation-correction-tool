@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
+
 import Link from 'next/link'
-import Layout from '../components/Layout.js'
+
 import Button from 'react-bootstrap/Button'
+
+import Layout from '../components/Layout.js'
 
 
 export default class annotation_review extends Component {
@@ -9,6 +12,7 @@ export default class annotation_review extends Component {
 	constructor(props) {
 		super(props)
 	}
+	
 
 	render() {
 

@@ -1,5 +1,6 @@
 import prisma from '../../../lib/prisma'
 
+
 export default async function handle(req, res) {
 
 	var evidence_types = await prisma.relation.findMany({

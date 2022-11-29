@@ -1,10 +1,10 @@
 import prisma from '../../../lib/prisma'
 
+
 export default async function handle(req, res) {
 
 	const matching_id = req.query.matching_id
 	const start = parseInt(req.query.start)
-	const end = parseInt(req.query.end)
 	
 	var params = {'matching_id':matching_id}
 	

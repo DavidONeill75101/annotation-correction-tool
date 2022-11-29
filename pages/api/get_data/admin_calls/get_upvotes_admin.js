@@ -1,8 +1,8 @@
 import prisma from '../../../../lib/prisma'
 
+
 export default async function handle(req, res) {
   
-	
     var upvotes = await prisma.UserUpvote.groupBy({
         by: ['sentenceId'],
         select: {
@@ -29,5 +29,4 @@ export default async function handle(req, res) {
     })
     
 	res.json(sentences)
-
 }

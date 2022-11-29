@@ -1,5 +1,6 @@
 import prisma from '../../../lib/prisma'
 
+
 export default async function handle(req, res) {
 
     const relation_type_id = parseInt(req.query.relation_type_id)
@@ -15,6 +16,4 @@ export default async function handle(req, res) {
 	})
 
 	res.json(relation_annotation)
-      
-	
 }

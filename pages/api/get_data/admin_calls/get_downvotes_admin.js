@@ -1,7 +1,7 @@
 import prisma from '../../../../lib/prisma'
 
+
 export default async function handle(req, res) {
-  
 	
     var downvotes = await prisma.UserDownvote.groupBy({
         by: ['sentenceId'],
@@ -28,7 +28,5 @@ export default async function handle(req, res) {
         }
     })
 
-    
-	res.json(sentences)
-
+    res.json(sentences)
 }

@@ -1,5 +1,6 @@
 import prisma from '../../../lib/prisma'
 
+
 export default async function handle(req, res) {
 
 	const sentence_id = parseInt(req.query.sentence_id)

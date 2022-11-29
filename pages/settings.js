@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import Layout from '../components/Layout.js'
+
 import { useUser } from "@auth0/nextjs-auth0";
+
+import Layout from '../components/Layout.js'
 
 
 export default function Settings() {

@@ -1,11 +1,11 @@
 import prisma from '../../../lib/prisma'
 
+
 export default async function handle(req, res) {
 
     const user_id = parseInt(req.query.user_id)
     const sentence_id = parseInt(req.query.sentence_id)
 
-    
     var user = await prisma.User.findUnique({
 		
 		where: {
@@ -20,14 +20,12 @@ export default async function handle(req, res) {
         }
     })
 
-
     var possible_user_downvote = await prisma.UserDownvote.findMany({
         where: {
             sentenceId: sentence.id,
             userId: user.id
         }
     })
-
 
     if (possible_user_downvote.length == 0){
         var user_downvote = await prisma.UserDownvote.create({
@@ -41,10 +39,4 @@ export default async function handle(req, res) {
         res.json(['error'])
     }
     
-    
-        
-        
-    
-    
-	
 }

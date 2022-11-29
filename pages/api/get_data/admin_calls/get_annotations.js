@@ -1,5 +1,5 @@
-import { TurnedIn } from '@material-ui/icons'
 import prisma from '../../../../lib/prisma'
+
 
 export default async function handle(req, res) {
 
@@ -36,6 +36,4 @@ export default async function handle(req, res) {
 	})
 
     res.json(user_annotations)
-	
-	
 }

@@ -1,5 +1,6 @@
 import prisma from '../../../lib/prisma'
 
+
 export default async function handle(req, res) {
 
 	const entity_id = parseInt(req.query.id)
@@ -9,8 +10,5 @@ export default async function handle(req, res) {
         
       });
     
-
-	res.json(deleteEntityAnnotation)
-       
-	
+	res.json(deleteEntityAnnotation)	
 }

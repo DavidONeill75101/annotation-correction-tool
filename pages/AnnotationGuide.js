@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
 import Layout from '../components/Layout.js'
 import Table from 'react-bootstrap/Table'
 
@@ -8,6 +9,7 @@ export default class AnnotationGuide extends Component {
 		super(props)
 		this.state = {}
 	}
+	
 	
 	render() {
 		

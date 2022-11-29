@@ -1,15 +1,11 @@
 
-import sqlite3
-
-
 import pandas as pd
-import wget
-import gzip
 
 import mysql.connector
 
 import os
 import re
+
 
 def main():
 
@@ -29,11 +25,7 @@ def main():
 
     print("DB connection established")
 
-    
     collated_pd = pd.read_pickle('prisma\collated_pd.pkl')
-
-    print(collated_pd.iloc[0])
-
 
     print("Dataframe built")
 
@@ -46,6 +38,7 @@ def main():
     print("Dataframe written to DB")
     
     con.commit()
+
 
 main()
     

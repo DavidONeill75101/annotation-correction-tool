@@ -1,5 +1,6 @@
 import prisma from '../../../lib/prisma'
 
+
 export default async function handle(req, res) {
 
 	var entity_types = await prisma.EntityType.findMany({
@@ -9,6 +10,5 @@ export default async function handle(req, res) {
 		}
 	})
 
-    
 	res.json(entity_types)
 }

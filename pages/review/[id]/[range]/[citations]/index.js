@@ -1,17 +1,20 @@
 import React, { Component } from 'react';
+
 import { useRouter } from 'next/router'
+
 import { useUser } from "@auth0/nextjs-auth0";
-import ReviewEditor from '../../../../../components/ReviewEditor.js'
-import Layout from '../../../../../components/Layout.js'
+
 import Button from 'react-bootstrap/Button';
 
+import ReviewEditor from '../../../../../components/ReviewEditor.js'
+import Layout from '../../../../../components/Layout.js'
 
 
 const Review = () => {
 
 	const { user, error, isLoading } = useUser();
+
 	const router = useRouter()
-	
 	const matchingId = router.query.id
 	const range = router.query.range
 
@@ -29,6 +32,7 @@ const Review = () => {
 	const citations = router.query.citations
 
 	const editor = user ?  <ReviewEditor matchingId={matchingId} showMetadata={true} start={start} end={end} citations={citations} user={user.email} /> : <div><a href="/api/auth/login">Login</a> to use the tool</div>
+	
 	
 	return <Layout title="Review" page="/review" >
 						

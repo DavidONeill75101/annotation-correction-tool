@@ -1,14 +1,17 @@
-# CIViCMine Annotation Review
+# CIViCMine Annotation Review Tool
 
 ## About
 
-This repository holds a [Next.js](https://nextjs.org/) application which facilitates the review of cancer-gene-drug relations extracted by the machine learning tool [CIViCMine](http://bionlp.bcgsc.ca/civicmine/).
+This repository holds a [Next.js](https://nextjs.org/) application which facilitates the review of cancer-gene-drug relations extracted by the machine learning tool [CIViCMine](http://bionlp.bcgsc.ca/civicmine/). The web application is part of the "human-in-the-loop" process - relations which have been predicted by CIViCMine are presented to users for review, generating new data which can be used to retrain the model.
+
+There are two main componenents in the application:
+
+- Upvoting/Downvoting - users have the ability to state whether a predicted sentence annotation is correct or incorrect. Correct annotations can be utilised in the future as concrete training data. Incorrect annotations can be used to filter predictions in the future.
+- Manual annotation - incorrectly annotated sentences can be fed to the user for manual annotation to explain what relations actually exist in the sentence.
 
 ## Setup
 
-To set up the current web interface with some data, follow the instructions below. A quick overview: first you need to install some prerequisites including a database, NodeJS and some Python packages. Then you need to get the database set up with some text to annotate, and entities to annotate with (along with some other things). Then you can run it.
-
-All commands are run from the terminal in the root directory of this project. You'll need to clone it and then you make edits to it.
+The following instructions can be followed to run this application locally.
 
 ### Prerequisities
 
@@ -19,7 +22,9 @@ All commands are run from the terminal in the root directory of this project. Yo
   - Install it from https://nodejs.org/en/download/
 - A nice terminal can be useful. On Windows, you could use Git-bash which comes packaged with git for windows: https://gitforwindows.org/
 - For the setup below, you'll need a couple Python packages installed
-  - `pip install pronto spans_and_trees`
+  - `pip install pandas`
+  - `pip install mysql-connector-python`
+  - `pip install gzip`
 
 ### Getting the database set up
 
@@ -32,15 +37,19 @@ All commands are run from the terminal in the root directory of this project. Yo
   - This either needs to be run before running any of the database loading scripts, or push in your `.bash_profile` or `.bash_rc` file so it's preloaded.
 - Install node modules (like React, etc)
   - In the root directory of this project, run `npm install` from the terminal.
-- The database schema is described in the file [prisma/schema.prisma](https://github.com/jakelever/react_annotator/blob/main/prisma/schema.prisma). Get prisma to load up the database schema into MySQL with the command below.
+- The database schema is described in the file [prisma/schema.prisma](https://github.com/DavidONeill75101/annotation-correction-tool/blob/main/prisma/schema.prisma). Get prisma to load up the database schema into MySQL with the command below.
   - `npx prisma migrate dev --name init`
 
 ### Start populating the database
 
 - Insert the relations into the database
-  - `python prisma/loadCollatedIntoDB.py`
+  - `python prisma/populate_db/loadCollatedIntoDB.py`
 - Insert the sentences into the database
-  - `python prisma/loadSentencesIntoDB.py`
+  - `python prisma/populate_db/loadSentencesIntoDB.py`
+- Insert the entity types into the database
+  - `python prisma/populate_db/loadEntityTypesIntoDB.py`
+- Insert the relation types into the database
+  - `python prisma/populate_db/loadRelationTypesIntoDB.py`
 
 ### Run the server
 
@@ -48,3 +57,33 @@ All commands are run from the terminal in the root directory of this project. Yo
   - `npm run dev`
 - Look at it:
   - http://localhost:3000
+
+## Usage
+
+### Casual Reviewing of Sentence Annotations
+
+- Create an account, with the option to login using a third party account.
+- Click "Get Started" to view all of the relations which have been extracted from CIViCMine
+- Filter the relations by various fields.
+- Select "Review Annotations" to be presented with the sentence annotations for a specific relation.
+- Give a "thumbs up" to a sentence annotation which correctly identifies the relation.
+- Give a "thumbs down" to a sentence annotation which incorrectly identifies the relation.
+
+### Detailed Annotation of Sentences
+
+- Create an account, with the option to login using a third party account.
+- Click "Get Started" to view all of the relations which have been extracted from CIViCMine
+- Filter the relations by various fields.
+- Select "Annotate Sentences" to be presented with a list of downvoted sentences for a particular relation.
+- Select "Annotate" on the desired sentence.
+- Highlight text to identify entities in the text.
+- Use the dropdown menus to add relations between entities.
+- Select "Annotations Complete" to save the changes.
+
+### Retrieving the New Training Data
+
+There is a series of administrator API calls which return JSON formatted results of the annotation review:
+
+- [/api/get_data/admin_calls/get_upvotes_admin](/api/get_data/admin_calls/get_upvotes_admin) returns every sentence annotation which has been upvoted.
+- [/api/get_data/admin_calls/get_downvotes_admin](/api/get_data/admin_calls/get_downvotes_admin) returns every sentence annotation which has been downvoted.
+- [/api/get_data/admin_calls/get_annotations](/api/get_data/admin_calls/get_annotations) returns every new, manually annotated sentence.

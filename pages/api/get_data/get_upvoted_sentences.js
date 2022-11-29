@@ -1,5 +1,6 @@
 import prisma from '../../../lib/prisma'
 
+
 export default async function handle(req, res) {
 
 	const matching_id = req.query.matching_id
@@ -9,7 +10,6 @@ export default async function handle(req, res) {
 	const evidence_type = req.query.evidence_type
 	const variant = req.query.variant_group
 	const start = parseInt(req.query.start)
-	const end = parseInt(req.query.end)
 
     var params = {'upvotes':{'gt':0}}
 

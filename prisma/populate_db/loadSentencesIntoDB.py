@@ -1,15 +1,11 @@
-
-import sqlite3
-
-
 import pandas as pd
-import wget
 import gzip
 
 import mysql.connector
 
 import os
 import re
+
 
 def main():
 
@@ -29,12 +25,9 @@ def main():
 
     print("DB connection established")
 
-    
     with gzip.open('prisma\civicmine_sentences.tsv.gz','r') as f:        
         sentences_pd = pd.read_csv(f, sep='\t')
     
-    
-
     print("Dataframe built")
 
     for i in range(len(sentences_pd)):
@@ -46,6 +39,7 @@ def main():
     print("Dataframe written to DB")
     
     con.commit()
+
 
 main()
     

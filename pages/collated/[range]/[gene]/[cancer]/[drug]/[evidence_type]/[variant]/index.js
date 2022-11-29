@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
+
 import { useRouter } from 'next/router'
-import Button from 'react-bootstrap/Button';
+
 import { useUser } from "@auth0/nextjs-auth0";
+
+import Button from 'react-bootstrap/Button';
+
 import Layout from '../../../../../../../../components/Layout.js'
 import Relations from '../../../../../../../../components/Relations.js'
 import Filter from '../../../../../../../../components/FilterDetails.js'
@@ -10,6 +14,7 @@ import Filter from '../../../../../../../../components/FilterDetails.js'
 const Collated = () => {
 
 	const { user, error, isLoading } = useUser();
+
 	const router = useRouter()
 	const range = router.query.range
 	const gene = router.query.gene
@@ -32,6 +37,7 @@ const Collated = () => {
 	const relations = user ? <Relations start={start} end={end} gene={gene} cancer={cancer} drug={drug} evidence_type={evidence_type} variant={variant}/> : <div><a href="/api/auth/login"><Button size="sm">Login</Button></a> to use the tool</div>
 	const filter = user ? <div className="card shadow mb-4"><div className="card-body"><Filter /></div></div> : <></>
 		
+	
 	return <Layout title="Relations" page="/relations" >
 		
 				<div className="d-sm-flex align-items-center justify-content-between mb-4 titlepadding">

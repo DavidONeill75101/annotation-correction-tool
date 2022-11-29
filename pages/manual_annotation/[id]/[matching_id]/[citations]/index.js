@@ -1,21 +1,25 @@
 import React, { Component, useState, useEffect } from 'react';
+
+import { useRouter } from 'next/router'
+
+import { useUser } from "@auth0/nextjs-auth0";
+
+import useAxios from 'axios-hooks'
+
+import Button from 'react-bootstrap/Button';
+
 import Layout from '../../../../../components/Layout.js'
 import SentenceEditor from '../../../../../components/SentenceEditor.js'
-import { useRouter } from 'next/router'
-import { useUser } from "@auth0/nextjs-auth0";
-import Button from 'react-bootstrap/Button';
-import useAxios from 'axios-hooks'
 
 
 function Sentence() {
-	const router = useRouter()
-
+	
 	const { user, user_error, isLoading } = useUser()
 
+	const router = useRouter()
 	const sentence_id = router.query.id
 	const matching_id = router.query.matching_id
 	const citations = router.query.citations
-	
 
 	var fetchURL = '/api/get_data/get_sentence?sentence_id=' + String(sentence_id)
 	

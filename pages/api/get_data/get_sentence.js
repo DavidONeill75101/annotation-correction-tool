@@ -1,9 +1,9 @@
 import prisma from '../../../lib/prisma'
 
+
 export default async function handle(req, res) {
 
 	const sentence_id = parseInt(req.query.sentence_id)
-	
 	
 	var params = {'id':sentence_id}
 	
@@ -21,6 +21,5 @@ export default async function handle(req, res) {
             sentence['subsection'] = 'No subsection'
     }
     
-	
 	res.json(sentence)
 }
