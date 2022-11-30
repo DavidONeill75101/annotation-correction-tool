@@ -63,7 +63,8 @@ The following instructions can be followed to run this application locally.
 ### Casual Reviewing of Sentence Annotations
 
 - Create an account, with the option to login using a third party account.
-- Click "Get Started" to view all of the relations which have been extracted from CIViCMine
+- Read and understand the annotation guide, clicking the button to confirm that you have done this.
+- Click "Get Started" on the homepage to view all of the relations which have been extracted from CIViCMine
 - Filter the relations by various fields.
 - Select "Review Annotations" to be presented with the sentence annotations for a specific relation.
 - Give a "thumbs up" to a sentence annotation which correctly identifies the relation.
@@ -72,7 +73,8 @@ The following instructions can be followed to run this application locally.
 ### Detailed Annotation of Sentences
 
 - Create an account, with the option to login using a third party account.
-- Click "Get Started" to view all of the relations which have been extracted from CIViCMine
+- Read and understand the annotation guide, clicking the button to confirm that you have done this.
+- Click "Get Started" on the homepage to view all of the relations which have been extracted from CIViCMine
 - Filter the relations by various fields.
 - Select "Annotate Sentences" to be presented with a list of downvoted sentences for a particular relation.
 - Select "Annotate" on the desired sentence.
