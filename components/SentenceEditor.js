@@ -118,15 +118,39 @@ export default class SentenceEditor extends Component {
 
 		var relations = this.state.relations
 
-		relations.push({'id': relations.length,
+		
+		if (this.state.candidate_gene!=-1 && 
+		this.state.candidate_cancer!=-1 && 
+		this.state.candidate_evidence_type!='predictive' && 
+		this.state.candidate_drug == -1){
+			relations.push({'id': relations.length,
 						'gene':this.state.candidate_gene, 
 						'cancer':this.state.candidate_cancer,
 						'drug':this.state.candidate_drug,
 						'evidence_type':this.state.candidate_evidence_type})
 
-		this.setState({
-			relations: relations,
-		})
+			this.setState({
+				relations: relations,
+				})
+		}else if (this.state.candidate_gene!=-1 &&
+		this.state.candidate_cancer!=-1 &&
+		this.state.candidate_drug!=-1 &&
+		this.state.candidate_evidence_type=='predictive'){
+			relations.push({'id': relations.length,
+						'gene':this.state.candidate_gene, 
+						'cancer':this.state.candidate_cancer,
+						'drug':this.state.candidate_drug,
+						'evidence_type':this.state.candidate_evidence_type})
+
+			this.setState({
+				relations: relations,
+				})
+		}
+
+		
+		
+
+		
 	}
 
 
@@ -291,9 +315,9 @@ export default class SentenceEditor extends Component {
 
 		const tag_colours = {'gene':'#FF9900', 'cancer':'#38E54D', 'drug':'#FDFF00'}
 
-		var relation_contents = ''
+		var relation_table = ''
 		const relation_rows = this.state.relations.map(r => <tr><td>{(r.gene>-1) ? this.state.value[r.gene].tokens.join(' ') : 'N/A'}</td><td>{(r.cancer>-1) ? this.state.value[r.cancer].tokens.join(' ') : 'N/A'}</td><td>{(r.drug>-1) ? this.state.value[r.drug].tokens.join(' ') : 'N/A'}</td><td>{r.evidence_type}</td><Button className="w-100 mt-1" onClick={() => this.remove_relation_annotation(r.id)}>Remove</Button></tr>)
-		relation_contents = <Table striped bordered hover>
+		relation_table = <Table striped bordered hover>
 			<thead>
 				<tr>
 					<th className="w-20">Gene</th>
@@ -306,7 +330,17 @@ export default class SentenceEditor extends Component {
 			<tbody>
 				{relation_rows}
 			</tbody>
-		</Table>
+		</Table>																			
+		
+		var relation_contents = ' '
+		if (this.state.relations.length>0){
+			relation_contents = <div><h3 className="mt-5">Relations</h3>
+						{relation_table}
+						<Button className="mt-1 float-right" size="sm" onClick={this.add_annotations_to_db}>
+							Annotations Complete
+						</Button></div>
+						
+		}
 
 		const gene_options = this.state.gene_annotations.map(g => <option value={g.value}>{g.text}</option>)
 		const cancer_options = this.state.cancer_annotations.map(c => <option value={c.value}>{c.text}</option>)
@@ -382,13 +416,9 @@ export default class SentenceEditor extends Component {
 					</div>
 					
 					<div>
-						<h3 className="mt-5">Relations</h3>
-						{relation_contents}
-
-						<Button className="mt-1 float-right" size="sm" onClick={this.add_annotations_to_db}>
-							Annotations Complete
-						</Button>
 						
+						{relation_contents}
+					
 					</div>
 									
 				</div>

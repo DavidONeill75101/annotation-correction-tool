@@ -11,13 +11,14 @@ datasource db {
 }
 
 model User {
-  id                  Int            @id @default(autoincrement())
-  email               String         @unique
+  id                  Int                 @id @default(autoincrement())
+  email               String              @unique
   upvoted_sentences   UserUpvote[]
   downvoted_sentences UserDownvote[]
+  UserAnnotation      UserAnnotation[]
+  read_guide          Boolean             @default(false)
 
   @@map("users")
-  UserAnnotation UserAnnotation[]
 }
 
 model UserUpvote {

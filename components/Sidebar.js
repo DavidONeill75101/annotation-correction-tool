@@ -55,7 +55,7 @@ export default class Sidebar extends Component {
 						<hr className="sidebar-divider my-0" />
 					<MyToolTip text="Get to know the annotation criteria" container={this.container}>
 						<li className={this.props.page=='/annotation_guide' ? "nav-item active" : "nav-item"}>
-							<Link href="/AnnotationGuide" as="/annotation_guide" prefetch={false}>
+							<Link href="/annotation_guide" prefetch={false}>
 								<a className="nav-link">
 									<span style={{marginRight: "0.25rem"}}>
 										<FontAwesomeIcon className="sideicon" icon={faQuestionCircle} fixedWidth width="0" />
