@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import Link from 'next/link'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faGear, faPaintbrush, faDna, faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
+import { faPaintbrush, faDna, faQuestionCircle, faChartLine } from '@fortawesome/free-solid-svg-icons'
 
 import MyToolTip from './MyToolTip'
 
@@ -70,14 +70,14 @@ export default class Sidebar extends Component {
 				<div className="tour-categories my-0">	
 					<hr className="sidebar-divider my-0" />		
 						<hr className="sidebar-divider my-0" />
-					<MyToolTip text="Customise your settings" container={this.container}>
-						<li className={this.props.page=='/settings' ? "nav-item active" : "nav-item"}>
-							<Link href="/settings" as="/settings" prefetch={false}>
+					<MyToolTip text="View the annotation stats" container={this.container}>
+						<li className={this.props.page=='/stats' ? "nav-item active" : "nav-item"}>
+							<Link href="/stats" as="/stats" prefetch={false}>
 								<a className="nav-link">
 									<span style={{marginRight: "0.25rem"}}>
-										<FontAwesomeIcon className="sideicon" icon={faGear} fixedWidth width="0" />
+										<FontAwesomeIcon className="sideicon" icon={faChartLine} fixedWidth width="0" />
 									</span>
-									<span> Settings</span>
+									<span> Stats</span>
 								</a>
 							</Link>
 						</li>

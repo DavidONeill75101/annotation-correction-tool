@@ -5,8 +5,8 @@ export default async function handle(req, res) {
 	
     var downvotes = await prisma.UserDownvote.groupBy({
         by: ['sentenceId'],
-        select: {
-            
+        _count: {
+            _all: true,
         }
     })
 
@@ -19,7 +19,7 @@ export default async function handle(req, res) {
     var sentences = await prisma.sentence.findMany({
         select: {
             id: true,
-            title: true,
+            sentence: true,
         },
         where: {
             id: {
@@ -28,5 +28,19 @@ export default async function handle(req, res) {
         }
     })
 
-    res.json(sentences)
+    var result = []
+
+    sentences.forEach(function(sentence){
+        var count = 0
+
+        downvotes.forEach(function(downvote){
+            if (downvote.sentenceId == sentence.id){
+                count = downvote._count._all
+            }
+        })
+
+        result.push({id:sentence.id, text: sentence.sentence, count: count})
+    })
+
+    res.json(result)
 }
