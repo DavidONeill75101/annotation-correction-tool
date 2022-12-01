@@ -20,6 +20,7 @@ export default async function handle(req, res) {
         select: {
             id: true,
             sentence: true,
+            evidencetype: true,
         },
         where: {
             id: {
@@ -39,7 +40,7 @@ export default async function handle(req, res) {
             }
         })
 
-        result.push({id:sentence.id, text: sentence.sentence, count: count})
+        result.push({id:sentence.id, text: sentence.sentence, evidence_type:sentence.evidencetype, count: count})
     })
 
     res.json(result)

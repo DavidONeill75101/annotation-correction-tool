@@ -77,7 +77,7 @@ export default class Sidebar extends Component {
 									<span style={{marginRight: "0.25rem"}}>
 										<FontAwesomeIcon className="sideicon" icon={faChartLine} fixedWidth width="0" />
 									</span>
-									<span> Stats</span>
+									<span> Statistics</span>
 								</a>
 							</Link>
 						</li>
