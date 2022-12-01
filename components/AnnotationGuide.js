@@ -6,9 +6,6 @@ import axios from 'axios';
 
 import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table'
-import { Col, Container, Row } from 'react-bootstrap';
-
-
 
 
 export default class AnnotationGuide extends Component {
@@ -103,9 +100,6 @@ export default class AnnotationGuide extends Component {
     }
 
 	
-	
-
-
 	render() {
 
 		
@@ -123,24 +117,27 @@ export default class AnnotationGuide extends Component {
 
                 { declaration }
                 
-                <div className="d-sm-flex align-items-center justify-content-between mb-4 titlepadding">
-                    <h1 className="h1 mb-0 text-gray-800">CIViCMine Annotation Guidelines</h1>					
-                </div>
-
                 <div>
-                    The goal of CIViCmine is to identify papers that contain evidence items that should be curated into the CIViC database. 
-                    CIViCmine focuses on individual sentences from these papers (due to the current limit of text mining technology). 
-                    It is a supervised machine learning system and so requires annotated sentences to learn from.
+                    <div>
+                        <h2 className="h2 mb-0 text-gray-800">TL;DR</h2>			
+                    </div>
+
+                    <ul>
+                        <li>CIViCMine is a BioNLP platform which predicts relations between genes, cancers and drugs</li>
+                        <li>Your mission is to review these predictions</li>
+                        <li>A prediction is a sentence annotation - this will contain highlighted entities which imply a specific relationship</li>
+                        <li>If the sentence annotation is valid for the given relation then give it a "thumbs up"</li>
+                        <li>If not, give it a "thumbs down"</li>
+                        <li>If you know how the incorrect annotation should be fixed, manually annotate the sentence</li>
+                        <li>To manually annotate, highlight the entities in the sentence and their types</li>
+                        <li>Then add relations between these entities along with the type of relation</li>
+                    </ul>
                 </div>
 
                 <br></br>
 
                 <div>
-                    The annotation process has already been carried out, and the machine learning tool has made predictions.  
-                    The goal of this review tool is to determine whether these predictions are accurate or not, with the goal of taking these corrections and using them to retrain the machine learning model.  
-                    You can select to view the sentences associated to any evidence item which has been predicted by CIViCMine and provide a "thumbs up" or a "thumbs down" for each sentence.
-                    A <strong>"thumbs up"</strong> indicates that you believe the sentence accurately indicates the given relation.
-                    A <strong>"thumbs down"</strong> indicates that you believe the sentence does not accurately indicate the given relation.
+                    <h2 className="h2 mb-0 text-gray-800">Annotation Guidelines</h2>			
                 </div>
 
                 <br></br>
@@ -226,7 +223,7 @@ export default class AnnotationGuide extends Component {
 
                 <div>
                     <div>
-                        <h3 className="h3 mb-0 text-gray-800">Diagnostic</h3>			
+                        <h4 className="h4 mb-0 text-gray-800">Diagnostic</h4>			
                     </div>
                 </div>
 
@@ -240,7 +237,7 @@ export default class AnnotationGuide extends Component {
 
                 <div>
                     <div>
-                        <h3 className="h3 mb-0 text-gray-800">Prognostic / Predictive</h3>			
+                        <h4 className="h4 mb-0 text-gray-800">Prognostic / Predictive</h4>			
                     </div>
                 </div>
 
@@ -252,7 +249,7 @@ export default class AnnotationGuide extends Component {
 
                 <div>
                     <div>
-                        <h3 className="h3 mb-0 text-gray-800">Predisposing</h3>			
+                        <h4 className="h4 mb-0 text-gray-800">Predisposing</h4>			
                     </div>
                 </div>
 
@@ -261,6 +258,10 @@ export default class AnnotationGuide extends Component {
                 <div>
                     Transforming growth factor beta1 gene (<strong>TGFB1</strong>) variant Leu10Pro (L10P) has previously been implicated in <strong>prostate</strong> cancer risk and radiation-induced side-effects. (PMID: 19039592) 
                 </div>
+
+                <br></br>
+               
+
             </div>
 		)
 	}

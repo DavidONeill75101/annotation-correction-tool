@@ -5,10 +5,13 @@ export default async function handle(req, res) {
 
     const relation_type_id = parseInt(req.query.relation_type_id)
     const user_annotation_id = parseInt(req.query.user_annotation_id)
+    const variant = req.query.variant
     
     const record = {
         relationTypeId: relation_type_id,
         userAnnotationId: user_annotation_id,
+        variant: variant,
+
     }
 	
 	var relation_annotation = await prisma.RelationAnnotation.create({

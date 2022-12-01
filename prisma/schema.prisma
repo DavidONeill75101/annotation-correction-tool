@@ -107,8 +107,9 @@ model RelationAnnotation {
   relationType      RelationType       @relation(fields: [relationTypeId], references: [id])
   relationTypeId    Int
   entityAnnotations EntityAnnotation[]
-  UserAnnotation   UserAnnotation?     @relation(fields: [userAnnotationId], references: [id])
-  userAnnotationId Int?
+  UserAnnotation    UserAnnotation?     @relation(fields: [userAnnotationId], references: [id])
+  userAnnotationId  Int?
+  variant           String
 }
 
 model RelationType {
