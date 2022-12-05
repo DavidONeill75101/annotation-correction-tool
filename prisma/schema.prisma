@@ -11,12 +11,12 @@ datasource db {
 }
 
 model User {
-  id                  Int                 @id @default(autoincrement())
-  email               String              @unique
+  id                  Int              @id @default(autoincrement())
+  email               String           @unique
   upvoted_sentences   UserUpvote[]
   downvoted_sentences UserDownvote[]
   UserAnnotation      UserAnnotation[]
-  read_guide          Boolean             @default(false)
+  read_guide          Boolean          @default(false)
 
   @@map("users")
 }
@@ -107,7 +107,7 @@ model RelationAnnotation {
   relationType      RelationType       @relation(fields: [relationTypeId], references: [id])
   relationTypeId    Int
   entityAnnotations EntityAnnotation[]
-  UserAnnotation    UserAnnotation?     @relation(fields: [userAnnotationId], references: [id])
+  UserAnnotation    UserAnnotation?    @relation(fields: [userAnnotationId], references: [id])
   userAnnotationId  Int?
   variant           String
 }
@@ -117,6 +117,59 @@ model RelationType {
   name               String
   RelationAnnotation RelationAnnotation[]
 }
+
+model Gene {
+  id          Int           @id
+  name        String
+  GeneSynonym GeneSynonym[]
+}
+
+model GeneSynonym {
+  id     Int    @id @default(autoincrement())
+  name   String
+  gene   Gene   @relation(fields: [geneId], references: [id])
+  geneId Int
+}
+
+model Cancer {
+  id              Int           @id
+  name            String
+  CancerSynonym   CancerSynonym[]
+}
+
+model CancerSynonym {
+  id          Int    @id @default(autoincrement())
+  name        String
+  cancer      Cancer   @relation(fields: [cancerId], references: [id])
+  cancerId    Int
+}
+
+model Drug {
+  id          Int           @id 
+  name        String
+  DrugSynonym DrugSynonym[]
+}
+
+model DrugSynonym {
+  id     Int    @id @default(autoincrement())
+  name   String
+  drug   Drug   @relation(fields: [drugId], references: [id])
+  drugId Int
+}
+
+model Variant {
+  id                Int           @id
+  name              String
+  VariantSynonym    VariantSynonym[]
+}
+
+model VariantSynonym {
+  id              Int    @id @default(autoincrement())
+  name            String
+  variant         Variant   @relation(fields: [variantId], references: [id])
+  variantId       Int
+}
+
 
 generator erd {
   provider = "prisma-erd-generator"

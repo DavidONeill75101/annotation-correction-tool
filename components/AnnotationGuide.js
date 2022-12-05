@@ -119,7 +119,7 @@ export default class AnnotationGuide extends Component {
                 
                 <div>
                     <div>
-                        <h2 className="h2 mb-0 text-gray-800">TL;DR</h2>			
+                        <h2 className="h2 mb-0 text-gray-800">BLUF</h2>			
                     </div>
 
                     <ul>

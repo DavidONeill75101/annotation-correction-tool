@@ -25,6 +25,7 @@ The following instructions can be followed to run this application locally.
   - `pip install pandas`
   - `pip install mysql-connector-python`
   - `pip install gzip`
+  - `pip install wget`
 
 ### Getting the database set up
 
@@ -50,6 +51,14 @@ The following instructions can be followed to run this application locally.
   - `python prisma/populate_db/loadEntityTypesIntoDB.py`
 - Insert the relation types into the database
   - `python prisma/populate_db/loadRelationTypesIntoDB.py`
+- Insert cancers and cancer synonyms into the database
+  - `python prisma/populate_db/loadCancersIntoDB.py`
+- Insert genes and gene synonyms into the database
+  - `python prisma/populate_db/loadGenesIntoDB.py`
+- Insert drugs and drug synonyms into the database
+  - `python prisma/populate_db/loadDrugsIntoDB.py`
+- Insert variants and variant synonyms into the database
+  - `python prisma/populate_db/loadVariantsIntoDB.py`
 
 ### Run the server
 
