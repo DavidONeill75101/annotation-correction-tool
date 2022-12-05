@@ -25,7 +25,7 @@ def main():
 
     print("DB connection established")
 
-    with gzip.open('prisma\civicmine_sentences.tsv.gz','r') as f:        
+    with gzip.open('prisma\populate_db\civicmine_sentences.tsv.gz','r') as f:        
         sentences_pd = pd.read_csv(f, sep='\t')
     
     print("Dataframe built")

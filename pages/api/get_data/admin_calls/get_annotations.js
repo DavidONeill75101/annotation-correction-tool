@@ -17,6 +17,7 @@ export default async function handle(req, res) {
 					relationType: {
 						select: {
 							name: true,
+							
 						}
 					},
 					entityAnnotations: {

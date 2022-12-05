@@ -109,7 +109,15 @@ model RelationAnnotation {
   entityAnnotations EntityAnnotation[]
   UserAnnotation    UserAnnotation?    @relation(fields: [userAnnotationId], references: [id])
   userAnnotationId  Int?
-  variant           String
+  variant           Variant?           @relation(fields: [variantId], references: [id])
+  variantId         Int?
+  cancer            Cancer?            @relation(fields: [cancerId], references: [id])
+  cancerId          Int?
+  gene              Gene?              @relation(fields: [geneId], references: [id])
+  geneId            Int?
+  drug              Drug?              @relation(fields: [drugId], references: [id])
+  drugId            Int?
+
 }
 
 model RelationType {
@@ -119,9 +127,10 @@ model RelationType {
 }
 
 model Gene {
-  id          Int           @id
-  name        String
-  GeneSynonym GeneSynonym[]
+  id                 Int                  @id
+  name               String
+  GeneSynonym        GeneSynonym[]
+  RelationAnnotation RelationAnnotation[]
 }
 
 model GeneSynonym {
@@ -132,22 +141,24 @@ model GeneSynonym {
 }
 
 model Cancer {
-  id              Int           @id
-  name            String
-  CancerSynonym   CancerSynonym[]
+  id                 Int                  @id
+  name               String
+  CancerSynonym      CancerSynonym[]
+  RelationAnnotation RelationAnnotation[]
 }
 
 model CancerSynonym {
-  id          Int    @id @default(autoincrement())
-  name        String
-  cancer      Cancer   @relation(fields: [cancerId], references: [id])
-  cancerId    Int
+  id       Int    @id @default(autoincrement())
+  name     String
+  cancer   Cancer @relation(fields: [cancerId], references: [id])
+  cancerId Int
 }
 
 model Drug {
-  id          Int           @id 
-  name        String
-  DrugSynonym DrugSynonym[]
+  id                 Int                  @id
+  name               String
+  DrugSynonym        DrugSynonym[]
+  RelationAnnotation RelationAnnotation[]
 }
 
 model DrugSynonym {
@@ -158,18 +169,18 @@ model DrugSynonym {
 }
 
 model Variant {
-  id                Int           @id
-  name              String
-  VariantSynonym    VariantSynonym[]
+  id                 Int                  @id
+  name               String
+  VariantSynonym     VariantSynonym[]
+  RelationAnnotation RelationAnnotation[]
 }
 
 model VariantSynonym {
-  id              Int    @id @default(autoincrement())
-  name            String
-  variant         Variant   @relation(fields: [variantId], references: [id])
-  variantId       Int
+  id        Int     @id @default(autoincrement())
+  name      String
+  variant   Variant @relation(fields: [variantId], references: [id])
+  variantId Int
 }
-
 
 generator erd {
   provider = "prisma-erd-generator"

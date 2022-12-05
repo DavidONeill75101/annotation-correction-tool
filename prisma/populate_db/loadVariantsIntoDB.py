@@ -37,6 +37,7 @@ def main():
     df.drop(2, inplace=True, axis=1)
 
     df_dict = df.to_dict('records')
+    df_dict.append({1: 'No Variant', 3: ['No Variant']})
 
     for count, row in enumerate(df_dict):
 

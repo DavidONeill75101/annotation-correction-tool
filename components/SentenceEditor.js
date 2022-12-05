@@ -25,6 +25,7 @@ export default class SentenceEditor extends Component {
 			candidate_variant: 'No Variant',
 			relations: [],
 			variants: [],
+			error_message: '',
 		}
 
 		this.get_variants = this.get_variants.bind(this)
@@ -155,37 +156,102 @@ export default class SentenceEditor extends Component {
 
 	add_relation_annotation(){
 
-		var relations = this.state.relations
+		var self = this
 
-		if (this.state.candidate_gene!=-1 && 
-		this.state.candidate_cancer!=-1 && 
-		this.state.candidate_evidence_type!='predictive' && 
-		this.state.candidate_drug == -1){
-			relations.push({'id': relations.length,
-						'gene':this.state.candidate_gene, 
-						'cancer':this.state.candidate_cancer,
-						'drug':this.state.candidate_drug,
-						'evidence_type':this.state.candidate_evidence_type,
-						'variant': this.state.candidate_variant,})
+		var gene_text = ''
+		this.state.gene_annotations.forEach(function(item){
+			if (item['value']==self.state.candidate_gene){
+				gene_text = item['text']
+			}
+		})
 
-			this.setState({
-				relations: relations,
-				})
-		}else if (this.state.candidate_gene!=-1 &&
-		this.state.candidate_cancer!=-1 &&
-		this.state.candidate_drug!=-1 &&
-		this.state.candidate_evidence_type=='predictive'){
-			relations.push({'id': relations.length,
-						'gene':this.state.candidate_gene, 
-						'cancer':this.state.candidate_cancer,
-						'drug':this.state.candidate_drug,
-						'evidence_type':this.state.candidate_evidence_type,
-						'variant': this.state.candidate_variant,})
+		var cancer_text = ''
+		this.state.cancer_annotations.forEach(function(item){
+			if (item['value']==self.state.candidate_cancer){
+				cancer_text = item['text']
+			}
+		})
 
-			this.setState({
-				relations: relations,
-				})
-		}		
+		var drug_text = ''
+		this.state.drug_annotations.forEach(function(item){
+			if (item['value']==self.state.candidate_drug){
+				drug_text = item['text']
+			}
+		})
+
+		var fetchURL = '/api/get_data/get_synonyms'
+		var params = {gene_name:gene_text, cancer_name:cancer_text, drug_name:drug_text, variant_name:this.state.candidate_variant}
+		
+		axios.get(fetchURL, {
+			params: params
+		})
+		.then(function (response) {
+				var res = response.data
+
+				if (res!='Entity Error'){
+
+					var relations = self.state.relations
+
+					if (self.state.candidate_gene!=-1 && 
+						self.state.candidate_cancer!=-1 && 
+						self.state.candidate_evidence_type!='predictive' && 
+						self.state.candidate_drug == -1){
+						relations.push({'id': relations.length,
+									'gene':self.state.candidate_gene, 
+									'cancer':self.state.candidate_cancer,
+									'drug':self.state.candidate_drug,
+									'evidence_type':self.state.candidate_evidence_type,
+									'variant': self.state.candidate_variant,
+									'gene_id': res.gene_id,
+									'cancer_id': res.cancer_id,
+									'drug_id': res.drug_id,
+									'variant_id': res.variant_id
+									})
+
+									self.setState({
+							relations: relations,
+							error_message: '',
+							})
+					}else if (self.state.candidate_gene!=-1 &&
+						self.state.candidate_cancer!=-1 &&
+						self.state.candidate_drug!=-1 &&
+						self.state.candidate_evidence_type=='predictive'){
+						relations.push({'id': relations.length,
+									'gene':self.state.candidate_gene, 
+									'cancer':self.state.candidate_cancer,
+									'drug':self.state.candidate_drug,
+									'evidence_type':self.state.candidate_evidence_type,
+									'variant': self.state.candidate_variant,
+									'gene_id': res.gene_id,
+									'cancer_id': res.cancer_id,
+									'drug_id': res.drug_id,
+									'variant_id': res.variant_id
+								})
+
+									self.setState({
+							relations: relations,
+							error_message: '',
+							})
+					}else{
+						self.setState({
+							error_message: 'Invalid Relation'
+						})
+					}	
+				}else{
+					self.setState({
+						error_message: 'Incorrect entity annotations'
+					})
+				}
+			})
+			.catch(function (error) {
+				console.log(error);
+			})
+			.then(function () {
+				// always executed
+				
+			});
+
+		
 	}
 
 
@@ -248,7 +314,7 @@ export default class SentenceEditor extends Component {
 
 				var evidence_type_ids = {'diagnostic': 1, 'predisposing': 2, 'predictive': 3, 'prognostic': 4}
 		
-				var params = {user_annotation_id:self.state.user_annotation_id, relation_type_id:evidence_type_ids[item.evidence_type], variant:item['variant'],}
+				var params = {user_annotation_id:self.state.user_annotation_id, relation_type_id:evidence_type_ids[item.evidence_type], gene: item['gene_id'], cancer: item['cancer_id'], drug: item['drug_id'], variant: item['variant_id']}
 
 				axios.get(fetchURL, {
 					params: params
@@ -267,8 +333,6 @@ export default class SentenceEditor extends Component {
 						if (typeof item.drug == 'string'){
 							self.add_entity_annotation_to_db(relation_annotation_id, item.drug)
 						}
-
-						
 					})
 					.catch(function (error) {
 						console.log(error);
@@ -381,7 +445,7 @@ export default class SentenceEditor extends Component {
 		
 		var relation_contents = ' '
 		if (this.state.relations.length>0){
-			relation_contents = <div><h3 className="mt-5">Relations</h3>
+			relation_contents = <div>
 						{relation_table}
 						<Button className="mt-1 float-right" size="sm" onClick={this.add_annotations_to_db}>
 							Annotations Complete
@@ -460,7 +524,9 @@ export default class SentenceEditor extends Component {
 
 						{ selector_table }
 
-						<Button className="mt-1 float-right" size="sm" onClick={this.add_relation_annotation}>
+						<h5 className="mt-1 float-left">{ this.state.error_message }</h5>
+
+						<Button className="mt-1 mb-2 float-right" size="sm" onClick={this.add_relation_annotation}>
 							Add relation
 						</Button>
 

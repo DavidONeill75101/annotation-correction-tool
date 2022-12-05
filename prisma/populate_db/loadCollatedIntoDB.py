@@ -25,7 +25,7 @@ def main():
 
     print("DB connection established")
 
-    collated_pd = pd.read_pickle('prisma\collated_pd.pkl')
+    collated_pd = pd.read_pickle('prisma\populate_db\collated_pd.pkl')
 
     print("Dataframe built")
 

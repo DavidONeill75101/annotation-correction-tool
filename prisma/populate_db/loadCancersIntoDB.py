@@ -38,6 +38,9 @@ def main():
 
     df_dict = df.to_dict('records')
 
+    df_dict = df.to_dict('records')
+    df_dict.append({1: 'No Cancer', 3: ['No Cancer']})
+
     for count, row in enumerate(df_dict):
         sql = "INSERT INTO cancer (id, name) VALUES (%s, %s)"
         val = (str(count), str(row[1]))
