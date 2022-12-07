@@ -66,7 +66,10 @@ export default class SentenceVotingData extends Component {
                             } 
                         })
 
+                        
                         user_agreements.push({'x':user1.id, 'y': user2.id, 'value':num_agreements/intersection.length})
+
+                        
 
                     })
                     agreements.push(user_agreements)
@@ -79,7 +82,10 @@ export default class SentenceVotingData extends Component {
                     labels.push(row[0].x)
                     var row_data = []
                     row.forEach(function(column){
-                        row_data.push(parseFloat(column.value).toFixed(2))
+                        if(!isNaN(column.value)){
+                            row_data.push(parseFloat(column.value).toFixed(2))
+                        }
+                        
                     })
                     data.push(row_data)
                 })
