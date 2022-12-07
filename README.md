@@ -98,3 +98,6 @@ There is a series of administrator API calls which return JSON formatted results
 - [/api/get_data/admin_calls/get_upvotes_admin](/api/get_data/admin_calls/get_upvotes_admin) returns every sentence annotation which has been upvoted.
 - [/api/get_data/admin_calls/get_downvotes_admin](/api/get_data/admin_calls/get_downvotes_admin) returns every sentence annotation which has been downvoted.
 - [/api/get_data/admin_calls/get_annotations](/api/get_data/admin_calls/get_annotations) returns every new, manually annotated sentence.
+- [/api/get_data/admin_calls/get_annotations_with_synonyms](/api/get_data/admin_calls/get_annotations_with_synonyms) returns every new, manually annotated sentence, as before. This time, however, it converts any of the highlighted entities to their most common form by consulting a list of synonyms. For example, the highligted entity might be "breast malignant neoplasm" and the API call would return this as "breast cancer".
+- [/api/get_data/admin_calls/get_sentence_voting_data](/api/get_data/admin_calls/get_sentence_voting_data) returns the number of upvotes and downvotes for each reviewed sentence.
+- [/api/get_data/admin_calls/get_user_voting_data](/api/get_data/admin_calls/get_user_voting_data) returns a list of the users, along with the sentences which they have upvoted and downvoted.
