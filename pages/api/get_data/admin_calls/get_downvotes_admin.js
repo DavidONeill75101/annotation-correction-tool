@@ -21,6 +21,10 @@ export default async function handle(req, res) {
             id: true,
             sentence: true,
             evidencetype: true,
+            gene: true,
+            cancer: true,
+            drug: true,
+            variant_group:true,
         },
         where: {
             id: {
@@ -40,7 +44,14 @@ export default async function handle(req, res) {
             }
         })
 
-        result.push({id:sentence.id, text: sentence.sentence, evidence_type:sentence.evidencetype, count: count})
+        result.push({id:sentence.id, 
+                    text: sentence.sentence, 
+                    evidence_type:sentence.evidencetype, 
+                    gene:sentence.gene, 
+                    cancer: sentence.cancer, 
+                    drug: sentence.drug,
+                    variant_group: sentence.variant_group,
+                    count: count})
     })
 
     res.json(result)
