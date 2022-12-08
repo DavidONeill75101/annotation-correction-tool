@@ -47,6 +47,55 @@ export default class SentenceEditor extends Component {
 		this.add_relation_annotations_to_db = this.add_relation_annotations_to_db.bind(this)
 		this.add_entity_annotation_to_db = this.add_entity_annotation_to_db.bind(this)
 
+		this.get_other_user_annotations = this.get_other_user_annotations.bind(this)
+
+	}
+
+
+	get_other_user_annotations(){
+
+		var self = this
+		
+		var params = {sentence_id: this.props.sentence_id}
+		
+		axios.get('/api/get_data/admin_calls/get_sentence_annotations_with_synonyms', {
+			params: params
+		})
+			.then(function (response) {
+				const res = response.data
+				if(typeof res[0]!='undefined'){
+					var gene = res[0].relations[0].gene.name
+					var cancer = res[0].relations[0].cancer.name
+					var drug = res[0].relations[0].drug.name
+					var evidence_type = res[0].relations[0].relationType.name
+					var variant = res[0].relations[0].variant.name
+
+					if (drug!='No Drug'){
+						self.setState({
+							suggested_drug: drug,
+						})
+					}
+
+					if (variant!='No Variant'){
+						self.setState({
+							suggested_variant: variant,
+						})
+					}
+					
+					self.setState({
+						suggested_gene: gene,
+						suggested_cancer: cancer,
+						suggested_evidence_type: evidence_type,
+					})
+				}
+				
+			})
+			.catch(function (error) {
+				console.log(error);
+			})
+			.then(function () {
+				// always executed
+			});
 	}
 
 
@@ -411,10 +460,21 @@ export default class SentenceEditor extends Component {
 
 	componentDidMount(){
 		this.get_variants()
+		this.get_other_user_annotations()
 	}
 
 	
 	render() {
+
+		var suggestion = ''
+		if (typeof this.state.suggested_gene != 'undefined'){
+			if(this.state.suggested_evidence_type == 'predictive'){
+				suggestion = 'Suggestion based on other users - a predictive relationship between ' + this.state.suggested_gene + ', ' + this.state.suggested_cancer + ' and ' + this.state.suggested_drug
+
+			}else{
+				suggestion = 'Suggestion based on other users - a ' + this.state.suggested_evidence_type + ' relationship between ' + this.state.suggested_gene + ' and ' + this.state.suggested_cancer
+			}
+		}
 
 		const tag_colours = {'gene':'#FF9900', 'cancer':'#38E54D', 'drug':'#FDFF00'}
 
@@ -498,10 +558,15 @@ export default class SentenceEditor extends Component {
 				<div> 
 
 					<div>
+
+						<div className='mb-5'>
+							<strong>{ suggestion }</strong>
+						</div>
+
 						<select
 							onChange={this.update_tag}
 							value={this.state.tag}
-							className="mb-5"
+							className="mb-2"
 						>
 							<option value="gene">gene</option>
 							<option value="cancer">cancer</option>
