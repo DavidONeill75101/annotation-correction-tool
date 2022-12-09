@@ -77,11 +77,11 @@ export default class ReviewEditor extends Component {
 		var next_end = parseInt(this.props.end) + 10
 
 		if (prev_start>=0){
-			prev_link = <Link href={"/review/" + this.props.matchingId + '/'+ prev_start + '-' + prev_end + '/' + this.props.citations}><a><Button size="md">Previous</Button></a></Link>
+			prev_link = <Link href={"/review?id=" + this.props.matchingId + '&range='+ prev_start + '-' + prev_end + '&citations=' + this.props.citations}><a><Button size="md">Previous</Button></a></Link>
 		}
 		
 		if (next_start < this.props.citations){
-			next_link = <Link href={"/review/" + this.props.matchingId + '/' + next_start + '-' + next_end + '/' + this.props.citations}><a><Button size="md">Next</Button></a></Link>			
+			next_link = <Link href={"/review?id=" + this.props.matchingId + '&range=' + next_start + '-' + next_end + '&citations=' + this.props.citations}><a><Button size="md">Next</Button></a></Link>			
 		}
 
 		var relation_contents = ''

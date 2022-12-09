@@ -9,6 +9,8 @@ export default async function handle(req, res) {
 	const drug = req.query.drug
 	const evidence_type = req.query.evidence_type
 	const variant = req.query.variant_group
+	const user_id = parseInt(req.query.user_id)
+
 	var start = parseInt(req.query.start)
 
 	var params = {}
@@ -58,7 +60,9 @@ export default async function handle(req, res) {
         },
 
         where: { 
-            sentence: params            
+            sentence: params,
+			// sentence.user_annotations does not include
+			user: {'id': user_id}       
         },
 
         skip: start,
@@ -66,5 +70,25 @@ export default async function handle(req, res) {
 		
 	})
 
-	res.json(downvotes)
+	var annotated_sentences = []
+
+	for (var sentence of downvotes){
+		for (var user_annotation of sentence.sentence.user_annotations){
+			if (user_annotation.userId == user_id) {
+				annotated_sentences.push(sentence.sentenceId)
+			}
+		}
+	}
+
+	var non_annotated_sentences = []
+
+
+	for (var sentence of downvotes){
+		if (!annotated_sentences.includes(sentence.sentenceId)){
+			non_annotated_sentences.push(sentence)
+		}
+	}
+	
+
+	res.json(non_annotated_sentences)
 }

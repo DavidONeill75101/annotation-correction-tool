@@ -6,6 +6,7 @@ import axios from 'axios';
 
 import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table'
+import { param } from 'malgo-brat-frontend-editor/client/src/util';
 
 
 export default class Relations extends Component {
@@ -115,10 +116,10 @@ export default class Relations extends Component {
 					<td>{c.gene}</td><td>{c.cancer}</td>
 					<td>{c.drug}</td><td>{c.variant_group}</td>
 					<td>{c.citation_count}</td>
-					<td><Link href={"/review/"+c.matching_id+'/0-9/'+c.citation_count}>
+					<td><Link href={"/review?id="+c.matching_id+'&range=0-9&citations='+c.citation_count}>
 							<a><Button size="sm">Review Sentences</Button></a>
 						</Link></td>
-					<td><Link href={'/review_downvoted_sentences/' + c.matching_id + '/0-9/' + c.citation_count}>
+					<td><Link href={'/review_downvoted_sentences?id=' + c.matching_id + '&range=0-9&citations=' + c.citation_count}>
 						<a><Button size="sm">Annotate Sentences</Button></a>
 						</Link></td>
 					</tr>)
@@ -134,35 +135,60 @@ export default class Relations extends Component {
 					</tr>)
 			}
 			
-
-			contents = <Table striped bordered hover>
-				<thead>
-					<tr>
-						<th>Evidence Type</th>
-						<th>Gene</th>
-						<th>Cancer</th>
-						<th>Drug</th>
-						<th>Variant</th>
-						<th># of Papers</th>
-					</tr>
-				</thead>
-				<tbody>
-					{rows}
-				</tbody>
-			</Table>
-		
+			if (this.state.collated.length>0){
+				contents = <Table striped bordered hover>
+								<thead>
+									<tr>
+										<th>Evidence Type</th>
+										<th>Gene</th>
+										<th>Cancer</th>
+										<th>Drug</th>
+										<th>Variant</th>
+										<th># of Papers</th>
+									</tr>
+								</thead>
+								<tbody>
+									{rows}
+								</tbody>
+							</Table>
+			}else{
+				contents = "There are no relations which match the filters you have applied"
+			}
+			
 			var prev_start = parseInt(this.state.start)-10
 			var prev_end = parseInt(this.state.end) - 10
 
 			var next_start = parseInt(this.state.start)+10
 			var next_end = parseInt(this.state.end) + 10
 
+			var param_string = ''
+
+			if (typeof this.state.gene!='undefined'){
+				param_string = param_string + '&gene=' + this.state.gene
+			}
+
+			if (typeof this.state.cancer!='undefined'){
+				param_string = param_string + '&cancer=' + this.state.cancer
+			}
+
+			if (typeof this.state.drug!='undefined'){
+				param_string = param_string + '&drug=' + this.state.drug
+			}
+
+			if (typeof this.state.evidence_type!='undefined'){
+				param_string = param_string + '&evidence_type=' + this.state.evidence_type
+			}
+
+			if (typeof this.state.variant!='undefined'){
+				param_string = param_string + '&variant=' + this.state.variant
+			}
+
 			if (prev_start>=0){
-				prev_link = <Link href={"/collated/"+prev_start + '-' + prev_end + '/' + this.state.gene + '/' + this.state.cancer + '/' + this.state.drug + '/' + this.state.evidence_type + '/' + this.state.variant + '/'}><a><Button size="md">Previous</Button></a></Link>
+				prev_link = <Link href={"/collated?range="+prev_start + '-' + prev_end + param_string}><a><Button size="md">Previous</Button></a></Link>
 			}
 
 			if (this.state.collated.length == 9){
-				next_link = <Link href={"/collated/"+next_start + '-' + next_end + '/' + this.state.gene + '/' + this.state.cancer + '/' + this.state.drug + '/' + this.state.evidence_type + '/' + this.state.variant + '/'}><a><Button size="md">Next</Button></a></Link>
+				next_link = <Link href={"/collated?range="+next_start + '-' + next_end + param_string}><a><Button size="md">Next</Button></a></Link>
 			}
 		}
 

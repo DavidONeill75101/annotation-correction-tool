@@ -6,9 +6,9 @@ import { useUser } from "@auth0/nextjs-auth0";
 
 import Button from 'react-bootstrap/Button';
 
-import Layout from '../../../../../../../../components/Layout.js'
-import Relations from '../../../../../../../../components/Relations.js'
-import Filter from '../../../../../../../../components/FilterDetails.js'
+import Layout from '../../components/Layout.js'
+import Relations from '../../components/Relations.js'
+import Filter from '../../components/FilterDetails.js'
 
 
 const Collated = () => {
@@ -22,6 +22,7 @@ const Collated = () => {
 	const drug = router.query.drug
 	const evidence_type = router.query.evidence_type
 	const variant = router.query.variant
+
 	
 	var start
 	var end

@@ -8,8 +8,8 @@ import useAxios from 'axios-hooks'
 
 import Button from 'react-bootstrap/Button';
 
-import Layout from '../../../../../components/Layout.js'
-import SentenceEditor from '../../../../../components/SentenceEditor.js'
+import Layout from '../../components/Layout.js'
+import SentenceEditor from '../../components/SentenceEditor.js'
 
 
 function Sentence() {

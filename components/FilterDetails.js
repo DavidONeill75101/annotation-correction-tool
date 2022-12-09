@@ -190,7 +190,29 @@ export default class Relations extends Component {
 
 
 	render() {
-		
+
+		var param_string = ''
+
+		if (this.state.gene!=' '){
+			param_string = param_string + '&gene=' + this.state.gene
+		}
+
+		if (this.state.cancer!=' '){
+			param_string = param_string + '&cancer=' + this.state.cancer
+		}
+
+		if (this.state.drug!=' '){
+			param_string = param_string + '&drug=' + this.state.drug
+		}
+
+		if (this.state.evidenceType!=' '){
+			param_string = param_string + '&evidence_type=' + this.state.evidenceType
+		}
+
+		if (this.state.variant!=' '){
+			param_string = param_string + '&variant=' + this.state.variant
+		}
+
 
 		return (
 				<div>
@@ -219,7 +241,7 @@ export default class Relations extends Component {
 						<br></br>
 
 						<Row>
-							<Col><Link href={"/collated/0-9/" + this.state.gene + '/' + this.state.cancer + '/' + this.state.drug + '/' + this.state.evidenceType + '/' + this.state.variant + '/'}><a><Button size="md">Apply filters</Button></a></Link></Col>
+							<Col><Link href={"/collated?range=0-9" + param_string}><a><Button size="md">Apply filters</Button></a></Link></Col>
 						</Row>
 
 					</Container>

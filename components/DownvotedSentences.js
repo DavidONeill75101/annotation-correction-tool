@@ -24,7 +24,7 @@ export default class DownvotedSentences extends Component {
 	refreshSentences(){
 		var self = this
 
-		axios.get('/api/get_data/get_downvoted_sentences?start=' + this.props.start + '&end=' + this.props.end + '&matching_id='+this.props.matching_id)
+		axios.get('/api/get_data/get_downvoted_sentences?start=' + this.props.start + '&end=' + this.props.end + '&matching_id='+this.props.matching_id + '&user_id=' + this.state.user_id)
 			.then(function (response) {
 				const sentences = response.data
 				self.setState( {
@@ -76,18 +76,18 @@ export default class DownvotedSentences extends Component {
 			})
 			.then(function () {
 				// always executed
-				
+				self.refreshSentences()
 			});
 	}
 
 	
 	componentDidMount() {
-		this.refreshSentences()
 		this.get_user()
 	}
 	
 	
 	render() {
+
 
 		var prev_link = ''
 		var next_link = ''
@@ -99,11 +99,11 @@ export default class DownvotedSentences extends Component {
 		var next_end = parseInt(this.props.end) + 10
 
 		if (prev_start>=0){
-			prev_link = <Link href={"/review_downvoted_sentences/" + this.props.matching_id + '/'+ prev_start + '-' + prev_end + '/' + this.props.citations}><a><Button size="md">Previous</Button></a></Link>
+			prev_link = <Link href={"/review_downvoted_sentences?id=" + this.props.matching_id + '&range='+ prev_start + '-' + prev_end + '&citations=' + this.props.citations}><a><Button size="md">Previous</Button></a></Link>
 		}
 		
 		if (this.state.sentences.length==9){
-			next_link = <Link href={"/review_downvoted_sentences/" + this.props.matching_id + '/' + next_start + '-' + next_end + '/' + this.props.citations}><a><Button size="md">Next</Button></a></Link>			
+			next_link = <Link href={"/review_downvoted_sentences?id=" + this.props.matching_id + '&range=' + next_start + '-' + next_end + '&citations=' + this.props.citations}><a><Button size="md">Next</Button></a></Link>			
 		}
 
 		var relation_contents = ''
@@ -128,49 +128,33 @@ export default class DownvotedSentences extends Component {
 		
 		var contents = 'loading...'
 
-		if (this.state.loaded && this.state.user_id) {
-			
-			var annotated_sentences = []
+		if (this.state.loaded) {
+			if (this.state.sentences.length == 0){
+				contents = "You have no sentences to annotate for this relation.  Go to the review section to select sentence annotations which are incorrect before coming here to manually annotate them."
+			}else{
+				const rows = this.state.sentences.map(s => <tr key={s.sentence.id}><td>{s.sentence.pmid}</td>
+				<td>{s.sentence.journal}</td><td>{s.sentence.year}</td>
+				<td>{s.sentence.section}</td><td>{s.sentence.subsection}</td>
+				<td>{s.sentence.sentence}</td>
+				<td><Link href={"/manual_annotation?id=" + s.sentence.id + '&matching_id=' + this.props.matching_id + '&citations' + this.props.citations}><a><Button size="md">Annotate</Button></a></Link></td>
+				</tr>)
 
-			for (var sentence of this.state.sentences){
-				for (var user_annotation of sentence.sentence.user_annotations){
-					if (user_annotation.userId == this.state.user_id) {
-						annotated_sentences.push(sentence.sentenceId)
-					}
-				}
+				contents = <Table striped bordered hover>
+					<thead>
+						<tr>
+							<th>PMID</th>
+							<th>Journal</th>
+							<th>Year</th>
+							<th>Section</th>
+							<th>Subsection</th>
+							<th>Sentence</th>
+						</tr>
+					</thead>
+					<tbody>
+						{rows}
+					</tbody>
+				</Table>
 			}
-
-			var non_annotated_sentences = []
-
-			for (var sentence of this.state.sentences){
-				if (!annotated_sentences.includes(sentence.sentenceId)){
-					non_annotated_sentences.push(sentence)
-				}
-			}
-			
-			const rows = non_annotated_sentences.map(s => <tr key={s.sentence.id}><td>{s.sentence.pmid}</td>
-			<td>{s.sentence.journal}</td><td>{s.sentence.year}</td>
-			<td>{s.sentence.section}</td><td>{s.sentence.subsection}</td>
-			<td>{s.sentence.sentence}</td>
-			<td><Link href={"/manual_annotation/" + s.sentence.id + '/' + this.props.matching_id + '/' + this.props.citations + '/'}><a><Button size="md">Annotate</Button></a></Link></td>
-			</tr>)
-
-			contents = <Table striped bordered hover>
-				<thead>
-					<tr>
-						<th>PMID</th>
-						<th>Journal</th>
-						<th>Year</th>
-						<th>Section</th>
-						<th>Subsection</th>
-						<th>Sentence</th>
-						
-					</tr>
-				</thead>
-				<tbody>
-					{rows}
-				</tbody>
-			</Table>
 		}
 	
 		

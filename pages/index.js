@@ -27,7 +27,7 @@ export default class annotation_review extends Component {
 					<div className="card-body">
 						Welcome to the CIViCMine Annotation Review Tool. <br></br> <br></br>
 						Review relations extracted made by the CIViCMine machine learning tool to help refine the tool. <br></br><br></br>
-						<Link href={"/collated/0-9/ / / / / /"}>
+						<Link href={"/collated?range=0-9"}>
 							<a><Button size="lg">
 								Get Started
 							</Button></a>
