@@ -169,11 +169,11 @@ export default class DownvotedSentences extends Component {
 						</div>
 						
 						<div>
-							<div className='float-left'>
+							<div className='float-left mt-3'>
 								{prev_link}
 							</div>
 
-							<div className="float-right">
+							<div className="float-right mt-3">
 								{next_link}
 							</div>
 						</div>
