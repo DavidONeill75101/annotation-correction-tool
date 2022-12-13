@@ -134,22 +134,65 @@ export default class SentenceEditor extends Component {
 		var drug_annotations = [{text:'No Drug', value:-1}]
 
 		value.forEach(function(item, index){
+
 			if (item['tag']=='gene'){
-				gene_annotations.push({text: item['tokens'].join(' '), value:index})
+				const fetchURL = '/api/get_data/get_synonym?gene='+ item['tokens'].join(' ')
+				
+				axios.get(fetchURL)
+				.then(function (response) {
+					const res = response.data
+					gene_annotations.push({text: item['tokens'].join(' ') + ' (' + res + ')', value:index, 'single_text': item['tokens'].join(' ')})
+					self.setState({
+						gene_annotations: gene_annotations
+					})
+				})
+				.catch(function (error) {
+					console.log(error);
+				})
+				.then(function () {
+					// always executed
+					
+
+				});
 			}else if (item['tag']=='cancer'){
-				cancer_annotations.push({text: item['tokens'].join(' '), value:index})
+				axios.get('/api/get_data/get_synonym?cancer='+ item['tokens'].join(' '))
+				.then(function (response) {
+					const res = response.data
+					cancer_annotations.push({text: item['tokens'].join(' ') + ' (' + res + ')', value:index, 'single_text': item['tokens'].join(' ')})
+					self.setState({
+						cancer_annotations: cancer_annotations
+					})
+				})
+				.catch(function (error) {
+					console.log(error);
+				})
+				.then(function () {
+					// always executed
+					
+				});
 			}else if (item['tag']=='drug'){
-				drug_annotations.push({text: item['tokens'].join(' '), value:index})
+				axios.get('/api/get_data/get_synonym?cancer='+ item['tokens'].join(' '))
+				.then(function (response) {
+					const res = response.data
+					drug_annotations.push({text: item['tokens'].join(' ') + ' (' + res + ')', value:index, 'single_text': item['tokens'].join(' ')})
+					self.setState({
+						drug_annotations: drug_annotations
+					})
+				})
+				.catch(function (error) {
+					console.log(error);
+				})
+				.then(function () {
+					// always executed
+					
+				});
 			}
 		})
 
 		self.setState({
 			value: value,
-			gene_annotations: gene_annotations,
-			cancer_annotations: cancer_annotations,
-			drug_annotations: drug_annotations,
+			
 		})
-
 	}
 
 
@@ -204,29 +247,31 @@ export default class SentenceEditor extends Component {
 
 
 	add_relation_annotation(){
-
 		var self = this
 
 		var gene_text = ''
 		this.state.gene_annotations.forEach(function(item){
 			if (item['value']==self.state.candidate_gene){
-				gene_text = item['text']
+				gene_text = item['single_text']
+				
 			}
 		})
 
 		var cancer_text = ''
 		this.state.cancer_annotations.forEach(function(item){
 			if (item['value']==self.state.candidate_cancer){
-				cancer_text = item['text']
+				cancer_text = item['single_text']
 			}
 		})
 
 		var drug_text = ''
 		this.state.drug_annotations.forEach(function(item){
 			if (item['value']==self.state.candidate_drug){
-				drug_text = item['text']
+				drug_text = item['single_text']
 			}
 		})
+
+		
 
 		var fetchURL = '/api/get_data/get_synonyms'
 		var params = {gene_name:gene_text, cancer_name:cancer_text, drug_name:drug_text, variant_name:this.state.candidate_variant}
@@ -235,9 +280,12 @@ export default class SentenceEditor extends Component {
 			params: params
 		})
 		.then(function (response) {
+
 				var res = response.data
 
-				if (res!='Entity Error'){
+				var errors = ['geneId', 'cancerId', 'drugId', 'variantId']
+
+				if (!errors.includes(res)){
 
 					var relations = self.state.relations
 
@@ -288,7 +336,7 @@ export default class SentenceEditor extends Component {
 					}	
 				}else{
 					self.setState({
-						error_message: 'Incorrect entity annotations'
+						error_message: res.slice(0, -2) + ' annotation incorrect'
 					})
 				}
 			})
@@ -574,7 +622,7 @@ export default class SentenceEditor extends Component {
 						</select>
 						
 						<TokenAnnotator
-						tokens={this.props.sentence.split(' ')}
+						tokens={this.props.sentence.split(/([_\W])/).filter(i => i!=' ')}
 						value={this.state.value}
 						onChange={this.update_value}
 						getSpan={span => ({

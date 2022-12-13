@@ -42,8 +42,8 @@ export default async function handle(req, res) {
     
         res.json({'gene_id': gene_synonym[0]['geneId'], 'cancer_id': cancer_synonym[0]['cancerId'], 'drug_id': drug_synonym[0]['drugId'], 'variant_id': variant_synonym[0]['variantId']})	
     
-    }catch{
-        res.json("Entity Error")
+    }catch(err){
+        res.json(err.message.split('\'')[1])
     }
 
     }
