@@ -5,6 +5,7 @@ import mysql.connector
 
 import os
 import re
+import wget
 
 
 def main():
@@ -25,8 +26,14 @@ def main():
 
     print("DB connection established")
 
-    with gzip.open('prisma\populate_db\civicmine_sentences.tsv.gz','r') as f:        
-        sentences_pd = pd.read_csv(f, sep='\t')
+    url = "https://zenodo.org/record/6816433/files/civicmine_sentences.tsv.gz?download=1"
+
+    filename = wget.download(url)
+
+    sentences_pd = pd.read_csv(filename, sep='\t')
+
+    # with gzip.open('prisma\populate_db\civicmine_sentences.tsv.gz','r') as f:        
+    #     sentences_pd = pd.read_csv(f, sep='\t')
     
     print("Dataframe built")
 

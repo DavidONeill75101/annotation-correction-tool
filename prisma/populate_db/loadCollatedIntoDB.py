@@ -5,6 +5,7 @@ import mysql.connector
 
 import os
 import re
+import wget
 
 
 def main():
@@ -25,7 +26,13 @@ def main():
 
     print("DB connection established")
 
-    collated_pd = pd.read_pickle('prisma\populate_db\collated_pd.pkl')
+    url = "https://zenodo.org/record/6816433/files/civicmine_collated.tsv.gz?download=1"
+
+    filename = wget.download(url)
+
+    collated_pd = pd.read_csv(filename, sep='\t')
+
+    # collated_pd = pd.read_pickle('prisma\populate_db\collated_pd.pkl')
 
     print("Dataframe built")
 
