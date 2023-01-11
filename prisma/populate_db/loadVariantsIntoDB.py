@@ -49,6 +49,10 @@ def main():
             sql = "INSERT INTO variantsynonym (name, variantId) VALUES (%s, %s)"
             val = (synonym, str(count))
             cur.execute(sql, val)
+    
+    sql = "INSERT INTO variant (id, name) VALUES (%s, %s)"
+    val = ("41", "unknown")
+    cur.execute(sql, val)
         
     con.commit()
 

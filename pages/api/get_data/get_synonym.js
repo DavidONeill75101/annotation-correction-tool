@@ -6,6 +6,7 @@ export default async function handle(req, res) {
     const gene_name = req.query.gene
     const cancer_name = req.query.cancer
     const drug_name = req.query.drug
+    const variant_name = req.query.variant
 
     if (typeof gene_name != 'undefined'){
 
@@ -19,9 +20,9 @@ export default async function handle(req, res) {
                 where: gene_params,
             })
             
-            res.json(gene_synonym[0]['gene']['name'])
+            res.json([gene_synonym[0]['gene']['id'], gene_synonym[0]['gene']['name']])
         }catch(error){
-            console.log(error.message)
+            res.json('no synonym')
         }
 
         
@@ -37,9 +38,9 @@ export default async function handle(req, res) {
                 where: cancer_params,
             })  
 
-            res.json(cancer_synonym[0]['cancer']['name'])
+            res.json([cancer_synonym[0]['cancer']['id'], cancer_synonym[0]['cancer']['name']])
         }catch(error){
-            console.log(error.message)
+            res.json('no synonym')
         }
         
     }else if( typeof drug_name != 'undefined'){
@@ -53,11 +54,27 @@ export default async function handle(req, res) {
                 where: drug_params,
             })
     
-            res.json(drug_synonym[0]['drug']['name'])
+            res.json([drug_synonym[0]['drug']['id'], drug_synonym[0]['drug']['name']])
         }catch(error){
-            console.log(error.message)
+            res.json('no synonym')
         }
         
+    }else if ( typeof variant_name != 'undefined'){
+        try{
+            const variant_params = {'name':variant_name}
+
+            var variant_synonym = await prisma.VariantSynonym.findMany({
+                select: {
+                    variant: true,
+                },
+                where: variant_params,
+            })
+
+            res.json([variant_synonym[0]['variant']['id'], variant_synonym[0]['variant']['name']])
+
+        }catch(error){
+            res.json('no synonym')
+        }
     }
   
 }

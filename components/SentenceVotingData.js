@@ -5,6 +5,7 @@ import axios from 'axios';
 import { Bar } from "react-chartjs-2";
 import { HeatMapGrid } from 'react-grid-heatmap'
 import Chart from 'chart.js/auto';
+import { objectToUrlStr } from 'brat-frontend-editor/client/src/util';
 
 
 export default class SentenceVotingData extends Component {
@@ -21,8 +22,10 @@ export default class SentenceVotingData extends Component {
         this.generate_upvote_evidencetype_chart = this.generate_upvote_evidencetype_chart.bind(this)
         this.get_upvote_data = this.get_upvote_data.bind(this)
 
-        this.generate_upvoted_sentences_chart = this.generate_upvoted_sentences_chart.bind(this)
-        this.get_upvoted_sentences = this.get_upvoted_sentences.bind(this)
+        this.generate_sentences_chart = this.generate_sentences_chart.bind(this)
+        this.generate_upvotes_chart = this.generate_upvotes_chart.bind(this)
+        this.generate_downvotes_chart = this.generate_downvotes_chart.bind(this)
+        this.get_sentences = this.get_sentences.bind(this)
 
         this.generate_downvote_gene_chart = this.generate_downvote_gene_chart.bind(this)
         this.generate_downvote_cancer_chart = this.generate_downvote_cancer_chart.bind(this)
@@ -38,6 +41,8 @@ export default class SentenceVotingData extends Component {
 
         this.update_chart_selection = this.update_chart_selection.bind(this)
 		
+        this.sort_dict = this.sort_dict.bind(this)
+
 	}
 
 
@@ -116,7 +121,7 @@ export default class SentenceVotingData extends Component {
     }
 
 
-    get_upvoted_sentences(){
+    get_sentences(){
         var self = this
         
         const fetchURL = '/api/get_data/admin_calls/get_sentence_voting_data'
@@ -146,12 +151,14 @@ export default class SentenceVotingData extends Component {
             })
             .then(function () {
                 // always executed
-                self.generate_upvoted_sentences_chart()
+                self.generate_sentences_chart()
+                self.generate_upvotes_chart()
+                self.generate_downvotes_chart()
             });
     }
 
 
-    generate_upvoted_sentences_chart(){
+    generate_sentences_chart(){
         const labels = this.state.sentence_ids
 
         this.setState({
@@ -178,6 +185,91 @@ export default class SentenceVotingData extends Component {
     }
 
 
+    generate_upvotes_chart(){
+        const labels = this.state.sentence_ids
+        
+
+        var upvote_dict = {}
+
+        for (var i = 0; i< labels.length; i++){
+            if (this.state.upvote_counts[i]!=0){
+                upvote_dict[labels[i]] = this.state.upvote_counts[i]
+            }
+        }
+
+        upvote_dict = this.sort_dict(upvote_dict)
+
+        this.setState({
+            sentence_upvotes_chart: {
+                labels: Object.keys(upvote_dict),
+                datasets: [
+                  {
+                    label: "Upvotes",
+                    backgroundColor: "#A30F0F",
+                    borderColor: "#A30F0F",
+                    data: Object.values(upvote_dict),
+                  },
+                ],
+                
+            }
+        })
+    }
+
+
+    generate_downvotes_chart(){
+        const labels = this.state.sentence_ids
+
+        var downvote_dict = {}
+
+        for (var i = 0; i< labels.length; i++){
+            if (this.state.downvote_counts[i]!=0){
+                downvote_dict[labels[i]] = this.state.downvote_counts[i]
+            }
+        }
+
+        downvote_dict = this.sort_dict(downvote_dict)
+
+        this.setState({
+            sentence_downvotes_chart: {
+                labels: Object.keys(downvote_dict),
+                datasets: [
+                  {
+                    label: "Upvotes",
+                    backgroundColor: "#A30F0F",
+                    borderColor: "#A30F0F",
+                    data: Object.values(downvote_dict),
+                  },
+                ],
+                
+            }
+        })
+    }
+
+
+    sort_dict(dict){
+        var items = Object.keys(dict).map(
+            (key) => { return [key, dict[key]] });
+        
+        items.sort(
+            (first, second) => { return first[1] - second[1] }
+            );
+
+        var keys = items.map(
+            (e) => { return e[0] });
+        
+        var vals = items.map(
+            (e) => { return e[1] });
+        
+            
+        var sorted_dict = {}
+
+        for (var i=keys.length-1; i>=0; i--){
+            sorted_dict[keys[i]] = vals[i]
+        }
+
+        return sorted_dict
+    }
+
     get_upvote_data(){
         var self = this
         
@@ -193,6 +285,8 @@ export default class SentenceVotingData extends Component {
                     evidence_type_counts[sentence.evidence_type] ++
                 })
 
+                evidence_type_counts = self.sort_dict(evidence_type_counts)
+
                 var gene_counts = {}
 
                 res.forEach(function(sentence){
@@ -203,6 +297,9 @@ export default class SentenceVotingData extends Component {
                     }
                 })
 
+                gene_counts = self.sort_dict(gene_counts)
+                
+
                 var cancer_counts = {}
 
                 res.forEach(function(sentence){
@@ -212,6 +309,8 @@ export default class SentenceVotingData extends Component {
                         cancer_counts[sentence.cancer] = 0
                     }
                 })
+
+                cancer_counts = self.sort_dict(cancer_counts)
 
                 var drug_counts = {}
 
@@ -225,6 +324,8 @@ export default class SentenceVotingData extends Component {
                     }
                 })
 
+                drug_counts = self.sort_dict(drug_counts)
+
                 var variant_counts = {}
 
                 res.forEach(function(sentence){
@@ -234,6 +335,8 @@ export default class SentenceVotingData extends Component {
                         variant_counts[sentence.variant_group] = 0
                     }
                 })
+
+                variant_counts = self.sort_dict(variant_counts)
 
                 self.setState({
                     upvote_evidencetype_counts: evidence_type_counts,
@@ -367,6 +470,8 @@ export default class SentenceVotingData extends Component {
                     evidence_type_counts[sentence.evidence_type] ++
                 })
 
+                evidence_type_counts = self.sort_dict(evidence_type_counts)
+
                 var gene_counts = {}
 
                 res.forEach(function(sentence){
@@ -377,6 +482,8 @@ export default class SentenceVotingData extends Component {
                     }
                 })
 
+                gene_counts = self.sort_dict(gene_counts)
+
                 var cancer_counts = {}
 
                 res.forEach(function(sentence){
@@ -386,6 +493,8 @@ export default class SentenceVotingData extends Component {
                         cancer_counts[sentence.cancer] = 0
                     }
                 })
+
+                cancer_counts = self.sort_dict(cancer_counts)
 
                 var drug_counts = {}
 
@@ -399,6 +508,8 @@ export default class SentenceVotingData extends Component {
                     }
                 })
 
+                drug_counts = self.sort_dict(drug_counts)
+                
                 var variant_counts = {}
 
                 res.forEach(function(sentence){
@@ -408,6 +519,8 @@ export default class SentenceVotingData extends Component {
                         variant_counts[sentence.variant_group] = 0
                     }
                 })
+
+                variant_counts = self.sort_dict(variant_counts)
 
                 self.setState({
                     downvote_evidencetype_counts: evidence_type_counts,
@@ -538,7 +651,7 @@ export default class SentenceVotingData extends Component {
     componentDidMount(){
         this.get_downvote_data()
         this.get_upvote_data()
-        this.get_upvoted_sentences()
+        this.get_sentences()
         this.get_inter_annotator_agreements()
         
     }
@@ -559,7 +672,9 @@ export default class SentenceVotingData extends Component {
                 <option value='8'>Number of Upvotes Attributed to Each Drug</option>
                 <option value='9'>Number of Upvotes Attributed to Each Variant Group</option>
                 <option value='10'>Sentence Votes</option>
-                <option value='11'>Inter-Annotator Agreement Heatmap For Every User</option>			
+                <option value='11'>Sentence Upvotes</option>
+                <option value='12'>Sentence Downvotes</option>
+                <option value='13'>Inter-Annotator Agreement Heatmap For Every User</option>			
 			</>
 
         var downvote_evidencetype_chart = (this.state.downvote_evidencetype_chart) ? <Bar data={this.state.downvote_evidencetype_chart} /> : <></>
@@ -576,6 +691,9 @@ export default class SentenceVotingData extends Component {
         var upvote_variant_chart = (this.state.upvote_variant_chart) ? <Bar data={this.state.upvote_variant_chart} /> : <></>
 
         var sentence_votes_chart = (this.state.sentence_votes_chart) ? <Bar data={this.state.sentence_votes_chart} /> : <></>
+        var sentence_upvotes_chart = (this.state.sentence_upvotes_chart) ? <Bar data={this.state.sentence_upvotes_chart}/> : <></>
+        var sentence_downvotes_chart = (this.state.sentence_downvotes_chart) ? <Bar data={this.state.sentence_downvotes_chart} /> : <></>
+
         var interannotator_chart = (this.state.inter_annotator_data) ? 
         <HeatMapGrid 
 
@@ -599,17 +717,18 @@ export default class SentenceVotingData extends Component {
         
         /> : <></>
         
-		var charts = [downvote_evidencetype_chart, downvote_gene_chart, downvote_cancer_chart, downvote_drug_chart, downvote_variant_chart, upvote_evidencetype_chart, upvote_gene_chart, upvote_cancer_chart, upvote_drug_chart, upvote_variant_chart, sentence_votes_chart, interannotator_chart]
+		var charts = [downvote_evidencetype_chart, downvote_gene_chart, downvote_cancer_chart, downvote_drug_chart, downvote_variant_chart, upvote_evidencetype_chart, upvote_gene_chart, upvote_cancer_chart, upvote_drug_chart, upvote_variant_chart, sentence_votes_chart, sentence_upvotes_chart, sentence_downvotes_chart, interannotator_chart]
         
         const chart_selector = <select onChange={this.update_chart_selection} value={this.state.chart_selection} className="w-100">{ chart_options }</select>
 		
+        var chart = (charts[parseInt(this.state.chart_selection)]) ? charts[parseInt(this.state.chart_selection)] : 'loading...'
     
 		return (
 				<div>
 						{ chart_selector }
 
                         <div>
-                        { charts[parseInt(this.state.chart_selection)]}
+                        { chart }
                         </div>   
 				</div>
 		)

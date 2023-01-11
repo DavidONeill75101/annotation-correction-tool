@@ -117,10 +117,13 @@ export default class Relations extends Component {
 					<td>{c.drug}</td><td>{c.variant_group}</td>
 					<td>{c.citation_count}</td>
 					<td><Link href={"/review?id="+c.matching_id+'&range=0-9&citations='+c.citation_count}>
-							<a><Button size="sm">Review Sentences</Button></a>
+							<a><Button size="sm">Review Predictions</Button></a>
 						</Link></td>
 					<td><Link href={'/review_downvoted_sentences?id=' + c.matching_id + '&range=0-9&citations=' + c.citation_count}>
 						<a><Button size="sm">Annotate Sentences</Button></a>
+						</Link></td>
+					<td><Link href={'/weak_predictions?id=' + c.matching_id + '&range=0-9&citations=' + c.citation_count}>
+						<a><Button size="sm">Review Weak Predictions</Button></a>
 						</Link></td>
 					</tr>)
 			}else{

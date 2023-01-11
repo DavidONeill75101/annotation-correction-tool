@@ -51,6 +51,10 @@ def main():
             sql = "INSERT INTO drugsynonym (name, drugId) VALUES (%s, %s)"
             val = (synonym, str(count))
             cur.execute(sql, val)
+    
+    sql = "INSERT INTO drug (id, name) VALUES (%s, %s)"
+    val = ("22674", "unknown")
+    cur.execute(sql, val)
         
     con.commit()
 

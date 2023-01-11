@@ -18,11 +18,14 @@ export default class SentenceEditor extends Component {
 			gene_annotations: [{text:'No Gene', value:-1}],
 			cancer_annotations: [{text:'No Cancer', value:-1}],
 			drug_annotations: [{text:'No Drug', value:-1}],
+			variant_annotations: [{label:'No Variant', value:-1}],
 			candidate_gene: -1,
 			candidate_cancer: -1,
 			candidate_drug: -1,		
 			candidate_evidence_type: 'diagnostic',
 			candidate_variant: 'No Variant',
+			candidate_annotation_variant: 'No Variant',
+			candidate_variant_group: 'No Variant Group',
 			relations: [],
 			variants: [],
 			error_message: '',
@@ -38,9 +41,16 @@ export default class SentenceEditor extends Component {
 		this.update_candidate_drug = this.update_candidate_drug.bind(this)
 		this.update_candidate_evidence_type = this.update_candidate_evidence_type.bind(this)
 		this.update_candidate_variant = this.update_candidate_variant.bind(this)
+		this.update_candidate_annotation_variant = this.update_candidate_annotation_variant.bind(this)
+		this.update_candidate_variant_group = this.update_candidate_variant_group.bind(this)
 
 		this.add_relation_annotation = this.add_relation_annotation.bind(this)
 		this.remove_relation_annotation = this.remove_relation_annotation.bind(this)
+
+		this.get_gene_synonym = this.get_gene_synonym.bind(this)
+		this.get_cancer_synonym = this.get_cancer_synonym.bind(this)
+		this.get_drug_synonym = this.get_drug_synonym.bind(this)
+		this.get_variant_synonym = this.get_variant_synonym.bind(this)
 
 		this.add_annotations_to_db = this.add_annotations_to_db.bind(this)
 		this.add_user_annotation_to_db = this.add_user_annotation_to_db.bind(this)
@@ -132,6 +142,7 @@ export default class SentenceEditor extends Component {
 		var gene_annotations = [{text:'No Gene', value:-1}]
 		var cancer_annotations = [{text:'No Cancer', value:-1}]
 		var drug_annotations = [{text:'No Drug', value:-1}]
+		var variant_annotations = [{text:'No Variant', value: -1}]
 
 		value.forEach(function(item, index){
 
@@ -141,10 +152,19 @@ export default class SentenceEditor extends Component {
 				axios.get(fetchURL)
 				.then(function (response) {
 					const res = response.data
-					gene_annotations.push({text: item['tokens'].join(' ') + ' (' + res + ')', value:index, 'single_text': item['tokens'].join(' ')})
-					self.setState({
-						gene_annotations: gene_annotations
-					})
+
+					if (res.length==2){
+						gene_annotations.push({text: item['tokens'].join(' ') + ' (' + res[1] + ')', value:index, 'single_text': item['tokens'].join(' ')})
+						self.setState({
+							gene_annotations: gene_annotations
+						})
+					}else{
+						gene_annotations.push({text: item['tokens'].join(' ') + ' (no synonym)', value:index, 'single_text': item['tokens'].join(' ')})
+						self.setState({
+							gene_annotations: gene_annotations
+						})
+					}
+					
 				})
 				.catch(function (error) {
 					console.log(error);
@@ -158,10 +178,17 @@ export default class SentenceEditor extends Component {
 				axios.get('/api/get_data/get_synonym?cancer='+ item['tokens'].join(' '))
 				.then(function (response) {
 					const res = response.data
-					cancer_annotations.push({text: item['tokens'].join(' ') + ' (' + res + ')', value:index, 'single_text': item['tokens'].join(' ')})
-					self.setState({
-						cancer_annotations: cancer_annotations
-					})
+					if (res.length==2){
+						cancer_annotations.push({text: item['tokens'].join(' ') + ' (' + res[1] + ')', value:index, 'single_text': item['tokens'].join(' ')})
+						self.setState({
+							cancer_annotations: cancer_annotations
+						})
+					}else{
+						cancer_annotations.push({text: item['tokens'].join(' ') + ' (no synonym)', value:index, 'single_text': item['tokens'].join(' ')})
+						self.setState({
+							cancer_annotations: cancer_annotations
+						})
+					}
 				})
 				.catch(function (error) {
 					console.log(error);
@@ -174,10 +201,17 @@ export default class SentenceEditor extends Component {
 				axios.get('/api/get_data/get_synonym?cancer='+ item['tokens'].join(' '))
 				.then(function (response) {
 					const res = response.data
-					drug_annotations.push({text: item['tokens'].join(' ') + ' (' + res + ')', value:index, 'single_text': item['tokens'].join(' ')})
-					self.setState({
-						drug_annotations: drug_annotations
-					})
+					if (res.length==2){
+						drug_annotations.push({text: item['tokens'].join(' ') + ' (' + res[1] + ')', value:index, 'single_text': item['tokens'].join(' ')})
+						self.setState({
+							drug_annotations: drug_annotations
+						})
+					}else{
+						drug_annotations.push({text: item['tokens'].join(' ') + ' (no synonym)', value:index, 'single_text': item['tokens'].join(' ')})
+						self.setState({
+							drug_annotations: drug_annotations
+						})
+					}
 				})
 				.catch(function (error) {
 					console.log(error);
@@ -186,13 +220,21 @@ export default class SentenceEditor extends Component {
 					// always executed
 					
 				});
+			}else if (item['tag']=='variant'){
+				variant_annotations.push({label: item['tokens'].join(' ') , value:index, 'single_text': item['tokens'].join(' ')})
+				self.setState({
+					variant_annotations: variant_annotations
+				})
+				
 			}
+				
 		})
-
+		
 		self.setState({
 			value: value,
 			
 		})
+
 	}
 
 
@@ -206,7 +248,6 @@ export default class SentenceEditor extends Component {
 
 	update_candidate_gene(e){
 		var self = this
-
 
 		self.setState({
 		 	candidate_gene: e.target.value
@@ -246,97 +287,45 @@ export default class SentenceEditor extends Component {
 	}
 
 
-	add_relation_annotation(){
+	update_candidate_annotation_variant(e){
 		var self = this
 
-		var gene_text = ''
-		this.state.gene_annotations.forEach(function(item){
-			if (item['value']==self.state.candidate_gene){
-				gene_text = item['single_text']
-				
-			}
+		self.setState({
+			candidate_annotation_variant: e.target.value
 		})
+	}
 
-		var cancer_text = ''
-		this.state.cancer_annotations.forEach(function(item){
-			if (item['value']==self.state.candidate_cancer){
-				cancer_text = item['single_text']
-			}
+
+	update_candidate_variant_group(e){
+		var self = this
+
+		self.setState({
+			candidate_variant_group: e.target.value
 		})
+	}
 
-		var drug_text = ''
-		this.state.drug_annotations.forEach(function(item){
-			if (item['value']==self.state.candidate_drug){
-				drug_text = item['single_text']
-			}
-		})
 
+	get_variant_synonym(){
 		
+		var self = this
 
-		var fetchURL = '/api/get_data/get_synonyms'
-		var params = {gene_name:gene_text, cancer_name:cancer_text, drug_name:drug_text, variant_name:this.state.candidate_variant}
-		
+		var fetchURL = '/api/get_data/get_synonym'
+
+		var params = {variant: this.state.candidate_variant}
+
 		axios.get(fetchURL, {
 			params: params
 		})
 		.then(function (response) {
 
 				var res = response.data
-
-				var errors = ['geneId', 'cancerId', 'drugId', 'variantId']
-
-				if (!errors.includes(res)){
-
-					var relations = self.state.relations
-
-					if (self.state.candidate_gene!=-1 && 
-						self.state.candidate_cancer!=-1 && 
-						self.state.candidate_evidence_type!='predictive' && 
-						self.state.candidate_drug == -1){
-						relations.push({'id': relations.length,
-									'gene':self.state.candidate_gene, 
-									'cancer':self.state.candidate_cancer,
-									'drug':self.state.candidate_drug,
-									'evidence_type':self.state.candidate_evidence_type,
-									'variant': self.state.candidate_variant,
-									'gene_id': res.gene_id,
-									'cancer_id': res.cancer_id,
-									'drug_id': res.drug_id,
-									'variant_id': res.variant_id
-									})
-
-									self.setState({
-							relations: relations,
-							error_message: '',
-							})
-					}else if (self.state.candidate_gene!=-1 &&
-						self.state.candidate_cancer!=-1 &&
-						self.state.candidate_drug!=-1 &&
-						self.state.candidate_evidence_type=='predictive'){
-						relations.push({'id': relations.length,
-									'gene':self.state.candidate_gene, 
-									'cancer':self.state.candidate_cancer,
-									'drug':self.state.candidate_drug,
-									'evidence_type':self.state.candidate_evidence_type,
-									'variant': self.state.candidate_variant,
-									'gene_id': res.gene_id,
-									'cancer_id': res.cancer_id,
-									'drug_id': res.drug_id,
-									'variant_id': res.variant_id
-								})
-
-									self.setState({
-							relations: relations,
-							error_message: '',
-							})
-					}else{
-						self.setState({
-							error_message: 'Invalid Relation'
-						})
-					}	
+				if(res=='no synonym'){
+					self.setState({
+						current_variant_id: 41
+					})
 				}else{
 					self.setState({
-						error_message: res.slice(0, -2) + ' annotation incorrect'
+						current_variant_id: res[0]
 					})
 				}
 			})
@@ -345,9 +334,198 @@ export default class SentenceEditor extends Component {
 			})
 			.then(function () {
 				// always executed
-				
+				self.add_relation_annotation()
+			});
+	}
+
+	get_drug_synonym(){
+		
+		var self = this
+
+		var drug_text = ''
+		this.state.drug_annotations.forEach(function(item){
+			if (item['value']==self.state.candidate_drug){
+				drug_text = item['single_text']
+			}
+		})
+
+		if (typeof drug_text == 'undefined'){
+			drug_text = 'unknown'
+		}
+
+		var fetchURL = '/api/get_data/get_synonym'
+
+		var params = {drug: drug_text}
+
+		axios.get(fetchURL, {
+			params: params
+		})
+		.then(function (response) {
+
+				var res = response.data
+				if(res=='no synonym'){
+					self.setState({
+						current_drug_id: 22674
+					})
+				}else{
+					self.setState({
+						current_drug_id: res[0]
+					})
+				}
+			})
+			.catch(function (error) {
+				console.log(error);
+			})
+			.then(function () {
+				// always executed
+				self.get_variant_synonym()
+			});
+	}
+
+
+	get_cancer_synonym(){
+		
+		var self = this
+
+		var cancer_text = ''
+		this.state.cancer_annotations.forEach(function(item){
+			if (item['value']==self.state.candidate_cancer){
+				cancer_text = item['single_text']
+			}
+		})
+
+		if (typeof cancer_text == 'undefined'){
+			cancer_text = 'unknown'
+		}
+
+		var fetchURL = '/api/get_data/get_synonym'
+
+		var params = {cancer: cancer_text}
+
+		axios.get(fetchURL, {
+			params: params
+		})
+		.then(function (response) {
+
+				var res = response.data
+				if(res=='no synonym'){
+					self.setState({
+						current_cancer_id: 2058
+					})
+				}else{
+					self.setState({
+						current_cancer_id: res[0]
+					})
+				}
+			})
+			.catch(function (error) {
+				console.log(error);
+			})
+			.then(function () {
+				// always executed
+				self.get_drug_synonym()
 			});
 
+	}
+
+	get_gene_synonym(){
+		
+		var self = this
+
+		var gene_text = ''
+		this.state.gene_annotations.forEach(function(item){
+			if (item['value']==self.state.candidate_gene){
+				gene_text = item['single_text']
+			}
+		})
+
+		if (typeof gene_text == 'undefined'){
+			gene_text = 'unknown'
+		}
+
+		var fetchURL = '/api/get_data/get_synonym'
+
+		var params = {gene: gene_text}
+
+		axios.get(fetchURL, {
+			params: params
+		})
+		.then(function (response) {
+
+				var res = response.data
+				if(res=='no synonym'){
+					self.setState({
+						current_gene_id: 19370
+					})
+				}else{
+					self.setState({
+						current_gene_id: res[0]
+					})
+				}
+			})
+			.catch(function (error) {
+				console.log(error);
+			})
+			.then(function () {
+				// always executed
+				self.get_cancer_synonym()
+			});
+
+	}
+
+
+	add_relation_annotation(){
+
+		var self = this
+
+		var relations = self.state.relations
+
+		if (self.state.candidate_gene!=-1 && 
+			self.state.candidate_cancer!=-1 && 
+			self.state.candidate_evidence_type!='predictive' && 
+			self.state.candidate_drug == -1){
+			relations.push({'id': relations.length,
+						'gene':self.state.candidate_gene, 
+						'cancer':self.state.candidate_cancer,
+						'drug':self.state.candidate_drug,
+						'evidence_type':self.state.candidate_evidence_type,
+						'variant': self.state.candidate_variant,
+						'gene_id': self.state.current_gene_id,
+						'cancer_id': self.state.current_cancer_id,
+						'drug_id': self.state.current_drug_id,
+						'variant_id': self.state.current_variant_id
+						})
+
+						self.setState({
+							relations: relations,
+							error_message: '',
+						})
+		}else if (self.state.candidate_gene!=-1 &&
+			self.state.candidate_cancer!=-1 &&
+			self.state.candidate_drug!=-1 &&
+			self.state.candidate_evidence_type=='predictive'){
+			relations.push({'id': relations.length,
+						'gene':self.state.candidate_gene, 
+						'cancer':self.state.candidate_cancer,
+						'drug':self.state.candidate_drug,
+						'evidence_type':self.state.candidate_evidence_type,
+						'variant': self.state.candidate_variant,
+						'gene_id': self.state.current_gene_id,
+						'cancer_id': self.state.current_cancer_id,
+						'drug_id': self.state.current_drug_id,
+						'variant_id': self.state.current_variant_id
+					})
+
+						self.setState({
+							relations: relations,
+							error_message: '',
+						})
+		
+		}else{
+			self.setState({
+				error_message: 'Invalid Relation - see annotation guide for further details of valid relations'
+			})
+		}
 		
 	}
 
@@ -524,7 +702,7 @@ export default class SentenceEditor extends Component {
 			}
 		}
 
-		const tag_colours = {'gene':'#FF9900', 'cancer':'#38E54D', 'drug':'#FDFF00'}
+		const tag_colours = {'gene':'#FF9900', 'cancer':'#38E54D', 'drug':'#FDFF00', 'variant':'#00dfff'}
 
 		var relation_table = ''
 		const relation_rows = this.state.relations.map(r => 
@@ -587,7 +765,7 @@ export default class SentenceEditor extends Component {
 				<th className="w-20">Cancer</th>
 				<th className="w-20">Drug</th>
 				<th className="w-20">Evidence Type</th>
-				<th className="w-20">Variant</th>
+				<th className="w-20">Variant Group</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -597,6 +775,30 @@ export default class SentenceEditor extends Component {
 				<td>{ drug_selector }</td>
 				<td>{ evidence_selector }</td>
 				<td>{ (variant_selector) ? variant_selector : ''}</td>
+			</tr>
+		</tbody>
+		</Table>
+
+
+		
+		const variant_annotation_options = this.state.variant_annotations.map(v => <option value={v.value}>{v.label}</option>)
+		const variant_group_options = this.state.variants.map(v => <option value={v.value}>{v.label}</option>)
+
+		const variant_annotation_selector = <select onChange={this.update_candidate_annotation_variant} value={this.state.candidate_annotation_variant} className="w-100">{ variant_annotation_options }</select>
+		const variant_group_selector = <select onChange={this.update_candidate_variant_group} value={this.state.candidate_variant_group} className="w-100">{ variant_group_options }</select>
+
+
+		const variant_selector_table = <Table striped bordered hover>
+		<thead>
+			<tr>
+				<th className="w-20">Variant</th>
+				<th className="w-20">Variant Group</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>{ (variant_annotation_selector) ? variant_annotation_selector : ''}</td>
+				<td>{ (variant_group_selector) ? variant_group_selector : ''}</td>
 			</tr>
 		</tbody>
 		</Table>
@@ -619,6 +821,7 @@ export default class SentenceEditor extends Component {
 							<option value="gene">gene</option>
 							<option value="cancer">cancer</option>
 							<option value="drug">drug</option>
+							<option value="variant">variant</option>
 						</select>
 						
 						<TokenAnnotator
@@ -626,6 +829,7 @@ export default class SentenceEditor extends Component {
 						value={this.state.value}
 						onChange={this.update_value}
 						getSpan={span => ({
+
 							...span,
 							tag: this.state.tag,
 							color: tag_colours[this.state.tag],
@@ -639,8 +843,8 @@ export default class SentenceEditor extends Component {
 
 						<h5 className="mt-1 float-left">{ this.state.error_message }</h5>
 
-						<Button className="mt-1 mb-2 float-right" size="sm" onClick={this.add_relation_annotation}>
-							Add relation
+						<Button className="mt-1 mb-2 float-right" size="sm" onClick={this.get_gene_synonym}>
+							Add Biomarker Relation
 						</Button>
 
 					</div>
@@ -650,7 +854,14 @@ export default class SentenceEditor extends Component {
 						{relation_contents}
 					
 					</div>
-									
+
+					<div className="mt-5">
+
+						{ variant_selector_table }
+
+						
+
+					</div>		
 				</div>
 		)
 	}

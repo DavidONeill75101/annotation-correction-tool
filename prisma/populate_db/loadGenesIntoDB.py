@@ -51,6 +51,11 @@ def main():
             sql = "INSERT INTO genesynonym (name, geneId) VALUES (%s, %s)"
             val = (synonym, str(count))
             cur.execute(sql, val)
+    
+
+    sql = "INSERT INTO gene (id, name) VALUES (%s, %s)"
+    val = ("19370", "unknown")
+    cur.execute(sql, val)
         
     con.commit()
 
