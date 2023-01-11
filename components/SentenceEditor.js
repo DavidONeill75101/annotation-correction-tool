@@ -733,7 +733,7 @@ export default class SentenceEditor extends Component {
 		if (this.state.relations.length>0){
 			relation_contents = <div>
 						{relation_table}
-						<Button className="mt-1 float-right" size="sm" onClick={this.add_annotations_to_db}>
+						<Button className="mt-1 float-right" size="md" onClick={this.add_annotations_to_db}>
 							Annotations Complete
 						</Button></div>
 						
@@ -803,6 +803,17 @@ export default class SentenceEditor extends Component {
 		</tbody>
 		</Table>
 
+		const tag_selector = <select
+									onChange={this.update_tag}
+									value={this.state.tag}
+									className="mb-2"
+								>
+									<option value="gene">gene</option>
+									<option value="cancer">cancer</option>
+									<option value="drug">drug</option>
+									<option value="variant">variant</option>
+								</select>
+
 
 		return (
 				<div> 
@@ -813,16 +824,10 @@ export default class SentenceEditor extends Component {
 							<strong>{ suggestion }</strong>
 						</div>
 
-						<select
-							onChange={this.update_tag}
-							value={this.state.tag}
-							className="mb-2"
-						>
-							<option value="gene">gene</option>
-							<option value="cancer">cancer</option>
-							<option value="drug">drug</option>
-							<option value="variant">variant</option>
-						</select>
+						
+						<div className='mb-3'>
+							<strong>Select an entity type before highlighting text: { tag_selector }</strong>
+						</div>
 						
 						<TokenAnnotator
 						tokens={this.props.sentence.split(/([_\W])/).filter(i => i!=' ')}
@@ -843,7 +848,7 @@ export default class SentenceEditor extends Component {
 
 						<h5 className="mt-1 float-left">{ this.state.error_message }</h5>
 
-						<Button className="mt-1 mb-2 float-right" size="sm" onClick={this.get_gene_synonym}>
+						<Button className="mb-3 float-right" size="md" onClick={this.get_gene_synonym}>
 							Add Biomarker Relation
 						</Button>
 
@@ -855,13 +860,13 @@ export default class SentenceEditor extends Component {
 					
 					</div>
 
-					<div className="mt-5">
+					{/* <div className="mt-5">
 
 						{ variant_selector_table }
 
 						
 
-					</div>		
+					</div>		 */}
 				</div>
 		)
 	}

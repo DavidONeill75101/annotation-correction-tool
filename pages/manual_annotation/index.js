@@ -33,7 +33,7 @@ function Sentence() {
 	return <Layout title="Manual Annotation" page="/manual_annotation" >
 		
 	 				<div>
-	 					<Button className='float-right mb-3' onClick={() => router.back()}>Back to Sentences</Button>
+	 					<Button size="md" className='float-right mb-3' onClick={() => router.back()}>Back to Sentences</Button>
 					</div>
 					
 	 				<div className="card shadow mb-4 float-right">

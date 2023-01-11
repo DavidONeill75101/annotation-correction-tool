@@ -18,7 +18,7 @@ export default function TopBar() {
 				<a className="nav-link dropdown-toggle" href="/api/auth/login" as="/login" id="userDropdown" role="button"
 					data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					<span className="mr-2 d-none d-lg-inline text-gray-600 small">
-						{user ? (<a href="/api/auth/logout"><Button size="sm">Logout</Button></a>) : (<a href="/api/auth/login"><Button size="sm">Login</Button></a>)}
+						{user ? (<a href="/api/auth/logout"><Button size="md">Logout</Button></a>) : (<a href="/api/auth/login"><Button size="md">Login</Button></a>)}
 					</span>
 				</a>
 			</li>

@@ -41,7 +41,7 @@ const Review = () => {
 				<div className="d-sm-flex align-items-center justify-content-between mb-4 titlepadding">
 					<h1 className="h3 mb-0 text-gray-800">Review Sentence Annotations</h1>
 					<Link href='/collated?range=0-9'>
-						<a><Button size="sm">Back to Relations</Button></a>
+						<a><Button size="md">Back to Relations</Button></a>
 					</Link>
 				</div>
 		
