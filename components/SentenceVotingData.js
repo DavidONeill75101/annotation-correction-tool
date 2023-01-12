@@ -677,22 +677,22 @@ export default class SentenceVotingData extends Component {
                 <option value='13'>Inter-Annotator Agreement Heatmap For Every User</option>			
 			</>
 
-        var downvote_evidencetype_chart = (this.state.downvote_evidencetype_chart) ? <Bar data={this.state.downvote_evidencetype_chart} /> : <></>
-        var upvote_evidencetype_chart = (this.state.upvote_evidencetype_chart) ? <Bar data={this.state.upvote_evidencetype_chart} /> : <></>
+        var downvote_evidencetype_chart = (this.state.downvote_evidencetype_chart) ? <Bar data={this.state.downvote_evidencetype_chart} /> : <div>Loading...</div>
+        var upvote_evidencetype_chart = (this.state.upvote_evidencetype_chart) ? <Bar data={this.state.upvote_evidencetype_chart} /> : <div>Loading...</div>
 
-        var downvote_gene_chart = (this.state.downvote_gene_chart) ? <Bar data={this.state.downvote_gene_chart} /> : <></>
-        var downvote_cancer_chart = (this.state.downvote_cancer_chart) ? <Bar data={this.state.downvote_cancer_chart} /> : <></>
-        var downvote_drug_chart = (this.state.downvote_drug_chart) ? <Bar data={this.state.downvote_drug_chart} /> : <></>
-        var downvote_variant_chart = (this.state.downvote_variant_chart) ? <Bar data={this.state.downvote_variant_chart} /> : <></>
+        var downvote_gene_chart = (this.state.downvote_gene_chart) ? <Bar data={this.state.downvote_gene_chart} /> : <div>Loading...</div>
+        var downvote_cancer_chart = (this.state.downvote_cancer_chart) ? <Bar data={this.state.downvote_cancer_chart} /> : <div>Loading...</div>
+        var downvote_drug_chart = (this.state.downvote_drug_chart) ? <Bar data={this.state.downvote_drug_chart} /> : <div>Loading...</div>
+        var downvote_variant_chart = (this.state.downvote_variant_chart) ? <Bar data={this.state.downvote_variant_chart} /> : <div>Loading...</div>
 
-        var upvote_gene_chart = (this.state.upvote_gene_chart) ? <Bar data={this.state.upvote_gene_chart} /> : <></>
-        var upvote_cancer_chart = (this.state.upvote_cancer_chart) ? <Bar data={this.state.upvote_cancer_chart} /> : <></>
-        var upvote_drug_chart = (this.state.upvote_drug_chart) ? <Bar data={this.state.upvote_drug_chart} /> : <></>
-        var upvote_variant_chart = (this.state.upvote_variant_chart) ? <Bar data={this.state.upvote_variant_chart} /> : <></>
+        var upvote_gene_chart = (this.state.upvote_gene_chart) ? <Bar data={this.state.upvote_gene_chart} /> : <div>Loading...</div>
+        var upvote_cancer_chart = (this.state.upvote_cancer_chart) ? <Bar data={this.state.upvote_cancer_chart} /> : <div>Loading...</div>
+        var upvote_drug_chart = (this.state.upvote_drug_chart) ? <Bar data={this.state.upvote_drug_chart} /> : <div>Loading...</div>
+        var upvote_variant_chart = (this.state.upvote_variant_chart) ? <Bar data={this.state.upvote_variant_chart} /> : <div>Loading...</div>
 
-        var sentence_votes_chart = (this.state.sentence_votes_chart) ? <Bar data={this.state.sentence_votes_chart} /> : <></>
-        var sentence_upvotes_chart = (this.state.sentence_upvotes_chart) ? <Bar data={this.state.sentence_upvotes_chart}/> : <></>
-        var sentence_downvotes_chart = (this.state.sentence_downvotes_chart) ? <Bar data={this.state.sentence_downvotes_chart} /> : <></>
+        var sentence_votes_chart = (this.state.sentence_votes_chart) ? <Bar data={this.state.sentence_votes_chart} /> : <div>Loading...</div>
+        var sentence_upvotes_chart = (this.state.sentence_upvotes_chart) ? <Bar data={this.state.sentence_upvotes_chart}/> : <div>Loading...</div>
+        var sentence_downvotes_chart = (this.state.sentence_downvotes_chart) ? <Bar data={this.state.sentence_downvotes_chart} /> : <div>Loading...</div>
 
         var interannotator_chart = (this.state.inter_annotator_data) ? 
         <HeatMapGrid 
@@ -715,7 +715,7 @@ export default class SentenceVotingData extends Component {
             yLabelsPos="left"
             square
         
-        /> : <></>
+        /> : <div>Loading...</div>
         
 		var charts = [downvote_evidencetype_chart, downvote_gene_chart, downvote_cancer_chart, downvote_drug_chart, downvote_variant_chart, upvote_evidencetype_chart, upvote_gene_chart, upvote_cancer_chart, upvote_drug_chart, upvote_variant_chart, sentence_votes_chart, sentence_upvotes_chart, sentence_downvotes_chart, interannotator_chart]
         
