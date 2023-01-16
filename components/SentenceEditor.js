@@ -6,6 +6,7 @@ import {TokenAnnotator, TextAnnotator} from 'react-text-annotate'
 import Button from 'react-bootstrap/Button'
 import Table from 'react-bootstrap/Table'
 import Router from 'next/router';
+import { ThreeSixtySharp } from '@material-ui/icons';
  
 
 export default class SentenceEditor extends Component {
@@ -29,6 +30,7 @@ export default class SentenceEditor extends Component {
 			relations: [],
 			variants: [],
 			error_message: '',
+			variant_relations: [],
 		}
 
 		this.get_variants = this.get_variants.bind(this)
@@ -46,6 +48,9 @@ export default class SentenceEditor extends Component {
 
 		this.add_relation_annotation = this.add_relation_annotation.bind(this)
 		this.remove_relation_annotation = this.remove_relation_annotation.bind(this)
+
+		this.add_variant = this.add_variant.bind(this)
+		this.remove_variant = this.remove_variant.bind(this)
 
 		this.get_gene_synonym = this.get_gene_synonym.bind(this)
 		this.get_cancer_synonym = this.get_cancer_synonym.bind(this)
@@ -549,6 +554,39 @@ export default class SentenceEditor extends Component {
 	}
 
 
+	add_variant(){
+		
+		var self = this
+
+		var variant_relations = self.state.variant_relations
+
+		variant_relations.push({id:variant_relations.length, variant: self.state.candidate_annotation_variant, variant_group: self.state.candidate_variant_group})
+
+		self.setState({
+			variant_relations: variant_relations
+		})
+
+	}
+
+	remove_variant(id){
+		var variant_relations = this.state.variant_relations
+
+		variant_relations.forEach(function(item, index){
+			if (item['id']==id){
+				variant_relations.splice(index, 1)
+			}
+		})
+
+		variant_relations.forEach(function(item, index){
+			item['id'] = index
+		})
+
+		this.setState({
+			variant_relations: variant_relations
+		})
+	}
+
+
 	add_entity_annotation_to_db(relation_annotation_id, entity_annotation_id){
 		var entity_type_ids = {'gene':1, 'cancer':2, 'drug':3}
 		var annotation = this.state.value[entity_annotation_id]
@@ -624,7 +662,49 @@ export default class SentenceEditor extends Component {
 			
 		promise.then(
 		 	function(value) {
+				// Router.back()
+				self.add_variant_annotations_to_db()
+			},
+			function(error) {
+
+			}
+			);
+	}
+
+
+	add_variant_annotations_to_db(){
+		var self = this
+		
+		let promise = new Promise(function(resolve, reject) {
+			self.state.variant_relations.forEach(function(item, index){
+
+				var fetchURL = '/api/update_data/add_variant_annotation'
+		
+				var params = {user_annotation_id:self.state.user_annotation_id, variant_name: self.state.value[item.variant].tokens.join(' '), variant_group: item.variant_group}
+				
+				axios.get(fetchURL, {
+					params: params
+				})
+				.then(function (response) {
+						
+					})
+					.catch(function (error) {
+						console.log(error);
+					})
+					.then(function () {
+						// always executed
+						
+					});
+
+			})
+			resolve() 
+			reject()  
+		});
+			
+		promise.then(
+		 	function(value) {
 				Router.back()
+				
 			},
 			function(error) {
 
@@ -656,6 +736,7 @@ export default class SentenceEditor extends Component {
 			.then(function () {
 				// always executed
 				self.add_relation_annotations_to_db()
+		
 			});
 	}
 
@@ -727,8 +808,38 @@ export default class SentenceEditor extends Component {
 			<tbody>
 				{relation_rows}
 			</tbody>
-		</Table>																			
+		</Table>		
 		
+
+		var variant_relation_table = ''
+		const variant_relation_rows = this.state.variant_relations.map(v => 
+		<tr><td>{this.state.value[v.variant].tokens.join(' ')}</td>
+		<td>{v.variant_group}</td>
+		<Button className="w-100 mt-1" onClick={() => this.remove_variant(v.id)}>Remove</Button>
+		</tr>)
+
+		variant_relation_table = <Table striped bordered hover>
+		<thead>
+			<tr>
+				<th className="w-20">Variant</th>
+				<th className="w-20">Variant Group</th>
+			</tr>
+		</thead>
+		<tbody>
+			{variant_relation_rows}
+		</tbody>
+		</Table>	
+
+		var variant_relation_contents = ' '
+		if (this.state.variant_relations.length>0){
+			variant_relation_contents = <div>
+				{variant_relation_table}
+			</div>
+		}
+
+
+
+
 		var relation_contents = ' '
 		if (this.state.relations.length>0){
 			relation_contents = <div>
@@ -738,6 +849,52 @@ export default class SentenceEditor extends Component {
 						</Button></div>
 						
 		}
+
+		var annotation_contents = ' '
+		if (this.state.relations.length > 0 && this.state.variant_relations.length > 0){
+			annotation_contents = <div>
+				<div className="float-left mt-3 w-50">
+					{relation_table}
+				</div>
+				<div className="float-right mt-3 w-30">
+					{variant_relation_table}
+				</div>
+				<br></br>
+				{/* <Button className="mt-1 float-right" size="md" onClick={this.add_annotations_to_db}>
+							Annotations Complete
+				</Button> */}
+			</div>
+		}else if (this.state.relations.length > 0 && this.state.variant_relations.length == 0){
+			annotation_contents = <div>
+				<div className="float-left mt-3 w-50">
+					{relation_table}
+				</div>
+				{/* <div className="float-right mt-3 w-50">
+					{variant_relation_table}
+				</div> */}
+				<br></br>
+				{/* <Button className="mt-1 float-right" size="md" onClick={this.add_annotations_to_db}>
+							Annotations Complete
+				</Button> */}
+			</div>
+		}else if (this.state.relations.length == 0 && this.state.variant_relations.length > 0){
+			annotation_contents = <div>
+				{/* <div className="float-left mt-3 w-50">
+					{relation_table}
+				</div> */}
+				<div className="float-right mt-3 w-30">
+					{variant_relation_table}
+				</div>
+				<br></br>
+				{/* <Button className="mt-1 float-right" size="md" onClick={this.add_annotations_to_db}>
+							Annotations Complete
+				</Button> */}
+			</div>
+		}
+
+		const annotations_complete_button = <Button className="mt-1 float-right" size="md" onClick={this.add_annotations_to_db}>
+												Annotations Complete
+											</Button>
 
 		const gene_options = this.state.gene_annotations.map(g => <option value={g.value}>{g.text}</option>)
 		const cancer_options = this.state.cancer_annotations.map(c => <option value={c.value}>{c.text}</option>)
@@ -780,13 +937,12 @@ export default class SentenceEditor extends Component {
 		</Table>
 
 
-		
+
 		const variant_annotation_options = this.state.variant_annotations.map(v => <option value={v.value}>{v.label}</option>)
 		const variant_group_options = this.state.variants.map(v => <option value={v.value}>{v.label}</option>)
 
 		const variant_annotation_selector = <select onChange={this.update_candidate_annotation_variant} value={this.state.candidate_annotation_variant} className="w-100">{ variant_annotation_options }</select>
 		const variant_group_selector = <select onChange={this.update_candidate_variant_group} value={this.state.candidate_variant_group} className="w-100">{ variant_group_options }</select>
-
 
 		const variant_selector_table = <Table striped bordered hover>
 		<thead>
@@ -818,7 +974,7 @@ export default class SentenceEditor extends Component {
 		return (
 				<div> 
 
-					<div>
+					
 
 						<div className='mb-5'>
 							<strong>{ suggestion }</strong>
@@ -826,47 +982,78 @@ export default class SentenceEditor extends Component {
 
 						
 						<div className='mb-3'>
-							<strong>Select an entity type before highlighting text: { tag_selector }</strong>
+							<div className="float-left">
+								<strong>Select an entity type before highlighting text: { tag_selector }</strong>
+							</div>
+							<div className="float-right">
+								{ annotations_complete_button }
+							</div>
 						</div>
+
+						<br></br>
+						<br></br>
+						<br></br>
 						
-						<TokenAnnotator
-						tokens={this.props.sentence.split(/([_\W])/).filter(i => i!=' ')}
-						value={this.state.value}
-						onChange={this.update_value}
-						getSpan={span => ({
+						<div className="mt-3">
+							<TokenAnnotator
+							tokens={this.props.sentence.split(/([_\W])/).filter(i => i!=' ')}
+							value={this.state.value}
+							onChange={this.update_value}
+							getSpan={span => ({
 
-							...span,
-							tag: this.state.tag,
-							color: tag_colours[this.state.tag],
-						})}
-						/>
-					</div>
-
-					<div className="mt-5">
-
-						{ selector_table }
-
-						<h5 className="mt-1 float-left">{ this.state.error_message }</h5>
-
-						<Button className="mb-3 float-right" size="md" onClick={this.get_gene_synonym}>
-							Add Biomarker Relation
-						</Button>
-
-					</div>
+								...span,
+								tag: this.state.tag,
+								color: tag_colours[this.state.tag],
+							})}
+							/>
+						</div>
 					
+
 					<div>
+						<div className="mt-5 w-50 float-left">
+
+							{ selector_table }
+
+							<h5 className="mt-1 float-left">{ this.state.error_message }</h5>
+
+							<Button className="mb-3 float-right" size="md" onClick={this.get_gene_synonym}>
+								Add Biomarker Relation
+							</Button>
+
+						</div>
+
+						<div className="mt w-30 float-right">
+							<div className="mt-5">
+
+								{ variant_selector_table }	
+
+								<Button className="mt-4 mb-3 float-right" size="md" onClick={this.add_variant}>
+									Add Variant
+								</Button>		
+
+							</div>
+						</div>
+					</div>
+
+					
+					
+					{/* <div className="mt-5 w-50 float-left">
 						
 						{relation_contents}
 					
 					</div>
 
-					{/* <div className="mt-5">
-
-						{ variant_selector_table }
-
+					<div className="mt-5 w-50 float-right">
 						
+						{variant_relation_contents}
+					
+					</div> */}
 
-					</div>		 */}
+					<div className="mt-5">
+						{ annotation_contents }
+					</div>
+
+					
 				</div>
 		)
 	}
