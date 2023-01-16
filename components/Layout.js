@@ -165,15 +165,6 @@ class Layout extends Component {
 					</div>
 					{/* End of Main Content */}
 						
-						{/* Footer */}
-					<footer className="sticky-footer bg-white">
-						<div className="container my-auto">
-							<div className="copyright text-center my-auto">
-								<span>TODO: Insert copyright info here</span>
-							</div>
-						</div>
-					</footer>
-					{/* End of Footer */}
 
 				</div>
 				{/* End of Content Wrapper */}
