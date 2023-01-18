@@ -19,7 +19,7 @@ export default class SentenceEditor extends Component {
 			gene_annotations: [{text:'No Gene', value:-1}],
 			cancer_annotations: [{text:'No Cancer', value:-1}],
 			drug_annotations: [{text:'No Drug', value:-1}],
-			variant_annotations: [{label:'No Variant', value:-1}],
+			variant_annotations: [{text:'No Variant', value:-1}],
 			candidate_gene: -1,
 			candidate_cancer: -1,
 			candidate_drug: -1,		
@@ -83,7 +83,7 @@ export default class SentenceEditor extends Component {
 					var cancer = res[0].relations[0].cancer.name
 					var drug = res[0].relations[0].drug.name
 					var evidence_type = res[0].relations[0].relationType.name
-					var variant = res[0].relations[0].variant.name
+					
 
 					if (drug!='No Drug'){
 						self.setState({
@@ -91,11 +91,7 @@ export default class SentenceEditor extends Component {
 						})
 					}
 
-					if (variant!='No Variant'){
-						self.setState({
-							suggested_variant: variant,
-						})
-					}
+					
 					
 					self.setState({
 						suggested_gene: gene,
@@ -203,7 +199,7 @@ export default class SentenceEditor extends Component {
 					
 				});
 			}else if (item['tag']=='drug'){
-				axios.get('/api/get_data/get_synonym?cancer='+ item['tokens'].join(' '))
+				axios.get('/api/get_data/get_synonym?drug='+ item['tokens'].join(' '))
 				.then(function (response) {
 					const res = response.data
 					if (res.length==2){
@@ -226,10 +222,29 @@ export default class SentenceEditor extends Component {
 					
 				});
 			}else if (item['tag']=='variant'){
-				variant_annotations.push({label: item['tokens'].join(' ') , value:index, 'single_text': item['tokens'].join(' ')})
-				self.setState({
-					variant_annotations: variant_annotations
+				
+				axios.get('/api/get_data/get_synonym?variant='+ item['tokens'].join(' '))
+				.then(function (response) {
+					const res = response.data
+					if (res.length==2){
+						variant_annotations.push({text: item['tokens'].join(' ') + ' (' + res[1] + ')', value:index, 'single_text': item['tokens'].join(' ')})
+						self.setState({
+							variant_annotations: variant_annotations
+						})
+					}else{
+						variant_annotations.push({text: item['tokens'].join(' ') + ' (no synonym)', value:index, 'single_text': item['tokens'].join(' ')})
+						self.setState({
+							variant_annotations: variant_annotations
+						})
+					}
 				})
+				.catch(function (error) {
+					console.log(error);
+				})
+				.then(function () {
+					// always executed
+					
+				});
 				
 			}
 				
@@ -311,12 +326,23 @@ export default class SentenceEditor extends Component {
 
 
 	get_variant_synonym(){
-		
+
 		var self = this
+
+		var variant_text = ''
+		this.state.variant_annotations.forEach(function(item){
+			if (item['value']==self.state.candidate_annotation_variant){
+				variant_text = item['single_text']
+			}
+		})
+
+		if (typeof variant_text == 'undefined'){
+			variant_text = 'unknown'
+		}
 
 		var fetchURL = '/api/get_data/get_synonym'
 
-		var params = {variant: this.state.candidate_variant}
+		var params = {variant: variant_text}
 
 		axios.get(fetchURL, {
 			params: params
@@ -341,6 +367,8 @@ export default class SentenceEditor extends Component {
 				// always executed
 				self.add_relation_annotation()
 			});
+		
+		
 	}
 
 	get_drug_synonym(){
@@ -494,7 +522,7 @@ export default class SentenceEditor extends Component {
 						'cancer':self.state.candidate_cancer,
 						'drug':self.state.candidate_drug,
 						'evidence_type':self.state.candidate_evidence_type,
-						'variant': self.state.candidate_variant,
+						'variant': self.state.candidate_annotation_variant,
 						'gene_id': self.state.current_gene_id,
 						'cancer_id': self.state.current_cancer_id,
 						'drug_id': self.state.current_drug_id,
@@ -514,7 +542,7 @@ export default class SentenceEditor extends Component {
 						'cancer':self.state.candidate_cancer,
 						'drug':self.state.candidate_drug,
 						'evidence_type':self.state.candidate_evidence_type,
-						'variant': self.state.candidate_variant,
+						'variant': self.state.candidate_annotation_variant,
 						'gene_id': self.state.current_gene_id,
 						'cancer_id': self.state.current_cancer_id,
 						'drug_id': self.state.current_drug_id,
@@ -588,7 +616,7 @@ export default class SentenceEditor extends Component {
 
 
 	add_entity_annotation_to_db(relation_annotation_id, entity_annotation_id){
-		var entity_type_ids = {'gene':1, 'cancer':2, 'drug':3}
+		var entity_type_ids = {'gene':1, 'cancer':2, 'drug':3, 'variant':4}
 		var annotation = this.state.value[entity_annotation_id]
 
 		var entity_type_id = entity_type_ids[annotation.tag]
@@ -645,6 +673,10 @@ export default class SentenceEditor extends Component {
 
 						if (typeof item.drug == 'string'){
 							self.add_entity_annotation_to_db(relation_annotation_id, item.drug)
+						}
+
+						if (typeof item.variant == 'string'){
+							self.add_entity_annotation_to_db(relation_annotation_id, item.variant)
 						}
 					})
 					.catch(function (error) {
@@ -703,7 +735,7 @@ export default class SentenceEditor extends Component {
 			
 		promise.then(
 		 	function(value) {
-				Router.back()
+				// Router.back()
 				
 			},
 			function(error) {
@@ -790,8 +822,8 @@ export default class SentenceEditor extends Component {
 		<tr><td>{(r.gene>-1) ? this.state.value[r.gene].tokens.join(' ') : 'No Gene'}</td>
 		<td>{(r.cancer>-1) ? this.state.value[r.cancer].tokens.join(' ') : 'No Cancer'}</td>
 		<td>{(r.drug>-1) ? this.state.value[r.drug].tokens.join(' ') : 'No Drug'}</td>
+		<td>{(r.variant>-1) ? this.state.value[r.variant].tokens.join(' ') : 'No Variant'}</td>
 		<td>{r.evidence_type}</td>
-		<td>{r.variant}</td>
 		<Button className="w-100 mt-1" onClick={() => this.remove_relation_annotation(r.id)}>Remove</Button></tr>)
 
 		relation_table = <Table striped bordered hover>
@@ -800,8 +832,8 @@ export default class SentenceEditor extends Component {
 					<th className="w-20">Gene</th>
 					<th className="w-20">Cancer</th>
 					<th className="w-20">Drug</th>
-					<th className="w-20">Evidence Type</th>
 					<th className="w-20">Variant</th>
+					<th className="w-20">Evidence Type</th>
 					<th className="w-20">Remove Relation</th>
 				</tr>
 			</thead>
@@ -899,7 +931,7 @@ export default class SentenceEditor extends Component {
 		const gene_options = this.state.gene_annotations.map(g => <option value={g.value}>{g.text}</option>)
 		const cancer_options = this.state.cancer_annotations.map(c => <option value={c.value}>{c.text}</option>)
 		const drug_options = this.state.drug_annotations.map(d => <option value={d.value}>{d.text}</option>)
-		const variant_options = this.state.variants.map(v => <option value={v.value}>{v.label}</option>)
+		const variant_annotation_options = this.state.variant_annotations.map(v => <option value={v.value}>{v.text}</option>)
 
 		const evidence_type_options = 
 			<>
@@ -913,7 +945,7 @@ export default class SentenceEditor extends Component {
 		const cancer_selector = <select onChange={this.update_candidate_cancer} value={this.state.candidate_cancer} className="w-100">{ cancer_options }</select>
 		const drug_selector = <select onChange={this.update_candidate_drug} value={this.state.candidate_drug} className="w-100">{ drug_options }</select>
 		const evidence_selector = <select onChange={this.update_candidate_evidence_type} value={this.state.candidate_evidence_type} className="w-100">{ evidence_type_options }</select>
-		const variant_selector = <select onChange={this.update_candidate_variant} value={this.state.candidate_variant} className="w-100">{ variant_options }</select>
+		const variant_annotation_selector = <select onChange={this.update_candidate_annotation_variant} value={this.state.candidate_annotation_variant} className="w-100">{ variant_annotation_options }</select>
 
 		const selector_table = <Table striped bordered hover>
 		<thead>
@@ -921,8 +953,8 @@ export default class SentenceEditor extends Component {
 				<th className="w-20">Gene</th>
 				<th className="w-20">Cancer</th>
 				<th className="w-20">Drug</th>
+				<th className="w-20">Variant</th>
 				<th className="w-20">Evidence Type</th>
-				<th className="w-20">Variant Group</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -930,18 +962,16 @@ export default class SentenceEditor extends Component {
 				<td>{ gene_selector }</td>
 				<td>{ cancer_selector }</td>
 				<td>{ drug_selector }</td>
+				<td>{variant_annotation_selector }</td>
 				<td>{ evidence_selector }</td>
-				<td>{ (variant_selector) ? variant_selector : ''}</td>
 			</tr>
 		</tbody>
 		</Table>
 
 
 
-		const variant_annotation_options = this.state.variant_annotations.map(v => <option value={v.value}>{v.label}</option>)
 		const variant_group_options = this.state.variants.map(v => <option value={v.value}>{v.label}</option>)
 
-		const variant_annotation_selector = <select onChange={this.update_candidate_annotation_variant} value={this.state.candidate_annotation_variant} className="w-100">{ variant_annotation_options }</select>
 		const variant_group_selector = <select onChange={this.update_candidate_variant_group} value={this.state.candidate_variant_group} className="w-100">{ variant_group_options }</select>
 
 		const variant_selector_table = <Table striped bordered hover>
@@ -1017,12 +1047,12 @@ export default class SentenceEditor extends Component {
 							<h5 className="mt-1 float-left">{ this.state.error_message }</h5>
 
 							<Button className="mb-3 float-right" size="md" onClick={this.get_gene_synonym}>
-								Add Biomarker Relation
+								Add Relation
 							</Button>
 
 						</div>
 
-						<div className="mt w-30 float-right">
+						{/* <div className="mt w-30 float-right">
 							<div className="mt-5">
 
 								{ variant_selector_table }	
@@ -1032,7 +1062,7 @@ export default class SentenceEditor extends Component {
 								</Button>		
 
 							</div>
-						</div>
+						</div> */}
 					</div>
 
 					

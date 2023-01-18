@@ -84,7 +84,6 @@ model UserAnnotation {
   user                      User                        @relation(fields: [userId], references: [id])
   userId                    Int                         @map("user_id")
   relations                 RelationAnnotation[]
-  
 }
 
 model EntityAnnotation {
@@ -118,15 +117,6 @@ model RelationAnnotation {
   geneId            Int?
   drug              Drug?              @relation(fields: [drugId], references: [id])
   drugId            Int?
-  variant_group     VariantGroup       @relation(fields: [variantGroupId], references: [id])
-  variantGroupId    Int
-}
-
-
-model VariantGroup {
-  id                  Int                   @id @default(autoincrement())
-  name                String
-  RelationAnnotation  RelationAnnotation[]
 }
 
 
