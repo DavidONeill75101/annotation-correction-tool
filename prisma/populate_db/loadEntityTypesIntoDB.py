@@ -24,7 +24,7 @@ def main():
 
     print("DB connection established")
     
-    d = {'id': [1, 2, 3], 'name': ['gene', 'cancer', 'drug']}
+    d = {'id': [1, 2, 3], 'name': ['gene', 'cancer', 'drug', 'variant']}
     df = pd.DataFrame(data=d)
 
     print("Dataframe Created")
