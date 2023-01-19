@@ -5,7 +5,6 @@ import axios from 'axios';
 import { Bar } from "react-chartjs-2";
 import { HeatMapGrid } from 'react-grid-heatmap'
 import Chart from 'chart.js/auto';
-import { objectToUrlStr } from 'brat-frontend-editor/client/src/util';
 
 
 export default class SentenceVotingData extends Component {
@@ -81,10 +80,7 @@ export default class SentenceVotingData extends Component {
                             } 
                         })
 
-                        
-                        user_agreements.push({'x':user1.id, 'y': user2.id, 'value':num_agreements/intersection.length})
-
-                        
+                        user_agreements.push({'x':user1.id, 'y': user2.id, 'value':num_agreements/intersection.length})         
 
                     })
                     agreements.push(user_agreements)
@@ -260,7 +256,6 @@ export default class SentenceVotingData extends Component {
         var vals = items.map(
             (e) => { return e[1] });
         
-            
         var sorted_dict = {}
 
         for (var i=keys.length-1; i>=0; i--){

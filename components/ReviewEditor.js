@@ -109,15 +109,11 @@ export default class ReviewEditor extends Component {
 
 		if (this.state.loaded) {
 
-			
-
 			const rows = this.state.sentences.map(s => <tr key={s.id}><td><a href={'https://pubmed.ncbi.nlm.nih.gov/' + s.pmid + '/'}>{s.pmid}</a></td>
 			<td>{s.journal}</td><td>{s.year}</td>
 			<td>{s.section}</td><td>{s.subsection}</td>
 			<td>{parse(s.formatted)}</td>			
 			<td><VotingButtons id={s.id} user={this.props.user}></VotingButtons></td></tr>)
-
-			
 
 			contents = <Table striped bordered hover>
 				<thead>

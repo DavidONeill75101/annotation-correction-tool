@@ -142,7 +142,6 @@ class Layout extends Component {
 			<div id="wrapper">
 				{/* Page Wrapper */}
 				
-				
 				{sidebar}
 
 				{/* Content Wrapper */}
@@ -152,7 +151,6 @@ class Layout extends Component {
 					<div id="content" style={overflowHack}>
 					
 						{headBlock}
-						
 						
 						<Topbar toggleSidebar={this.toggleSidebar} viruses={this.props.viruses} updateViruses={this.props.updateViruses} showVirusSelector={this.props.showVirusSelector} />
 

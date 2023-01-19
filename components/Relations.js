@@ -122,9 +122,6 @@ export default class Relations extends Component {
 					<td><Link href={'/review_downvoted_sentences?id=' + c.matching_id + '&range=0-9&citations=' + c.citation_count}>
 						<a><Button size="sm">Annotate Sentences</Button></a>
 						</Link></td>
-					{/* <td><Link href={'/weak_predictions?id=' + c.matching_id + '&range=0-9&citations=' + c.citation_count}>
-						<a><Button size="sm">Review Weak Predictions</Button></a>
-						</Link></td> */}
 					</tr>)
 			}else{
 				rows = this.state.collated.map(c => <tr key={c.matching_id}>

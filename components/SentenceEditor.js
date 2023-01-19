@@ -6,7 +6,6 @@ import {TokenAnnotator, TextAnnotator} from 'react-text-annotate'
 import Button from 'react-bootstrap/Button'
 import Table from 'react-bootstrap/Table'
 import Router from 'next/router';
-import { LocalConvenienceStoreOutlined, ThreeSixtySharp } from '@material-ui/icons';
  
 
 export default class SentenceEditor extends Component {
@@ -36,7 +35,6 @@ export default class SentenceEditor extends Component {
 			genes: [],
 			cancers: [],
 			drugs: [],
-
 			candidate_entity_text: 'No Entity',
 			candidate_true_entity_name: 'No Name', 
 		}
@@ -203,8 +201,6 @@ export default class SentenceEditor extends Component {
 							suggested_drug: drug,
 						})
 					}
-
-					
 					
 					self.setState({
 						suggested_gene: gene,
@@ -357,17 +353,13 @@ export default class SentenceEditor extends Component {
 				.then(function () {
 					// always executed
 					
-				});
-				
+				});	
 			}
-				
 		})
 		
 		self.setState({
 			value: value,
-			
 		})
-
 	}
 
 
@@ -381,7 +373,6 @@ export default class SentenceEditor extends Component {
 
 	update_candidate_gene(e){
 		var self = this
-
 		self.setState({
 		 	candidate_gene: e.target.value
 		})
@@ -413,7 +404,6 @@ export default class SentenceEditor extends Component {
 
 	update_candidate_variant(e){
 		var self = this
-
 		self.setState({
 			candidate_variant: e.target.value
 		})
@@ -422,7 +412,6 @@ export default class SentenceEditor extends Component {
 
 	update_candidate_annotation_variant(e){
 		var self = this
-
 		self.setState({
 			candidate_annotation_variant: e.target.value
 		})
@@ -431,36 +420,29 @@ export default class SentenceEditor extends Component {
 
 	update_candidate_variant_group(e){
 		var self = this
-
 		self.setState({
 			candidate_variant_group: e.target.value
 		})
 	}
 
 	update_candidate_entity_type(e){
-		
 		var self = this
-
 		self.setState({
 			candidate_entity_type: e.target.value
 		})
-
 	}
 
 
 	update_candidate_entity_text(e){
 		var self = this
-
 		self.setState({
 			candidate_entity_text: e.target.value
 		})
-
 	}
 
 
 	update_candidate_true_entity_name(e){
 		var self = this
-
 		self.setState({
 			candidate_true_entity_name: e.target.value
 		})
@@ -509,9 +491,8 @@ export default class SentenceEditor extends Component {
 				// always executed
 				self.add_relation_annotation()
 			});
-		
-		
 	}
+
 
 	get_drug_synonym(){
 		
@@ -603,6 +584,7 @@ export default class SentenceEditor extends Component {
 
 	}
 
+
 	get_gene_synonym(){
 		
 		var self = this
@@ -675,6 +657,7 @@ export default class SentenceEditor extends Component {
 							relations: relations,
 							error_message: '',
 						})
+
 		}else if (self.state.candidate_gene!=-1 &&
 			self.state.candidate_cancer!=-1 &&
 			self.state.candidate_drug!=-1 &&
@@ -700,8 +683,7 @@ export default class SentenceEditor extends Component {
 			self.setState({
 				error_message: 'Invalid Relation - see annotation guide for further details of valid relations'
 			})
-		}
-		
+		}	
 	}
 
 
@@ -737,6 +719,7 @@ export default class SentenceEditor extends Component {
 		})
 	
 	}
+
 
 	remove_entity_link(id){
 		var entity_links = this.state.entity_links
@@ -783,7 +766,6 @@ export default class SentenceEditor extends Component {
 				// always executed
 				
 			});
-
 	}
 
 
@@ -828,7 +810,6 @@ export default class SentenceEditor extends Component {
 						// always executed
 						
 					});
-
 			})
 			resolve() 
 			reject()  
@@ -842,7 +823,7 @@ export default class SentenceEditor extends Component {
 			function(error) {
 
 			}
-			);
+		);
 	}
 
 
@@ -883,7 +864,7 @@ export default class SentenceEditor extends Component {
 			function(error) {
 
 			}
-			);
+		);
 	}
 
 
@@ -939,6 +920,7 @@ export default class SentenceEditor extends Component {
 			});
 	}
 
+
 	componentDidMount(){
 		this.getGenes()
 		this.getCancers()
@@ -961,42 +943,20 @@ export default class SentenceEditor extends Component {
 			}
 		}
 
+
 		const tag_colours = {'gene':'#FF9900', 'cancer':'#38E54D', 'drug':'#FDFF00', 'variant':'#00dfff'}
 
-		var relation_table = ''
-		const relation_rows = this.state.relations.map(r => 
-		<tr><td>{(r.gene>-1) ? this.state.value[r.gene].tokens.join(' ') : 'No Gene'}</td>
-		<td>{(r.cancer>-1) ? this.state.value[r.cancer].tokens.join(' ') : 'No Cancer'}</td>
-		<td>{(r.drug>-1) ? this.state.value[r.drug].tokens.join(' ') : 'No Drug'}</td>
-		<td>{(r.variant>-1) ? this.state.value[r.variant].tokens.join(' ') : 'No Variant'}</td>
-		<td>{r.evidence_type}</td>
-		<Button className="w-100 mt-1" onClick={() => this.remove_relation_annotation(r.id)}>Remove</Button></tr>)
-
-		relation_table = <Table striped bordered hover>
-			<thead>
-				<tr>
-					<th className="w-20">Gene</th>
-					<th className="w-20">Cancer</th>
-					<th className="w-20">Drug</th>
-					<th className="w-20">Variant</th>
-					<th className="w-20">Evidence Type</th>
-					<th className="w-20">Remove Relation</th>
-				</tr>
-			</thead>
-			<tbody>
-				{relation_rows}
-			</tbody>
-		</Table>		
+		const tag_selector = <select
+									onChange={this.update_tag}
+									value={this.state.tag}
+									className="mb-2"
+								>
+									<option value="gene">gene</option>
+									<option value="cancer">cancer</option>
+									<option value="drug">drug</option>
+									<option value="variant">variant</option>
+								</select>
 		
-
-		var relation_contents = ' '
-		if (this.state.relations.length>0){
-			relation_contents = <div>
-						{relation_table}
-						</div>
-						
-		}
-
 		const annotations_complete_button = <Button className="mt-1 float-right" size="md" onClick={this.add_annotations_to_db}>
 												Annotations Complete
 											</Button>
@@ -1041,11 +1001,41 @@ export default class SentenceEditor extends Component {
 		</tbody>
 		</Table>
 
+		var relation_table = ''
+		const relation_rows = this.state.relations.map(r => 
+		<tr><td>{(r.gene>-1) ? this.state.value[r.gene].tokens.join(' ') : 'No Gene'}</td>
+		<td>{(r.cancer>-1) ? this.state.value[r.cancer].tokens.join(' ') : 'No Cancer'}</td>
+		<td>{(r.drug>-1) ? this.state.value[r.drug].tokens.join(' ') : 'No Drug'}</td>
+		<td>{(r.variant>-1) ? this.state.value[r.variant].tokens.join(' ') : 'No Variant'}</td>
+		<td>{r.evidence_type}</td>
+		<Button className="w-100 mt-1" onClick={() => this.remove_relation_annotation(r.id)}>Remove</Button></tr>)
+
+		relation_table = <Table striped bordered hover>
+			<thead>
+				<tr>
+					<th className="w-20">Gene</th>
+					<th className="w-20">Cancer</th>
+					<th className="w-20">Drug</th>
+					<th className="w-20">Variant</th>
+					<th className="w-20">Evidence Type</th>
+					<th className="w-20">Remove Relation</th>
+				</tr>
+			</thead>
+			<tbody>
+				{relation_rows}
+			</tbody>
+		</Table>		
+		
+		var relation_contents = ' '
+		if (this.state.relations.length>0){
+			relation_contents = <div>
+						{relation_table}
+						</div>				
+		}
 
 		const entity_types = [{text:'Gene', value:0}, {text:'Cancer', value:1}, {text:'Drug', value:2}, {text:'Variant', value:3}]
 		const entity_type_options = entity_types.map(e => <option value={e.value}>{e.text}</option>)
 		const entity_type_selector = <select onChange={this.update_candidate_entity_type} value={this.state.candidate_entity_type} className="w-100">{ entity_type_options }</select>
-		
 
 		const gene_entity_options = this.state.gene_annotations.map(g => <option value={g.value}>{g.single_text}</option>)
 		const cancer_entity_options = this.state.cancer_annotations.map(c => <option value={c.value}>{c.single_text}</option>)
@@ -1068,7 +1058,6 @@ export default class SentenceEditor extends Component {
 			true_entity_options = this.state.variant_entities
 		}
 
-		
 		const true_entity_options_list = true_entity_options.map(e => <option value={e.value}>{e.label}</option>)
 		
 		var entity_text_selector = <select onChange={this.update_candidate_entity_text} value={this.state.candidate_entity_text} className="w-100">{ text_options }</select>
@@ -1119,19 +1108,6 @@ export default class SentenceEditor extends Component {
 						</div>			
 		}
 
-
-		const tag_selector = <select
-									onChange={this.update_tag}
-									value={this.state.tag}
-									className="mb-2"
-								>
-									<option value="gene">gene</option>
-									<option value="cancer">cancer</option>
-									<option value="drug">drug</option>
-									<option value="variant">variant</option>
-								</select>
-
-
 		return (
 				<div> 
 
@@ -1168,9 +1144,8 @@ export default class SentenceEditor extends Component {
 							})}
 							/>
 						</div>
-					
-
 					<div>
+
 						<div className="mt-5 w-100 float-left">
 
 							{ relation_selector_table }
@@ -1199,16 +1174,9 @@ export default class SentenceEditor extends Component {
 								<div className="mt-5">
 									{ entity_link_contents }
 								</div>
-
-
 							</div>
 						</div>
 					</div>
-
-					
-
-					
-					
 				</div>
 		)
 	}

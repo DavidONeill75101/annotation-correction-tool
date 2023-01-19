@@ -355,10 +355,13 @@ export default class AnnotationGuide extends Component {
                             <li>You will be presented with all the sentences associated with this particular relation which you have <em>downvoted</em>.</li>
                             <li>Pick a sentence to manually annotate.</li>
                             <li>When annotating a sentence, you will begin by identifying entities.  To do this, select the type of entity you wish to identify using the dropdown menu and then highlight the area of text which displays the entity.</li>
-                            <li>Next you will be able to create a biomarker relation between entities.</li>
-                            <li>To define a biomarker relation, select the entities and evidence type from the dropdown menus - these will only be populated with the entities that you have highlighted.</li>
+                            <li>You can highlight gene, cancer, drug or variant entities.</li>
+                            <li>Next you will be able to create a relation between these entities.</li>
+                            <li>To define a relation, select the entities and evidence type from the dropdown menus - these will only be populated with the entities that you have highlighted.</li>
                             <li>The dropdown menus will also indicate whether the entity you have chosen has a more well-known synonym.</li>
-                            <li>Select to add the biomarker relation using the button below, ensuring that the relation follows the rules described above - e.g. a predictive relation must have a gene, cancer and drug entity identified.</li>
+                            <li>Select to add the relation using the button below, ensuring that the relation follows the rules described above - e.g. a predictive relation must have a gene, cancer and drug entity identified.</li>
+                            <li>If you have highlighted an entity in the text and you would like to specify its more commonly known synonym, you can add an entity link.</li>
+                            <li>This can be done by looking at the entity link table, selecting the entity you highlighted and the more common synonym.</li>
                             <li>Once you are satisfied that you have identified all entities and relations, you can save your annotations.</li>
                         </ul>
                     </div>
