@@ -78,12 +78,19 @@ model relation {
 }
 
 model UserAnnotation {
-  id                        Int                         @id @default(autoincrement())
-  sentence                  Sentence                    @relation(fields: [sentenceId], references: [id])
-  sentenceId                Int                         @map("sentence_id")
-  user                      User                        @relation(fields: [userId], references: [id])
-  userId                    Int                         @map("user_id")
-  relations                 RelationAnnotation[]
+  id         Int                  @id @default(autoincrement())
+  sentence   Sentence             @relation(fields: [sentenceId], references: [id])
+  sentenceId Int                  @map("sentence_id")
+  user       User                 @relation(fields: [userId], references: [id])
+  userId     Int                  @map("user_id")
+  relations  RelationAnnotation[]
+}
+
+model EntityLink {
+  id           Int        @id @default(autoincrement())
+  entityType   String
+  entityText   String
+  trueName     String
 }
 
 model EntityAnnotation {
@@ -119,7 +126,6 @@ model RelationAnnotation {
   drugId            Int?
 }
 
-
 model RelationType {
   id                 Int                  @id @default(autoincrement())
   name               String
@@ -131,6 +137,7 @@ model Gene {
   name               String
   GeneSynonym        GeneSynonym[]
   RelationAnnotation RelationAnnotation[]
+
 }
 
 model GeneSynonym {
@@ -145,6 +152,7 @@ model Cancer {
   name               String
   CancerSynonym      CancerSynonym[]
   RelationAnnotation RelationAnnotation[]
+
 }
 
 model CancerSynonym {
@@ -159,6 +167,7 @@ model Drug {
   name               String
   DrugSynonym        DrugSynonym[]
   RelationAnnotation RelationAnnotation[]
+
 }
 
 model DrugSynonym {
@@ -169,10 +178,11 @@ model DrugSynonym {
 }
 
 model Variant {
-  id                        Int                         @id
-  name                      String
-  VariantSynonym            VariantSynonym[]
-  RelationAnnotation        RelationAnnotation[]
+  id                 Int                  @id
+  name               String
+  VariantSynonym     VariantSynonym[]
+  RelationAnnotation RelationAnnotation[]
+
 }
 
 model VariantSynonym {
