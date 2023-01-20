@@ -1,5 +1,10 @@
 # CIViCMine Annotation Review Tool
 
+## Contributors
+
+- David O'Neill - Lead
+- Jake Lever - Supervisor
+
 ## About
 
 This repository holds a [Next.js](https://nextjs.org/) application which facilitates the review of cancer-gene-drug relations extracted by the machine learning tool [CIViCMine](http://bionlp.bcgsc.ca/civicmine/). The web application is part of the "human-in-the-loop" process - relations which have been predicted by CIViCMine are presented to users for review, generating new data which can be used to retrain the model.
@@ -21,7 +26,7 @@ The following instructions can be followed to run this application locally.
 - NodeJS
   - Install it from https://nodejs.org/en/download/
 - A nice terminal can be useful. On Windows, you could use Git-bash which comes packaged with git for windows: https://gitforwindows.org/
-- For the setup below, you'll need a couple Python packages installed
+- For the setup below, you'll need some Python packages installed:
   - `pip install pandas`
   - `pip install mysql-connector-python`
   - `pip install gzip`
