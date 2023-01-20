@@ -5,6 +5,7 @@ import Link from 'next/link'
 import axios from 'axios';
 
 import Select from 'react-select'
+import { ReactSearchAutocomplete } from 'react-search-autocomplete'
 
 import Button from 'react-bootstrap/Button';
 import { Col, Container, Row } from 'react-bootstrap';
@@ -32,9 +33,15 @@ export default class Relations extends Component {
 		this.getDrugs = this.getDrugs.bind(this);
 		this.getEvidenceTypes = this.getEvidenceTypes.bind(this);
 		this.getVariants = this.getVariants.bind(this);
+		
+		
+		this.handleOnGeneSelect = this.handleOnGeneSelect.bind(this);
+		this.handleOnCancerSelect = this.handleOnCancerSelect.bind(this);
+		this.handleOnDrugSelect = this.handleOnDrugSelect.bind(this);
+		this.formatResult = this.formatResult.bind(this);
 	}
 
-	
+
 	getGenes() {
 
 		var self = this
@@ -43,9 +50,10 @@ export default class Relations extends Component {
 			.then(function (response) {
 				const res = response.data
 				var genes = []
-				res.forEach(element => {
-					genes.push({'value':element, 'label':element})
-				});
+				res.forEach(function (value, i) {
+					genes.push({'id':i, 'name':value})	
+				}	)
+				
 				self.setState({
 					genes: genes,
 				})
@@ -67,11 +75,12 @@ export default class Relations extends Component {
 			.then(function (response) {
 				const res = response.data
 				var cancers = []
-				res.forEach(element => {
-					cancers.push({'value':element, 'label':element})
-				});
+				res.forEach(function (value, i) {
+					cancers.push({'id':i, 'name':value})	
+				}	)
+				
 				self.setState({
-					cancers: cancers,	
+					cancers: cancers,
 				})
 			})
 			.catch(function (error) {
@@ -91,9 +100,10 @@ export default class Relations extends Component {
 			.then(function (response) {
 				const res = response.data
 				var drugs = []
-				res.forEach(element => {
-					drugs.push({'value':element, 'label':element})
-				});
+				res.forEach(function (value, i) {
+					drugs.push({'id':i, 'name':value})	
+				}	)
+				
 				self.setState({
 					drugs: drugs,
 				})
@@ -163,21 +173,6 @@ export default class Relations extends Component {
 		this.getVariants()		
 	}
 
-	
-	handleGeneClick(e){
-		this.setState({gene:e.label})
-	}
-
-
-	handleCancerClick(e){
-		this.setState({cancer:e.label})
-	}
-
-
-	handleDrugClick(e){
-		this.setState({drug:e.label})
-	}
-
 
 	handleEvidenceTypeClick(e){
 		this.setState({evidenceType:e.label})
@@ -186,6 +181,33 @@ export default class Relations extends Component {
 
 	handleVariantClick(e){
 		this.setState({variant:e.label})
+	}
+
+
+	handleOnGeneSelect(item){
+		// the item selected
+		this.setState({gene:item.name})
+	}
+
+
+	handleOnCancerSelect(item){
+		// the item selected
+		this.setState({cancer:item.name})
+	}
+
+
+	handleOnDrugSelect(item){
+		// the item selected
+		this.setState({drug:item.name})
+	}
+
+
+	formatResult(item){
+		return (
+		<>
+			<span style={{ display: 'block', textAlign: 'left' }}>{item.name}</span>
+		</>
+		)
 	}
 
 
@@ -216,6 +238,9 @@ export default class Relations extends Component {
 
 		return (
 				<div>
+
+					 
+
 					<Container>
 						
 						<Row>
@@ -227,15 +252,65 @@ export default class Relations extends Component {
 						</Row>
 						
 						<Row>
-							<Col><Select className="sm" options={this.state.genes} onChange={this.handleGeneClick.bind(this)}/></Col>
-						
-							<Col><Select options={this.state.cancers} onChange={this.handleCancerClick.bind(this)}/></Col>
 
-							<Col><Select options={this.state.drugs} onChange={this.handleDrugClick.bind(this)}/></Col>
+							<Col>
+								<ReactSearchAutocomplete
+										items={this.state.genes}
+										onSelect={this.handleOnGeneSelect}
+										placeholder={"Search..."}
+										formatResult={this.formatResult}
+										showIcon={false}
+										styling={
+											{
+											borderRadius: "5px",
+											height: "37px",
+											color: "#999999",
+											zIndex: 1,
+											}
+										}
+									/>						
+							</Col>
+
+							<Col>
+								<ReactSearchAutocomplete
+									items={this.state.cancers}
+									onSelect={this.handleOnCancerSelect}
+									placeholder={"Search..."}
+									formatResult={this.formatResult}
+									showIcon={false}
+									styling={
+										{
+										borderRadius: "5px",
+										height: "37px",
+										color: "#999999",
+										zIndex: 1,									
+										}
+									}
+								/>
+							</Col>
+
+							<Col>
+								<ReactSearchAutocomplete
+									items={this.state.drugs}
+									onSelect={this.handleOnDrugSelect}
+									placeholder={"Search..."}
+									formatResult={this.formatResult}
+									showIcon={false}
+									styling={
+										{
+										borderRadius: "5px",
+										height: "37px",
+										color: "#999999",
+										zIndex: 1,
+										}
+									}
+								/>
+							</Col>
 
 							<Col><Select options={this.state.evidenceTypes} onChange={this.handleEvidenceTypeClick.bind(this)}/></Col>
 
 							<Col><Select options={this.state.variants} onChange={this.handleVariantClick.bind(this)}/></Col>
+
 						</Row>
 
 						<br></br>
@@ -245,6 +320,8 @@ export default class Relations extends Component {
 						</Row>
 
 					</Container>
+
+					
 				</div>
 		)
 	}
