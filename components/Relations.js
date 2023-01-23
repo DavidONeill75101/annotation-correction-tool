@@ -6,7 +6,6 @@ import axios from 'axios';
 
 import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table'
-import { param } from 'malgo-brat-frontend-editor/client/src/util';
 
 
 export default class Relations extends Component {
