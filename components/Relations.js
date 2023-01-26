@@ -119,7 +119,7 @@ export default class Relations extends Component {
 							<a><Button size="sm">Review Predictions</Button></a>
 						</Link></td>
 					<td><Link href={'/review_downvoted_sentences?id=' + c.matching_id + '&range=0-9&citations=' + c.citation_count}>
-						<a><Button size="sm">Annotate Sentences</Button></a>
+						<a><Button size="sm">Annotate Incorrect Sentences</Button></a>
 						</Link></td>
 					</tr>)
 			}else{
