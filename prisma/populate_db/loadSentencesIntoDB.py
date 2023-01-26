@@ -35,13 +35,13 @@ def main():
     print("Dataframe built")
 
     for i in range(len(sentences_pd)):
-        try:
-            row = sentences_pd.iloc[i]
-            sql = "INSERT INTO sentences (matching_id, evidencetype, gene, cancer, drug, variant_group, day, formatted, journal, month, pmid, section, subsection, sentence, title, year) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-            val = (str(row['matching_id']), str(row['evidencetype']), str(row['gene_normalized']), str(row['cancer_normalized']), str(row['drug_normalized']), str(row['variant_id']), str(row['day']), str(row['formatted_sentence']),str(row['journal']),str(row['month']),str(row['pmid']),str(row['section']),str(row['subsection']), str(row['sentence']),str(row['title']),str(row['year']))
-            cur.execute(sql, val)
-        except:
-            print("Not possible to insert sentence into DB")
+
+        row = sentences_pd.iloc[i]
+        # sql = "INSERT INTO sentences (matching_id, evidencetype, gene, cancer, drug, variant_group, day, formatted, journal, month, pmid, section, subsection, sentence, title, year) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        sql = "INSERT INTO sentences (matching_id, evidencetype, gene, cancer, drug, variant_group, day, journal, month, pmid, section, subsection, sentence, title, year) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        val = (str(row['matching_id']), str(row['evidencetype']), str(row['gene_normalized']), str(row['cancer_normalized']), str(row['drug_normalized']), str(row['variant_id']), str(row['day']), str(row['formatted_sentence']),str(row['journal']),str(row['month']),str(row['pmid']),str(row['section']),str(row['subsection']), str(row['sentence']),str(row['title']),str(row['year']))
+        cur.execute(sql, val)
+       
 
     print("Dataframe written to DB")
     
