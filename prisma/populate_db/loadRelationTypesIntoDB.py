@@ -31,7 +31,7 @@ def main():
 
     for i in range(len(df)):
         row = df.iloc[i]
-        sql = "INSERT INTO relationtype (id, name) VALUES (%s, %s)"
+        sql = "INSERT INTO RelationType (id, name) VALUES (%s, %s)"
         val = (str(row['id']), str(row['name']))
         cur.execute(sql, val)
 

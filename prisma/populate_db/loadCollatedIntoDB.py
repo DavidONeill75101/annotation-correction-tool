@@ -32,13 +32,11 @@ def main():
 
     collated_pd = pd.read_csv(filename, sep='\t')
 
-    # collated_pd = pd.read_pickle('prisma\populate_db\collated_pd.pkl')
-
     print("Dataframe built")
 
     for i in range(len(collated_pd)):
         row = collated_pd.iloc[i]
-        sql = "INSERT INTO relation (matching_id, evidencetype, gene, cancer, drug, variant_group, citation_count) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+        sql = "INSERT INTO Relation (matching_id, evidencetype, gene, cancer, drug, variant_group, citation_count) VALUES (%s, %s, %s, %s, %s, %s, %s)"
         val = (str(row['matching_id']), str(row['evidencetype']), str(row['gene_normalized']), str(row['cancer_normalized']), str(row['drug_normalized']), str(row['variant_group']), str(row['citation_count']))
         cur.execute(sql, val)
 

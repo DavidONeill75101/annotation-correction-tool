@@ -41,16 +41,16 @@ def main():
 
     for count, row in enumerate(df_dict):
 
-        sql = "INSERT INTO variant (id, name) VALUES (%s, %s)"
+        sql = "INSERT INTO Variant (id, name) VALUES (%s, %s)"
         val = (count, str(row[1]))
         cur.execute(sql, val)
 
         for synonym in row[3]:
-            sql = "INSERT INTO variantsynonym (name, variantId) VALUES (%s, %s)"
+            sql = "INSERT INTO VariantSynonym (name, variantId) VALUES (%s, %s)"
             val = (synonym, str(count))
             cur.execute(sql, val)
     
-    sql = "INSERT INTO variant (id, name) VALUES (%s, %s)"
+    sql = "INSERT INTO Variant (id, name) VALUES (%s, %s)"
     val = ("41", "unknown")
     cur.execute(sql, val)
         
