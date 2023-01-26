@@ -36,7 +36,7 @@ def main():
 
     for i in range(len(collated_pd)):
         row = collated_pd.iloc[i]
-        sql = "INSERT INTO Relation (matching_id, evidencetype, gene, cancer, drug, variant_group, citation_count) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+        sql = "INSERT INTO relation (matching_id, evidencetype, gene, cancer, drug, variant_group, citation_count) VALUES (%s, %s, %s, %s, %s, %s, %s)"
         val = (str(row['matching_id']), str(row['evidencetype']), str(row['gene_normalized']), str(row['cancer_normalized']), str(row['drug_normalized']), str(row['variant_group']), str(row['citation_count']))
         cur.execute(sql, val)
 
