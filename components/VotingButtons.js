@@ -36,7 +36,7 @@ export default class VotingButtons extends Component {
     delete_upvote() {
 
         var self = this
-        const fetchURL = 'http://localhost:3000/api/update_data/delete_upvote?user_id=' + this.state.user_id + '&sentence_id=' + this.props.id
+        const fetchURL = '/api/update_data/delete_upvote?user_id=' + this.state.user_id + '&sentence_id=' + this.props.id
 
         axios.get(fetchURL)
             .then(function (response) {
@@ -59,7 +59,7 @@ export default class VotingButtons extends Component {
     add_upvote() {
 
         var self = this
-        const fetchURL = 'http://localhost:3000/api/update_data/add_upvote?user_id=' + this.state.user_id + '&sentence_id=' + this.props.id
+        const fetchURL = '/api/update_data/add_upvote?user_id=' + this.state.user_id + '&sentence_id=' + this.props.id
 
         axios.get(fetchURL)
             .then(function (response) {
@@ -182,7 +182,7 @@ export default class VotingButtons extends Component {
 
         var self = this
 
-        const fetchURL = 'http://localhost:3000/api/update_data/delete_downvote?user_id=' + this.state.user_id + '&sentence_id=' + this.props.id
+        const fetchURL = '/api/update_data/delete_downvote?user_id=' + this.state.user_id + '&sentence_id=' + this.props.id
 
         axios.get(fetchURL)
             .then(function (response) {
@@ -206,7 +206,7 @@ export default class VotingButtons extends Component {
 
         var self = this
 
-        const fetchURL = 'http://localhost:3000/api/update_data/add_downvote?user_id=' + this.state.user_id + '&sentence_id=' + this.props.id
+        const fetchURL = '/api/update_data/add_downvote?user_id=' + this.state.user_id + '&sentence_id=' + this.props.id
 
         if (this.state.upvoted_users.includes(this.state.user_id)){
             this.delete_upvote()
