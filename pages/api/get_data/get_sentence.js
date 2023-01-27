@@ -7,7 +7,7 @@ export default async function handle(req, res) {
 	
 	var params = {'id':sentence_id}
 	
-	var sentence = await prisma.sentence.findUnique({
+	var sentence = await prisma.sentences.findUnique({
 		select:{
 			user_upvotes: true,
 			user_downvotes: true,
